@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/kitchen_background"
+    tools:context=".ingredientsPickup">
+
+    <TextView
+        android:id="@+id/tvFoodName"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:text="Name: "
+        android:textColor="@color/black"
+        android:textSize="10pt"/>
+
+    <TextView
+        android:id="@+id/tvFoodAmount"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:text="Amount: "
+        android:textColor="@color/black"
+        android:textSize="10pt"/>
+
+    <ImageView
+        android:id="@+id/foodImg"
+        android:layout_width="100pt"
+        android:layout_height="80pt"
+        android:layout_margin="6pt"
+        app:srcCompat="@drawable/foodtime_background" />
+
+    <Button
+        android:id="@+id/btNext"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:onClick="nextItem"/>
+
+</LinearLayout>

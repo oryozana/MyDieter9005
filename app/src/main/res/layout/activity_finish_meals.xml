@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".finishMeals"
+    android:background="@drawable/black_kitchen_background">
+
+
+    <androidx.gridlayout.widget.GridLayout
+        android:layout_width="125pt"
+        android:layout_height="85pt"
+        app:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_margin="10pt">
+
+        <TextView
+            android:id="@+id/tvBreakfastInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="10pt"
+            android:text="Breakfast: None" />
+
+        <ListView
+            android:id="@+id/breakfastIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="75pt" />
+    </androidx.gridlayout.widget.GridLayout>
+
+
+    <androidx.gridlayout.widget.GridLayout
+        android:layout_width="125pt"
+        android:layout_height="85pt"
+        app:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_margin="10pt">
+
+        <TextView
+            android:id="@+id/tvLunchInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="15pt"
+            android:text="Lunch: None" />
+
+        <ListView
+            android:id="@+id/lunchIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="75pt" />
+    </androidx.gridlayout.widget.GridLayout>
+
+
+    <androidx.gridlayout.widget.GridLayout
+        android:layout_width="125pt"
+        android:layout_height="85pt"
+        app:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_margin="10pt">
+
+        <TextView
+            android:id="@+id/tvDinnerInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="15pt"
+            android:text="Dinner: None" />
+
+        <ListView
+            android:id="@+id/dinnerIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="75pt" />
+    </androidx.gridlayout.widget.GridLayout>
+
+    <Button
+        android:id="@+id/btFinishMeals"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:text="Finish"
+        android:onClick="finish"/>
+
+</LinearLayout>

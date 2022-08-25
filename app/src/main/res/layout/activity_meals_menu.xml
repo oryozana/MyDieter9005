@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/food_background"
+    tools:context=".mealsMenu">
+
+    <TextView
+        android:id="@+id/tvBreakfast"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:text="Set Breakfast: "
+        android:textColor="@color/black"/>
+
+    <Button
+        android:id="@+id/btBreakfast"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:onClick="sendToMealSelection"
+        android:text="Select" />
+
+    <TextView
+        android:id="@+id/tvLunch"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:text="Set Lunch: "
+        android:textColor="@color/black"/>
+
+    <Button
+        android:id="@+id/btLunch"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:onClick="sendToMealSelection"
+        android:text="Select" />
+
+    <TextView
+        android:id="@+id/tvDinner"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:text="Set Dinner: "
+        android:textColor="@color/black"/>
+
+    <Button
+        android:id="@+id/btDinner"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:onClick="sendToMealSelection"
+        android:text="Select" />
+
+    <TextView
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:layout_margin="4pt" />
+
+    <TextView
+        android:id="@+id/tvTotalCalories"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:textSize="8pt"
+        android:text="Total Calories: 0 calories."
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/tvTotalTime"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:textSize="8pt"
+        android:text="Total time: 0 minutes."
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:layout_margin="4pt" />
+
+    <Button
+        android:id="@+id/btFinish"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:text="Finish"
+        android:onClick="sendToMealSelection"/>
+
+</LinearLayout>
