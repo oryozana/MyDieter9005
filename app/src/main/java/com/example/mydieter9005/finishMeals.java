@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -40,8 +41,11 @@ public class finishMeals extends AppCompatActivity {
         dinnerIngredientsAmount = new ArrayList<Integer>();
 
         tvBreakfastInfo = (TextView) findViewById(R.id.tvBreakfastInfo);
+        tvBreakfastInfo.setMovementMethod(new ScrollingMovementMethod());
         tvLunchInfo = (TextView) findViewById(R.id.tvLunchInfo);
+        tvLunchInfo.setMovementMethod(new ScrollingMovementMethod());
         tvDinnerInfo = (TextView) findViewById(R.id.tvDinnerInfo);
+        tvDinnerInfo.setMovementMethod(new ScrollingMovementMethod());
 
         breakfastIngredients = (ListView) findViewById(R.id.breakfastIngredients);
         lunchIngredients = (ListView) findViewById(R.id.lunchIngredients);

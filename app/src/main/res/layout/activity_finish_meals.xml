@@ -17,11 +17,20 @@
         android:layout_gravity="center"
         android:layout_margin="10pt">
 
-        <TextView
-            android:id="@+id/tvBreakfastInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="10pt"
-            android:text="Breakfast: None" />
+        <HorizontalScrollView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            app:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/tvBreakfastInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="10pt"
+                android:singleLine="true"
+                android:scrollHorizontally="true"
+                android:gravity="center|start"
+                android:text="Breakfast: None" />
+        </HorizontalScrollView>
 
         <ListView
             android:id="@+id/breakfastIngredients"
@@ -37,11 +46,20 @@
         android:layout_gravity="center"
         android:layout_margin="10pt">
 
-        <TextView
-            android:id="@+id/tvLunchInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="15pt"
-            android:text="Lunch: None" />
+        <HorizontalScrollView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            app:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/tvLunchInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="15pt"
+                android:singleLine="true"
+                android:scrollHorizontally="true"
+                android:gravity="center|start"
+                android:text="Lunch: None" />
+        </HorizontalScrollView>
 
         <ListView
             android:id="@+id/lunchIngredients"
@@ -57,11 +75,20 @@
         android:layout_gravity="center"
         android:layout_margin="10pt">
 
-        <TextView
-            android:id="@+id/tvDinnerInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="15pt"
-            android:text="Dinner: None" />
+        <HorizontalScrollView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            app:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/tvDinnerInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="15pt"
+                android:singleLine="true"
+                android:scrollHorizontally="true"
+                android:gravity="center|start"
+                android:text="Dinner: None" />
+        </HorizontalScrollView>
 
         <ListView
             android:id="@+id/dinnerIngredients"
