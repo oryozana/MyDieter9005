@@ -15,7 +15,7 @@ public class mealsMenu extends AppCompatActivity {
     TextView tvBreakfast, tvLunch, tvDinner;
     TextView tvTotalCalories, tvTotalTime;
     Button btBreakfast, btLunch, btDinner, btFinish;
-    String breakfast, lunch, dinner;
+    String breakfast = "", lunch = "", dinner = "";
     String[] list, meals = new String[3];
     int totalCalories = 0, totalTime = 0;
     Intent me;
@@ -98,10 +98,15 @@ public class mealsMenu extends AppCompatActivity {
             startActivity(me);
         }
         if(id == btFinish.getId()) {
-            me.setClass(this, ingredientsPickup.class);
-            me.putExtra("meals", meals);
-            me.putExtra("totalCalories", totalCalories);
-            startActivity(me);
+            if(!breakfast.isEmpty() || !lunch.isEmpty() || !dinner.isEmpty()){
+                me.setClass(this, ingredientsPickup.class);
+                me.putExtra("meals", meals);
+                me.putExtra("totalCalories", totalCalories);
+                startActivity(me);
+            }
+            else{
+                Toast.makeText(this, "Please pick at least one meal !", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
