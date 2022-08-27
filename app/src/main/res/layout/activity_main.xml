@@ -9,10 +9,74 @@
     android:background="@drawable/morning_city_background"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btMealsMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        android:onClick="sendToSelected"/>
+    <androidx.gridlayout.widget.GridLayout
+        android:layout_width="125pt"
+        android:layout_height="85pt"
+        app:orientation="vertical">
+
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:fillViewport="true">
+
+            <TextView
+                android:id="@+id/tvBreakfastMain"
+                android:layout_width="100pt"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="4pt"
+                android:maxLines="@integer/material_motion_duration_long_1"
+                android:scrollbars="vertical"
+                android:text="Your breakfast: "
+                android:textColor="@color/black"
+                app:layout_gravity="center" />
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/tvLunchMain"
+            android:layout_width="100pt"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:text="Your lunch: "
+            android:textColor="@color/black"
+            android:maxLines="@integer/material_motion_duration_long_1"
+            app:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/tvDinnerMain"
+            android:layout_width="100pt"
+            android:layout_height="wrap_content"
+            app:layout_gravity="center"
+            android:textColor="@color/black"
+            android:scrollbars = "vertical"
+            android:maxLines="@integer/material_motion_duration_long_1"
+            android:text="Your dinner: " />
+
+        <TextView
+            android:id="@+id/tvTotalCaloriesMain"
+            android:layout_width="100pt"
+            android:layout_height="wrap_content"
+            app:layout_gravity="center"
+            android:layout_marginTop="6pt"
+            android:textColor="@color/black"
+            android:text="Total calories: " />
+
+        <TextView
+            android:id="@+id/tvCaloriesLeftMain"
+            android:layout_width="100pt"
+            android:layout_height="wrap_content"
+            app:layout_gravity="center"
+            android:textColor="@color/black"
+            android:text="Calories left: " />
+
+        <Button
+            android:id="@+id/btMealsMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_gravity="center"
+            android:onClick="sendToSelected"
+            android:text="Meals selector" />
+    </androidx.gridlayout.widget.GridLayout>
+
 </LinearLayout>

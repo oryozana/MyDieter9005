@@ -52,7 +52,8 @@ public class mealsMenu extends AppCompatActivity {
         }
 
         try {
-            me = getIntent();lunch = me.getStringExtra("lunch");
+            me = getIntent();
+            lunch = me.getStringExtra("lunch");
             list = organizeMeal(lunch);
             tvLunch.setText("Your lunch is: " + list[0] + ".");
             btLunch.setText(list[1] + "." + "\n" + list[2]);
@@ -99,6 +100,7 @@ public class mealsMenu extends AppCompatActivity {
         if(id == btFinish.getId()) {
             me.setClass(this, ingredientsPickup.class);
             me.putExtra("meals", meals);
+            me.putExtra("totalCalories", totalCalories);
             startActivity(me);
         }
     }
