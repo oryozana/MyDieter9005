@@ -26,7 +26,6 @@ public class mealsMenu extends AppCompatActivity {
         setContentView(R.layout.activity_meals_menu);
 
         me = getIntent();
-        returnSavedInfo();
 
         tvBreakfast = (TextView) findViewById(R.id.tvBreakfast);
         tvLunch = (TextView) findViewById(R.id.tvLunch);
@@ -111,15 +110,6 @@ public class mealsMenu extends AppCompatActivity {
             }
         }
         return info;
-    }
-
-    public void returnSavedInfo(){
-        if(me.hasExtra("meals")){
-            updateMeals();
-        }
-        else{
-            Toast.makeText(this, "it's not exists", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public void updateMeals(){

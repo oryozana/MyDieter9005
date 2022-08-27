@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         me = getIntent();
+        me = createTheFirstIntent(me);
 
         tvBreakfastMain = (TextView) findViewById(R.id.tvBreakfastMain);
         tvBreakfastMain.setMovementMethod(new ScrollingMovementMethod());
@@ -72,11 +73,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public Intent createTheFirstIntent(Intent me){
+        if(!me.hasExtra("meals")){
+            me = new Intent(this, mealsMenu.class);
+        }
+        return me;
+    }
+
     public void sendToSelected(View v) {
         int id = v.getId();
         if (id == btMealsMenu.getId()) {
-            Intent nextActivity = new Intent(this, mealsMenu.class);
-            startActivity(nextActivity);
+            me.setClass(this, mealsMenu.class);
+            startActivity(me);
         }
     }
 }
