@@ -28,7 +28,7 @@
                 android:gravity="center|start"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="Your breakfast: "
+                android:text="Your breakfast:                            "
                 android:textColor="@color/black"
                 app:layout_gravity="center" />
         </HorizontalScrollView>
@@ -45,7 +45,7 @@
                 android:gravity="center|start"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="Your lunch: "
+                android:text="Your lunch:                                   "
                 android:textColor="@color/black"
                 app:layout_gravity="center" />
         </HorizontalScrollView>
@@ -62,7 +62,7 @@
                 android:gravity="center|start"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="Your dinner: "
+                android:text="Your dinner:                                  "
                 android:textColor="@color/black"
                 app:layout_gravity="center" />
         </HorizontalScrollView>
