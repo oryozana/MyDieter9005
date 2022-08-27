@@ -37,7 +37,7 @@ public class breakfastSelection extends AppCompatActivity {
         mealsList.add("100");
         mealsList.add("1");
 
-        mealsList.add("Yogurt with chocolate");
+        mealsList.add("Chocolate flavored yogurt");
         mealsList.add("200");
         mealsList.add("1");
 

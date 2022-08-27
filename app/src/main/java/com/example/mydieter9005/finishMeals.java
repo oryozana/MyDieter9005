@@ -65,32 +65,40 @@ public class finishMeals extends AppCompatActivity {
                     mealParts[i] = mealParts[i].replaceAll(" ", "");
 
                     if (ingredients.contains(mealParts[i])) {
-                        add_if_needed(mealParts[i], mealIndex);
+                        addIfNeeded(mealParts[i], mealIndex);
                         if (mealParts[i].equals("olive")) {
-                            add_extra("olive", 7, mealIndex);
+                            addExtra("olive", 7, mealIndex);
                         }
                     }
 
+                    if (mealParts[i].equals("flavored")){
+                        String flavoredIngredient = mealParts[i - 1] + " " + mealParts[i] + " " + mealParts[i + 1];
+                        addIfNeeded(flavoredIngredient, mealIndex);
+                        removeIfNeeded(mealParts[i - 1], 1, mealIndex);
+                        i++;
+                    }
+
                     if (mealParts[i].equals("toast")) {
-                        add_if_needed("bread", mealIndex);
-                        add_if_needed("yellow cheese", mealIndex);
-                        add_if_needed("ketchup", mealIndex);
-                        add_if_needed("thousand island dressing", mealIndex);
+                        addIfNeeded("bread", mealIndex);
+                        addIfNeeded("yellow cheese", mealIndex);
+                        addIfNeeded("ketchup", mealIndex);
+                        addIfNeeded("thousand island dressing", mealIndex);
                     }
                     if (mealParts[i].equals("cereals")) {
-                        add_if_needed("milk", mealIndex);
+                        addIfNeeded("milk", mealIndex);
                     }
                     if (mealParts[i].equals("salad")) {
-                        add_if_needed("tomato", mealIndex);
-                        add_if_needed("cucumber", mealIndex);
-                        add_if_needed("lettuce", mealIndex);
+                        addIfNeeded("tomato", mealIndex);
+                        addIfNeeded("cucumber", mealIndex);
+                        addIfNeeded("lettuce", mealIndex);
                     }
                 }
                 updateMealName(meal, mealIndex);
             }
         }
     }
-    public void add_extra(String ingredient, int amount, int mealIndex){
+
+    public void addExtra(String ingredient, int amount, int mealIndex){
         if(mealIndex == 0){
             int index = breakfastIngredientsList.indexOf(ingredient);
             breakfastIngredientsAmount.add(index, breakfastIngredientsAmount.get(index) + amount);
@@ -107,7 +115,7 @@ public class finishMeals extends AppCompatActivity {
         }
     }
 
-    public void add_if_needed(String ingredient, int mealIndex){
+    public void addIfNeeded(String ingredient, int mealIndex){
         if(mealIndex == 0){
             if(!breakfastIngredientsList.contains(ingredient)){
                 breakfastIngredientsList.add(ingredient);
@@ -138,6 +146,41 @@ public class finishMeals extends AppCompatActivity {
             else{
                 int index = dinnerIngredientsList.indexOf(ingredient);
                 dinnerIngredientsAmount.add(index, dinnerIngredientsAmount.get(index) + 1);
+            }
+        }
+    }
+
+    public void removeIfNeeded(String ingredient, int amountToRemove, int mealIndex){
+        if(mealIndex == 0){
+            int index = breakfastIngredientsList.indexOf(ingredient);
+            if(breakfastIngredientsAmount.get(index) == amountToRemove){
+                breakfastIngredientsList.remove(index);
+                breakfastIngredientsAmount.remove(index);
+            }
+            else{
+                breakfastIngredientsAmount.add(index, breakfastIngredientsAmount.get(index) - amountToRemove);
+            }
+        }
+
+        if(mealIndex == 1){
+            int index = lunchIngredientsList.indexOf(ingredient);
+            if(lunchIngredientsAmount.get(index) == amountToRemove){
+                lunchIngredientsList.remove(index);
+                lunchIngredientsAmount.remove(index);
+            }
+            else{
+                lunchIngredientsAmount.add(index, lunchIngredientsAmount.get(index) - amountToRemove);
+            }
+        }
+
+        if(mealIndex == 2){
+            int index = dinnerIngredientsList.indexOf(ingredient);
+            if(dinnerIngredientsAmount.get(index) == amountToRemove){
+                dinnerIngredientsList.remove(index);
+                dinnerIngredientsAmount.remove(index);
+            }
+            else{
+                dinnerIngredientsAmount.add(index, dinnerIngredientsAmount.get(index) - amountToRemove);
             }
         }
     }

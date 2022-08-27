@@ -45,8 +45,10 @@ public class ingredientsPickup extends AppCompatActivity {
 
         ingredients.add("milk");
         ingredients.add("yogurt");
+        ingredients.add("chocolate flavored yogurt");
         ingredients.add("cheese");
         ingredients.add("yellow cheese");
+        ingredients.add("chocolate");
 
         ingredients.add("egg");
         ingredients.add("patit");
@@ -86,6 +88,10 @@ public class ingredientsPickup extends AppCompatActivity {
                 custom = true;
                 foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier("thousand_island_dressing", "drawable", getPackageName()));
             }
+            if(ingredient.equals("chocolate flavored yogurt")){
+                custom = true;
+                foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier("chocolate_flavored_yogurt", "drawable", getPackageName()));
+            }
             try {
                 if(!custom){
                     foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier(ingredient, "drawable", getPackageName()));
@@ -108,34 +114,32 @@ public class ingredientsPickup extends AppCompatActivity {
                     mealParts[i] = mealParts[i].replaceAll(" ", "");
 
                     if (ingredients.contains(mealParts[i])) {
-                        add_if_needed(mealParts[i]);
+                        addIfNeeded(mealParts[i]);
                         if (mealParts[i].equals("olive")) {
                             amount[ingredients.indexOf("olive")] += 7;
                         }
-                        amount[ingredients.indexOf(mealParts[i])] += 1;
+                    }
+
+                    if (mealParts[i].equals("flavored")){
+                        String flavoredIngredient = mealParts[i - 1] + " " + mealParts[i] + " " + mealParts[i + 1];
+                        addIfNeeded(flavoredIngredient);
+                        removeIfNeeded(mealParts[i - 1], 1);
+                        i++;
                     }
 
                     if (mealParts[i].equals("toast")) {
-                        add_if_needed("bread");
-                        amount[ingredients.indexOf("bread")] += 1;
-                        add_if_needed("yellow cheese");
-                        amount[ingredients.indexOf("yellow cheese")] += 1;
-                        add_if_needed("ketchup");
-                        amount[ingredients.indexOf("ketchup")] += 1;
-                        add_if_needed("thousand island dressing");
-                        amount[ingredients.indexOf("thousand island dressing")] += 1;
+                        addIfNeeded("bread");
+                        addIfNeeded("yellow cheese");
+                        addIfNeeded("ketchup");
+                        addIfNeeded("thousand island dressing");
                     }
                     if (mealParts[i].equals("cereals")) {
-                        add_if_needed("milk");
-                        amount[ingredients.indexOf("milk")] += 1;
+                        addIfNeeded("milk");
                     }
                     if (mealParts[i].equals("salad")) {
-                        add_if_needed("tomato");
-                        amount[ingredients.indexOf("tomato")] += 1;
-                        add_if_needed("cucumber");
-                        amount[ingredients.indexOf("cucumber")] += 1;
-                        add_if_needed("lettuce");
-                        amount[ingredients.indexOf("lettuce")] += 1;
+                        addIfNeeded("tomato");
+                        addIfNeeded("cucumber");
+                        addIfNeeded("lettuce");
                     }
                 }
             }
@@ -163,10 +167,21 @@ public class ingredientsPickup extends AppCompatActivity {
         }
     }
 
-    public void add_if_needed(String ingredient){
+    public void addIfNeeded(String ingredient){
         if(amount[ingredients.indexOf(ingredient)] == 0){
             finalIngredients.add(ingredient);
             ingredient_amount += 1;
+        }
+        amount[ingredients.indexOf(ingredient)] += 1;
+    }
+
+    public void removeIfNeeded(String ingredient, int amountToRemove){
+        if(amount[ingredients.indexOf(ingredient)] == amountToRemove){
+            finalIngredients.remove(ingredient);
+            ingredient_amount -= 1;
+        }
+        else{
+            amount[ingredients.indexOf(ingredient)] -= amountToRemove;
         }
     }
 
