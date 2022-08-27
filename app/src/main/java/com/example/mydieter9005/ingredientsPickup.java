@@ -56,11 +56,26 @@ public class ingredientsPickup extends AppCompatActivity {
         ingredients.add("ketchup");
         ingredients.add("thousand island dressing");
 
+        initiateAmountCounter();
+        initiateIngredientsPictures();
+        initiateMealsRecipes();
+
+        tvFoodName = (TextView) findViewById(R.id.tvFoodName);
+        tvFoodAmount = (TextView) findViewById(R.id.tvFoodAmount);
+        foodImg = (ImageView) findViewById(R.id.foodImg);
+        btNext = (Button) findViewById(R.id.btNext);
+
+        btNext.setText("Next" + "\n" + "Item: " + ingredient_counter + " out of " + ingredient_amount);
+    }
+
+    public void initiateAmountCounter(){
         amount = new int[ingredients.size()];
         for(int i = 0; i < ingredients.size(); i++){
             amount[i] = 0;
         }
+    }
 
+    public void initiateIngredientsPictures(){
         boolean custom = false;
         for(String ingredient : ingredients) {
             if(ingredient.equals("yellow cheese")){
@@ -81,7 +96,9 @@ public class ingredientsPickup extends AppCompatActivity {
             }
             custom = false;
         }
+    }
 
+    public void initiateMealsRecipes(){
         for(String meal : meals){
             if(meal != null){
                 Toast.makeText(this, meal, Toast.LENGTH_SHORT).show();
@@ -123,13 +140,6 @@ public class ingredientsPickup extends AppCompatActivity {
                 }
             }
         }
-
-        tvFoodName = (TextView) findViewById(R.id.tvFoodName);
-        tvFoodAmount = (TextView) findViewById(R.id.tvFoodAmount);
-        foodImg = (ImageView) findViewById(R.id.foodImg);
-        btNext = (Button) findViewById(R.id.btNext);
-
-        btNext.setText("Next" + "\n" + "Item: " + ingredient_counter + " out of " + ingredient_amount);
     }
 
     public void nextItem(View v){
@@ -153,16 +163,16 @@ public class ingredientsPickup extends AppCompatActivity {
         }
     }
 
-    public void finish(View v){
-        me.setClass(this, finishMeals.class);
-        me.putExtra("ingredients", ingredients);
-        startActivity(me);
-    }
-
     public void add_if_needed(String ingredient){
         if(amount[ingredients.indexOf(ingredient)] == 0){
             finalIngredients.add(ingredient);
             ingredient_amount += 1;
         }
+    }
+
+    public void finish(View v){
+        me.setClass(this, finishMeals.class);
+        me.putExtra("ingredients", ingredients);
+        startActivity(me);
     }
 }

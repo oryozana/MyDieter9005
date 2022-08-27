@@ -51,10 +51,14 @@ public class finishMeals extends AppCompatActivity {
         lunchIngredients = (ListView) findViewById(R.id.lunchIngredients);
         dinnerIngredients = (ListView) findViewById(R.id.dinnerIngredients);
 
+        initiateMealsRecipes();
+        setAdapters();
+    }
+
+    public void initiateMealsRecipes(){
         for(int mealIndex = 0; mealIndex < meals.length; mealIndex++) {
             String meal = meals[mealIndex];
             if (meal != null) {
-                Toast.makeText(this, meal, Toast.LENGTH_SHORT).show();
                 mealParts = meal.split(" ", 100);
                 mealParts[0] = mealParts[0].toLowerCase();
                 for (int i = 0; i < mealParts.length; i++) {
@@ -85,9 +89,7 @@ public class finishMeals extends AppCompatActivity {
                 updateMealName(meal, mealIndex);
             }
         }
-        setAdapters();
     }
-
     public void add_extra(String ingredient, int amount, int mealIndex){
         if(mealIndex == 0){
             int index = breakfastIngredientsList.indexOf(ingredient);

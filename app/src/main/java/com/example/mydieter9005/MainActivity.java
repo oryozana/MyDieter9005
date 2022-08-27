@@ -38,38 +38,26 @@ public class MainActivity extends AppCompatActivity {
 
         btMealsMenu = (Button) findViewById(R.id.btMealsMenu);
 
-        try {
-            meals = me.getStringArrayExtra("meals");
-            tvBreakfastMain.setText("Your breakfast: " + meals[0]);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        updateMealsIfNeeded();
+    }
 
-        try {
+    public void updateMealsIfNeeded(){
+        if (me.hasExtra("meals")) {
             meals = me.getStringArrayExtra("meals");
-            tvLunchMain.setText("Your lunch: " + meals[1]);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+            if (me.hasExtra("breakfast")) {
+                tvBreakfastMain.setText("Your breakfast: " + meals[0]);
+            }
+            if (me.hasExtra("lunch")) {
+                tvLunchMain.setText("Your lunch: " + meals[1]);
+            }
+            if (me.hasExtra("dinner")) {
+                tvDinnerMain.setText("Your dinner: " + meals[2]);
+            }
 
-        try {
-            meals = me.getStringArrayExtra("meals");
-            tvDinnerMain.setText("Your dinner: " + meals[2]);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
             totalCalories = me.getIntExtra("totalCalories", 0);
             tvTotalCaloriesMain.setText("Total calories: " + totalCalories);
             caloriesLeft = 2000 - totalCalories;
             tvCaloriesLeftMain.setText("Calories left: " + caloriesLeft);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
