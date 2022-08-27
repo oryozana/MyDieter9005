@@ -25,6 +25,9 @@ public class mealsMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meals_menu);
 
+        me = getIntent();
+        returnSavedInfo();
+
         tvBreakfast = (TextView) findViewById(R.id.tvBreakfast);
         tvLunch = (TextView) findViewById(R.id.tvLunch);
         tvDinner = (TextView) findViewById(R.id.tvDinner);
@@ -37,50 +40,7 @@ public class mealsMenu extends AppCompatActivity {
         tvTotalCalories = (TextView) findViewById(R.id.tvTotalCalories);
         tvTotalTime = (TextView) findViewById(R.id.tvTotalTime);
 
-        try {
-            me = getIntent();
-            breakfast = me.getStringExtra("breakfast");
-            list = organizeMeal(breakfast);
-            tvBreakfast.setText("Your breakfast is: " + list[0] + ".");
-            btBreakfast.setText(list[1] + "." + "\n" + list[2]);
-            totalCalories += Integer.parseInt(separateInfo(list[1]));
-            totalTime += Integer.parseInt(separateInfo(list[2]));
-            meals[0] = list[0];
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            me = getIntent();
-            lunch = me.getStringExtra("lunch");
-            list = organizeMeal(lunch);
-            tvLunch.setText("Your lunch is: " + list[0] + ".");
-            btLunch.setText(list[1] + "." + "\n" + list[2]);
-            totalCalories += Integer.parseInt(separateInfo(list[1]));
-            totalTime += Integer.parseInt(separateInfo(list[2]));
-            meals[1] = list[0];
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            me = getIntent();
-            dinner = me.getStringExtra("dinner");
-            list = organizeMeal(dinner);
-            tvDinner.setText("Your dinner is: " + list[0] + ".");
-            btDinner.setText(list[1] + "." + "\n" + list[2]);
-            totalCalories += Integer.parseInt(separateInfo(list[1]));
-            totalTime += Integer.parseInt(separateInfo(list[2]));
-            meals[2] = list[0];
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        tvTotalCalories.setText("Total calories: " + totalCalories + " calories.");
-        tvTotalTime.setText("Total time: " + totalTime + " minutes.");
+        updateMeals();
     }
 
     public void sendToMealSelection(View v){
@@ -152,4 +112,49 @@ public class mealsMenu extends AppCompatActivity {
         }
         return info;
     }
+
+    public void returnSavedInfo(){
+        if(me.hasExtra("meals")){
+            updateMeals();
+        }
+        else{
+            Toast.makeText(this, "it's not exists", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void updateMeals(){
+        if(me.hasExtra("breakfast")){
+            breakfast = me.getStringExtra("breakfast");
+            list = organizeMeal(breakfast);
+            tvBreakfast.setText("Your breakfast is: " + list[0] + ".");
+            btBreakfast.setText(list[1] + "." + "\n" + list[2]);
+            totalCalories += Integer.parseInt(separateInfo(list[1]));
+            totalTime += Integer.parseInt(separateInfo(list[2]));
+            meals[0] = list[0];
+        }
+
+        if(me.hasExtra("lunch")){
+            lunch = me.getStringExtra("lunch");
+            list = organizeMeal(lunch);
+            tvLunch.setText("Your lunch is: " + list[0] + ".");
+            btLunch.setText(list[1] + "." + "\n" + list[2]);
+            totalCalories += Integer.parseInt(separateInfo(list[1]));
+            totalTime += Integer.parseInt(separateInfo(list[2]));
+            meals[1] = list[0];
+        }
+
+        if(me.hasExtra("dinner")){
+            dinner = me.getStringExtra("dinner");
+            list = organizeMeal(dinner);
+            tvDinner.setText("Your dinner is: " + list[0] + ".");
+            btDinner.setText(list[1] + "." + "\n" + list[2]);
+            totalCalories += Integer.parseInt(separateInfo(list[1]));
+            totalTime += Integer.parseInt(separateInfo(list[2]));
+            meals[2] = list[0];
+        }
+
+        tvTotalCalories.setText("Total calories: " + totalCalories + " calories.");
+        tvTotalTime.setText("Total time: " + totalTime + " minutes.");
+    }
+
 }
