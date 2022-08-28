@@ -119,14 +119,10 @@ public class ingredientsPickup extends AppCompatActivity {
                 foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier(customIngredient, "drawable", getPackageName()));
             }
 
-            try {
-                if(!custom){
-                    foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier(ingredient, "drawable", getPackageName()));
-                }
+            if(ingredients.contains(ingredient) && !custom) {
+                foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier(ingredient, "drawable", getPackageName()));
             }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+
             custom = false;
         }
     }
