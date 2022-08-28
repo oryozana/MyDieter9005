@@ -3,6 +3,7 @@ package com.example.mydieter9005;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 
 public class finishMeals extends AppCompatActivity {
 
+    private MediaPlayer mediaPlayer;
     TextView tvBreakfastInfo, tvLunchInfo, tvDinnerInfo;
     ListView breakfastIngredients, lunchIngredients, dinnerIngredients;
     String[] meals, mealParts;
@@ -53,6 +55,10 @@ public class finishMeals extends AppCompatActivity {
 
         initiateMealsRecipes();
         setAdapters();
+
+        mediaPlayer = MediaPlayer.create(finishMeals.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 
     public void initiateMealsRecipes(){
@@ -267,5 +273,24 @@ public class finishMeals extends AppCompatActivity {
     public void finish(View v){
         me.setClass(this, MainActivity.class);
         startActivity(me);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mediaPlayer.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mediaPlayer.pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 }

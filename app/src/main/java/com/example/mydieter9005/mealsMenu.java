@@ -3,8 +3,8 @@ package com.example.mydieter9005;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Size;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 public class mealsMenu extends AppCompatActivity {
 
+    private MediaPlayer mediaPlayer;
     TextView tvBreakfast, tvLunch, tvDinner;
     TextView tvTotalCalories, tvTotalTime;
     Button btBreakfast, btLunch, btDinner, btFinish;
@@ -40,6 +41,10 @@ public class mealsMenu extends AppCompatActivity {
         tvTotalTime = (TextView) findViewById(R.id.tvTotalTime);
 
         updateMeals();
+
+        mediaPlayer = MediaPlayer.create(mealsMenu.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 
     public void sendToMealSelection(View v){
@@ -147,4 +152,22 @@ public class mealsMenu extends AppCompatActivity {
         tvTotalTime.setText("Total time: " + totalTime + " minutes.");
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mediaPlayer.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mediaPlayer.pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.stop();
+        mediaPlayer.release();
+    }
 }

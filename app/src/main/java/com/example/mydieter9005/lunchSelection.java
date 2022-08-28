@@ -3,6 +3,7 @@ package com.example.mydieter9005;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 
 public class lunchSelection extends AppCompatActivity {
 
+    private MediaPlayer mediaPlayer;
     Intent me;
     ArrayList<String> mealsList;
     ArrayAdapter<String> adapter;
@@ -83,11 +85,34 @@ public class lunchSelection extends AppCompatActivity {
                 startActivity(me);
             }
         });
+
+        mediaPlayer = MediaPlayer.create(lunchSelection.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 
     public void sendToCustomize(View v){
         me.setClass(lunchSelection.this, customMeals.class);
         me.putExtra("cameFrom", "lunch");
         startActivity(me);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mediaPlayer.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mediaPlayer.pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 }

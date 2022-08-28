@@ -3,6 +3,7 @@ package com.example.mydieter9005;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 
 public class ingredientsPickup extends AppCompatActivity {
 
+    private MediaPlayer mediaPlayer;
     TextView tvFoodName, tvFoodAmount;
     ImageView foodImg;
     Button btNext;
@@ -103,6 +105,10 @@ public class ingredientsPickup extends AppCompatActivity {
         else{
             btNext.setText("Next" + "\n" + "Item: " + ingredient_counter + " out of " + ingredient_amount);
         }
+
+        mediaPlayer = MediaPlayer.create(ingredientsPickup.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 
     public void initiateAmountCounter(){
@@ -242,5 +248,24 @@ public class ingredientsPickup extends AppCompatActivity {
         me.setClass(this, finishMeals.class);
         me.putExtra("ingredients", ingredients);
         startActivity(me);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mediaPlayer.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mediaPlayer.pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 }

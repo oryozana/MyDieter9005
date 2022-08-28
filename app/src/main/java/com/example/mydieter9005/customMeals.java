@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 @SuppressWarnings("SuspiciousRegexArgument")
 public class customMeals extends AppCompatActivity {
 
+    private MediaPlayer mediaPlayer;
     Button btFinishCustomize;
     TextView tvInstructions;
     EditText customMeal;
@@ -36,6 +39,10 @@ public class customMeals extends AppCompatActivity {
         customMeal = (EditText) findViewById(R.id.customMeal);
 
         writeTheInstructions();
+
+        mediaPlayer = MediaPlayer.create(customMeals.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 
     public void writeTheInstructions(){
@@ -141,5 +148,24 @@ public class customMeals extends AppCompatActivity {
         me.setClass(customMeals.this, mealsMenu.class);
         me.putExtra(cameFrom, customMeal.getText().toString());
         startActivity(me);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mediaPlayer.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mediaPlayer.pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 }

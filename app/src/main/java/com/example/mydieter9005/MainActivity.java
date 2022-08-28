@@ -3,6 +3,7 @@ package com.example.mydieter9005;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private MediaPlayer mediaPlayer;
     TextView tvBreakfastMain, tvLunchMain, tvDinnerMain;
     TextView tvTotalCaloriesMain, tvCaloriesLeftMain;
     Button btMealsMenu;
@@ -39,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
         btMealsMenu = (Button) findViewById(R.id.btMealsMenu);
 
         updateMealsIfNeeded();
+
+        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 
     public void updateMealsIfNeeded(){
@@ -74,5 +80,24 @@ public class MainActivity extends AppCompatActivity {
             me.setClass(this, mealsMenu.class);
             startActivity(me);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mediaPlayer.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mediaPlayer.pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 }
