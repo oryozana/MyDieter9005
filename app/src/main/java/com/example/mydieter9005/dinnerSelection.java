@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -16,12 +17,15 @@ public class dinnerSelection extends AppCompatActivity {
     Intent me;
     ArrayList<String> mealsList;
     ArrayAdapter<String> adapter;
+    Button btSendDinnerToCustomize;
     ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dinner_selection);
+
+        me = getIntent();
 
         mealsList = new ArrayList<>();
         mealsList.add("Toast");
@@ -56,9 +60,8 @@ public class dinnerSelection extends AppCompatActivity {
         mealsList.add("0");
         mealsList.add("0");
 
-
-        me = getIntent();
         listView = (ListView) findViewById(R.id.listViewDinner);
+        btSendDinnerToCustomize = (Button) findViewById(R.id.btSendDinnerToCustomize);
 
         String[] fields = new String[mealsList.size() / 3];
         double total = 0;
@@ -80,5 +83,11 @@ public class dinnerSelection extends AppCompatActivity {
                 startActivity(me);
             }
         });
+    }
+
+    public void sendToCustomize(View v){
+        me.setClass(dinnerSelection.this, customMeals.class);
+        me.putExtra("cameFrom", "dinner");
+        startActivity(me);
     }
 }

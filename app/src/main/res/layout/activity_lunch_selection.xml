@@ -20,5 +20,13 @@
     <ListView
         android:id="@+id/listViewLunch"
         android:layout_width="match_parent"
-        android:layout_height="600dp" />
+        android:layout_height="500dp" />
+
+    <Button
+        android:id="@+id/btSendLunchToCustomize"
+        android:layout_width="125pt"
+        android:layout_height="wrap_content"
+        android:layout_margin="15pt"
+        android:text="Customize meal"
+        android:onClick="sendToCustomize"/>
 </LinearLayout>

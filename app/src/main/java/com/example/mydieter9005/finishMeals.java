@@ -101,7 +101,7 @@ public class finishMeals extends AppCompatActivity {
         if (mealParts[i].equals("flavored")){
             middleIngredient = mealParts[i - 1] + " " + mealParts[i] + " " + mealParts[i + 1];
             if(mealParts[i + 1].equals("ice")){
-                middleIngredient += mealParts[i + 2];
+                middleIngredient += " " + mealParts[i + 2];
                 combo++;
             }
             addIfNeeded(middleIngredient, mealIndex);

@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -17,12 +20,15 @@ public class breakfastSelection extends AppCompatActivity {
     Intent me;
     ArrayList<String> mealsList;
     ArrayAdapter<String> adapter;
+    Button btSendBreakfastToCustomize;
     ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_breakfast_selection);
+
+        me = getIntent();
 
         mealsList = new ArrayList<>();
         mealsList.add("Cereals");
@@ -46,7 +52,7 @@ public class breakfastSelection extends AppCompatActivity {
         mealsList.add("0");
 
         listView = (ListView) findViewById(R.id.listViewBreakfast);
-        me = getIntent();
+        btSendBreakfastToCustomize = (Button) findViewById(R.id.btSendBreakfastToCustomize);
 
         String[] fields = new String[mealsList.size() / 3];
         double total = 0;
@@ -68,5 +74,11 @@ public class breakfastSelection extends AppCompatActivity {
                 startActivity(me);
             }
         });
+    }
+
+    public void sendToCustomize(View v){
+        me.setClass(breakfastSelection.this, customMeals.class);
+        me.putExtra("cameFrom", "breakfast");
+        startActivity(me);
     }
 }

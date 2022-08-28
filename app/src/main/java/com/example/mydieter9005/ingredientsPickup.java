@@ -139,31 +139,32 @@ public class ingredientsPickup extends AppCompatActivity {
 
     public int lookForSpecialWords(String[] mealParts, int i){
         String previousIngredient, middleIngredient, nextIngredient;
+        int combo = 1;
 
         if(mealParts[i].equals("oil") || mealParts[i].equals("powder")){
             nextIngredient = mealParts[i - 1] + " " + mealParts[i];
             removeIfNeeded(mealParts[i - 1], 1);
             addIfNeeded(nextIngredient);
-            i++;
+            i += combo;
             return i;
         }
 
         if(mealParts[i].equals("ice")){
             previousIngredient = mealParts[i] + " " + mealParts[i + 1];
             addIfNeeded(previousIngredient);
-            i++;
+            i += combo;
             return i;
         }
 
         if (mealParts[i].equals("flavored")){
             middleIngredient = mealParts[i - 1] + " " + mealParts[i] + " " + mealParts[i + 1];
             if(mealParts[i + 1].equals("ice")){
-                middleIngredient += mealParts[i + 2];
-                i++;
+                middleIngredient += " " + mealParts[i + 2];
+                combo++;
             }
             addIfNeeded(middleIngredient);
             removeIfNeeded(mealParts[i - 1], 1);
-            i++;
+            i += combo;
             return i;
         }
         return i;
