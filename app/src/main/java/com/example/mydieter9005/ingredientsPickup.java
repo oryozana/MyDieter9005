@@ -58,6 +58,29 @@ public class ingredientsPickup extends AppCompatActivity {
         ingredients.add("ketchup");
         ingredients.add("thousand island dressing");
 
+        ingredients.add("olive oil");
+        ingredients.add("canola oil");
+        ingredients.add("sugar");
+        ingredients.add("rice");
+        ingredients.add("pasta");
+        ingredients.add("potato");
+        ingredients.add("flour");
+        ingredients.add("tehina");
+        ingredients.add("baking soda powder");
+        ingredients.add("breadcrumbs");
+        ingredients.add("mayonnaise");
+        ingredients.add("honey");
+        ingredients.add("lemon");
+        ingredients.add("cocoa powder");
+        ingredients.add("cafe powder");
+        ingredients.add("mushroom");
+        ingredients.add("cauliflower");
+        ingredients.add("dwarf corn");
+        ingredients.add("chocolate flavored ice cream");
+        ingredients.add("strawberry");
+        ingredients.add("avocado");
+
+
         initiateAmountCounter();
         initiateIngredientsPictures();
         initiateMealsRecipes();
