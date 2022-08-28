@@ -80,7 +80,6 @@ public class ingredientsPickup extends AppCompatActivity {
         ingredients.add("strawberry");
         ingredients.add("avocado");
 
-
         initiateAmountCounter();
         initiateIngredientsPictures();
         initiateMealsRecipes();
@@ -90,7 +89,12 @@ public class ingredientsPickup extends AppCompatActivity {
         foodImg = (ImageView) findViewById(R.id.foodImg);
         btNext = (Button) findViewById(R.id.btNext);
 
-        btNext.setText("Next" + "\n" + "Item: " + ingredient_counter + " out of " + ingredient_amount);
+        if(ingredient_amount == 0){
+            btNext.setText("Finish");
+        }
+        else{
+            btNext.setText("Next" + "\n" + "Item: " + ingredient_counter + " out of " + ingredient_amount);
+        }
     }
 
     public void initiateAmountCounter(){
