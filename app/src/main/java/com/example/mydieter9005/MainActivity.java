@@ -1,11 +1,16 @@
 package com.example.mydieter9005;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -27,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         me = getIntent();
         me = createTheFirstIntent(me);
+        initiateMediaPlayer();
 
         tvBreakfastMain = (TextView) findViewById(R.id.tvBreakfastMain);
         tvBreakfastMain.setMovementMethod(new ScrollingMovementMethod());
@@ -41,10 +47,6 @@ public class MainActivity extends AppCompatActivity {
         btMealsMenu = (Button) findViewById(R.id.btMealsMenu);
 
         updateMealsIfNeeded();
-
-        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.my_song);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
     }
 
     public void updateMealsIfNeeded(){
@@ -71,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         if(!me.hasExtra("meals")){
             me = new Intent(this, mealsMenu.class);
         }
+        me.putExtra("isPlaying", true);
         return me;
     }
 
@@ -79,6 +82,17 @@ public class MainActivity extends AppCompatActivity {
         if (id == btMealsMenu.getId()) {
             me.setClass(this, mealsMenu.class);
             startActivity(me);
+        }
+    }
+
+    public void initiateMediaPlayer(){
+        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
+        if(me.getBooleanExtra("isPlaying", true)){
+            mediaPlayer.start();
+        }
+        else{
+            mediaPlayer.pause();
         }
     }
 
@@ -99,5 +113,30 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         mediaPlayer.stop();
         mediaPlayer.release();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.music_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemID = item.getItemId();
+        if(itemID == R.id.musicController){
+            if(me.getBooleanExtra("isPlaying", true)){
+                mediaPlayer.pause();
+                me.putExtra("isPlaying", false);
+                item.setIcon(R.drawable.ic_music_off_icon);
+            }
+            else{
+                mediaPlayer.start();
+                me.putExtra("isPlaying", true);
+                item.setIcon(R.drawable.ic_music_on_icon);
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

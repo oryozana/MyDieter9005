@@ -1,10 +1,14 @@
 package com.example.mydieter9005;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,6 +23,7 @@ public class mealsMenu extends AppCompatActivity {
     String breakfast = "", lunch = "", dinner = "";
     String[] list, meals = new String[3];
     int totalCalories = 0, totalTime = 0;
+    boolean isPlaying = true;
     Intent me;
 
     @Override
@@ -27,6 +32,7 @@ public class mealsMenu extends AppCompatActivity {
         setContentView(R.layout.activity_meals_menu);
 
         me = getIntent();
+        isPlaying = initiateMediaPlayer();
 
         tvBreakfast = (TextView) findViewById(R.id.tvBreakfast);
         tvLunch = (TextView) findViewById(R.id.tvLunch);
@@ -41,10 +47,6 @@ public class mealsMenu extends AppCompatActivity {
         tvTotalTime = (TextView) findViewById(R.id.tvTotalTime);
 
         updateMeals();
-
-        mediaPlayer = MediaPlayer.create(mealsMenu.this, R.raw.my_song);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
     }
 
     public void sendToMealSelection(View v){
@@ -66,6 +68,7 @@ public class mealsMenu extends AppCompatActivity {
                 me.setClass(this, ingredientsPickup.class);
                 me.putExtra("meals", meals);
                 me.putExtra("totalCalories", totalCalories);
+                me.putExtra("isPlaying", isPlaying);
                 startActivity(me);
             }
             else{
@@ -152,6 +155,19 @@ public class mealsMenu extends AppCompatActivity {
         tvTotalTime.setText("Total time: " + totalTime + " minutes.");
     }
 
+    public boolean initiateMediaPlayer(){
+        mediaPlayer = MediaPlayer.create(mealsMenu.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
+        isPlaying = me.getBooleanExtra("isPlaying", true);
+        if(isPlaying){
+            mediaPlayer.start();
+        }
+        else{
+            mediaPlayer.pause();
+        }
+        return isPlaying;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -169,5 +185,30 @@ public class mealsMenu extends AppCompatActivity {
         super.onDestroy();
         mediaPlayer.stop();
         mediaPlayer.release();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.music_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemID = item.getItemId();
+        if(itemID == R.id.musicController){
+            if(isPlaying){
+                mediaPlayer.pause();
+                isPlaying = false;
+                item.setIcon(R.drawable.ic_music_off_icon);
+            }
+            else{
+                initiateMediaPlayer();
+                isPlaying = true;
+                item.setIcon(R.drawable.ic_music_on_icon);
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
