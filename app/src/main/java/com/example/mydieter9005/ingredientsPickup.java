@@ -17,7 +17,7 @@ public class ingredientsPickup extends AppCompatActivity {
     TextView tvFoodName, tvFoodAmount;
     ImageView foodImg;
     Button btNext;
-    String[] meals, mealParts, ingredientParts;
+    String[] meals, mealParts;
     ArrayList<String> ingredients, finalIngredients;
     ArrayList<Integer> foodImages;
     int[] amount;
@@ -36,49 +36,57 @@ public class ingredientsPickup extends AppCompatActivity {
         finalIngredients = new ArrayList<String>();
         foodImages = new ArrayList<Integer>();
 
+        // Vegetables, fruits and mushrooms:
         ingredients.add("tomato");
         ingredients.add("cucumber");
         ingredients.add("lettuce");
         ingredients.add("parsley");
         ingredients.add("olive");
         ingredients.add("corn");
+        ingredients.add("potato");
+        ingredients.add("lemon");
+        ingredients.add("mushroom");
+        ingredients.add("cauliflower");
+        ingredients.add("dwarf corn");
+        ingredients.add("strawberry");
+        ingredients.add("avocado");
 
+        // Milky ingredients:
         ingredients.add("milk");
         ingredients.add("yogurt");
         ingredients.add("chocolate flavored yogurt");
         ingredients.add("cheese");
         ingredients.add("yellow cheese");
         ingredients.add("chocolate");
+        ingredients.add("chocolate flavored ice cream");
 
+        // Parve ingredients:
         ingredients.add("egg");
         ingredients.add("patit");
         ingredients.add("bread");
         ingredients.add("cereals");
-
-        ingredients.add("ketchup");
-        ingredients.add("thousand island dressing");
-
-        ingredients.add("olive oil");
-        ingredients.add("canola oil");
-        ingredients.add("sugar");
+        ingredients.add("honey");
         ingredients.add("rice");
         ingredients.add("pasta");
-        ingredients.add("potato");
-        ingredients.add("flour");
-        ingredients.add("tehina");
-        ingredients.add("baking soda powder");
         ingredients.add("breadcrumbs");
-        ingredients.add("mayonnaise");
-        ingredients.add("honey");
-        ingredients.add("lemon");
+        ingredients.add("sugar");
+
+        // Powders:
+        ingredients.add("flour");
+        ingredients.add("baking soda powder");
         ingredients.add("cocoa powder");
         ingredients.add("cafe powder");
-        ingredients.add("mushroom");
-        ingredients.add("cauliflower");
-        ingredients.add("dwarf corn");
-        ingredients.add("chocolate flavored ice cream");
-        ingredients.add("strawberry");
-        ingredients.add("avocado");
+
+        // Sauces:
+        ingredients.add("ketchup");
+        ingredients.add("tehina");
+        ingredients.add("mayonnaise");
+        ingredients.add("thousand island dressing");
+
+        // Oils:
+        ingredients.add("olive oil");
+        ingredients.add("canola oil");
+
 
         initiateAmountCounter();
         initiateIngredientsPictures();
