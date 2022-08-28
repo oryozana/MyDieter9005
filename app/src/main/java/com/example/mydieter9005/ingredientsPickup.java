@@ -17,7 +17,7 @@ public class ingredientsPickup extends AppCompatActivity {
     TextView tvFoodName, tvFoodAmount;
     ImageView foodImg;
     Button btNext;
-    String[] meals, mealParts;
+    String[] meals, mealParts, ingredientParts;
     ArrayList<String> ingredients, finalIngredients;
     ArrayList<Integer> foodImages;
     int[] amount;
@@ -101,20 +101,24 @@ public class ingredientsPickup extends AppCompatActivity {
     }
 
     public void initiateIngredientsPictures(){
+        String customIngredient;
         boolean custom = false;
         for(String ingredient : ingredients) {
-            if(ingredient.equals("yellow cheese")){
+            ingredientParts = ingredient.split(" ", 100);
+            if(ingredientParts.length != 1){
+                customIngredient = "";
                 custom = true;
-                foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier("yellow_cheese", "drawable", getPackageName()));
+                for(int i = 0; i < ingredientParts.length; i++){
+                    if(i == 0){
+                        customIngredient += ingredientParts[i];
+                    }
+                    else{
+                        customIngredient += "_" + ingredientParts[i];
+                    }
+                }
+                foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier(customIngredient, "drawable", getPackageName()));
             }
-            if(ingredient.equals("thousand island dressing")){
-                custom = true;
-                foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier("thousand_island_dressing", "drawable", getPackageName()));
-            }
-            if(ingredient.equals("chocolate flavored yogurt")){
-                custom = true;
-                foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier("chocolate_flavored_yogurt", "drawable", getPackageName()));
-            }
+
             try {
                 if(!custom){
                     foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier(ingredient, "drawable", getPackageName()));
@@ -130,7 +134,6 @@ public class ingredientsPickup extends AppCompatActivity {
     public void initiateMealsRecipes(){
         for(String meal : meals){
             if(meal != null){
-                Toast.makeText(this, meal, Toast.LENGTH_SHORT).show();
                 mealParts = meal.split(" ", 100);
                 mealParts[0] = mealParts[0].toLowerCase();
                 for(int i = 0; i < mealParts.length; i++) {
