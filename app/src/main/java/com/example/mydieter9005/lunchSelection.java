@@ -52,6 +52,9 @@ public class lunchSelection extends AppCompatActivity {
         mealsList.add("460");
         mealsList.add("18");
 
+        mealsList.add("Clear selection");
+        mealsList.add("0");
+        mealsList.add("0");
 
         me = getIntent();
         listView = (ListView) findViewById(R.id.listViewLunch);
