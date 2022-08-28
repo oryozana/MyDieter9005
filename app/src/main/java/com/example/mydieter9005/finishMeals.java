@@ -71,30 +71,61 @@ public class finishMeals extends AppCompatActivity {
                         }
                     }
 
-                    if (mealParts[i].equals("flavored")){
-                        String flavoredIngredient = mealParts[i - 1] + " " + mealParts[i] + " " + mealParts[i + 1];
-                        addIfNeeded(flavoredIngredient, mealIndex);
-                        removeIfNeeded(mealParts[i - 1], 1, mealIndex);
-                        i++;
-                    }
-
-                    if (mealParts[i].equals("toast")) {
-                        addIfNeeded("bread", mealIndex);
-                        addIfNeeded("yellow cheese", mealIndex);
-                        addIfNeeded("ketchup", mealIndex);
-                        addIfNeeded("thousand island dressing", mealIndex);
-                    }
-                    if (mealParts[i].equals("cereals")) {
-                        addIfNeeded("milk", mealIndex);
-                    }
-                    if (mealParts[i].equals("salad")) {
-                        addIfNeeded("tomato", mealIndex);
-                        addIfNeeded("cucumber", mealIndex);
-                        addIfNeeded("lettuce", mealIndex);
-                    }
+                    i = lookForSpecialWords(mealParts, i, mealIndex);
+                    addIfMiniMealInside(mealParts[i], mealIndex);
                 }
                 updateMealName(meal, mealIndex);
             }
+        }
+    }
+
+    public int lookForSpecialWords(String[] mealParts, int i, int mealIndex){
+        String previousIngredient, middleIngredient, nextIngredient;
+        int combo = 1;
+
+        if(mealParts[i].equals("oil") || mealParts[i].equals("powder")){
+            nextIngredient = mealParts[i - 1] + " " + mealParts[i];
+            removeIfNeeded(mealParts[i - 1], 1, mealIndex);
+            addIfNeeded(nextIngredient, mealIndex);
+            i += combo;
+            return i;
+        }
+
+        if(mealParts[i].equals("ice")){
+            previousIngredient = mealParts[i] + " " + mealParts[i + 1];
+            addIfNeeded(previousIngredient, mealIndex);
+            i += combo;
+            return i;
+        }
+
+        if (mealParts[i].equals("flavored")){
+            middleIngredient = mealParts[i - 1] + " " + mealParts[i] + " " + mealParts[i + 1];
+            if(mealParts[i + 1].equals("ice")){
+                middleIngredient += mealParts[i + 2];
+                combo++;
+            }
+            addIfNeeded(middleIngredient, mealIndex);
+            removeIfNeeded(mealParts[i - 1], 1, mealIndex);
+            i += combo;
+            return i;
+        }
+        return i;
+    }
+
+    public void addIfMiniMealInside(String mealPart, int mealIndex){
+        if (mealPart.equals("toast")) {
+            addIfNeeded("bread", mealIndex);
+            addIfNeeded("yellow cheese", mealIndex);
+            addIfNeeded("ketchup", mealIndex);
+            addIfNeeded("thousand island dressing", mealIndex);
+        }
+        if (mealPart.equals("cereals")) {
+            addIfNeeded("milk", mealIndex);
+        }
+        if (mealPart.equals("salad")) {
+            addIfNeeded("tomato", mealIndex);
+            addIfNeeded("cucumber", mealIndex);
+            addIfNeeded("lettuce", mealIndex);
         }
     }
 

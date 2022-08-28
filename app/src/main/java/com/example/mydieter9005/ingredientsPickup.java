@@ -102,28 +102,16 @@ public class ingredientsPickup extends AppCompatActivity {
 
     public void initiateIngredientsPictures(){
         String customIngredient;
-        boolean custom = false;
         for(String ingredient : ingredients) {
-            ingredientParts = ingredient.split(" ", 100);
-            if(ingredientParts.length != 1){
-                customIngredient = "";
-                custom = true;
-                for(int i = 0; i < ingredientParts.length; i++){
-                    if(i == 0){
-                        customIngredient += ingredientParts[i];
-                    }
-                    else{
-                        customIngredient += "_" + ingredientParts[i];
-                    }
-                }
+            if(ingredient.contains(" ")){
+                customIngredient = ingredient.replaceAll(" ", "_");;
                 foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier(customIngredient, "drawable", getPackageName()));
             }
-
-            if(ingredients.contains(ingredient) && !custom) {
-                foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier(ingredient, "drawable", getPackageName()));
+            else{
+                if(ingredients.contains(ingredient)) {
+                    foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier(ingredient, "drawable", getPackageName()));
+                }
             }
-
-            custom = false;
         }
     }
 
@@ -142,29 +130,59 @@ public class ingredientsPickup extends AppCompatActivity {
                         }
                     }
 
-                    if (mealParts[i].equals("flavored")){
-                        String flavoredIngredient = mealParts[i - 1] + " " + mealParts[i] + " " + mealParts[i + 1];
-                        addIfNeeded(flavoredIngredient);
-                        removeIfNeeded(mealParts[i - 1], 1);
-                        i++;
-                    }
-
-                    if (mealParts[i].equals("toast")) {
-                        addIfNeeded("bread");
-                        addIfNeeded("yellow cheese");
-                        addIfNeeded("ketchup");
-                        addIfNeeded("thousand island dressing");
-                    }
-                    if (mealParts[i].equals("cereals")) {
-                        addIfNeeded("milk");
-                    }
-                    if (mealParts[i].equals("salad")) {
-                        addIfNeeded("tomato");
-                        addIfNeeded("cucumber");
-                        addIfNeeded("lettuce");
-                    }
+                    i = lookForSpecialWords(mealParts, i);
+                    addIfMiniMealInside(mealParts[i]);
                 }
             }
+        }
+    }
+
+    public int lookForSpecialWords(String[] mealParts, int i){
+        String previousIngredient, middleIngredient, nextIngredient;
+
+        if(mealParts[i].equals("oil") || mealParts[i].equals("powder")){
+            nextIngredient = mealParts[i - 1] + " " + mealParts[i];
+            removeIfNeeded(mealParts[i - 1], 1);
+            addIfNeeded(nextIngredient);
+            i++;
+            return i;
+        }
+
+        if(mealParts[i].equals("ice")){
+            previousIngredient = mealParts[i] + " " + mealParts[i + 1];
+            addIfNeeded(previousIngredient);
+            i++;
+            return i;
+        }
+
+        if (mealParts[i].equals("flavored")){
+            middleIngredient = mealParts[i - 1] + " " + mealParts[i] + " " + mealParts[i + 1];
+            if(mealParts[i + 1].equals("ice")){
+                middleIngredient += mealParts[i + 2];
+                i++;
+            }
+            addIfNeeded(middleIngredient);
+            removeIfNeeded(mealParts[i - 1], 1);
+            i++;
+            return i;
+        }
+        return i;
+    }
+
+    public void addIfMiniMealInside(String mealPart){
+        if (mealPart.equals("toast")) {
+            addIfNeeded("bread");
+            addIfNeeded("yellow cheese");
+            addIfNeeded("ketchup");
+            addIfNeeded("thousand island dressing");
+        }
+        if (mealPart.equals("cereals")) {
+            addIfNeeded("milk");
+        }
+        if (mealPart.equals("salad")) {
+            addIfNeeded("tomato");
+            addIfNeeded("cucumber");
+            addIfNeeded("lettuce");
         }
     }
 
