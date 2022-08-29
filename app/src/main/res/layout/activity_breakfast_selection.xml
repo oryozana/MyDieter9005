@@ -1,42 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     android:background="@drawable/morning_background"
+    android:gravity="center"
+    android:orientation="vertical"
     tools:context=".breakfastSelection">
 
-    <TextView
-        android:id="@+id/textView"
+    <VideoView
+        android:id="@+id/breakfastVideoView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:padding="10pt"
-        android:textSize="10pt"
-        android:text="Choose your breakfast, from the options below:" />
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"/>
 
-    <ListView
-        android:id="@+id/listViewBreakfast"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="475dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <Button
-        android:id="@+id/btSendBreakfastToCustomize"
-        android:layout_width="125pt"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15pt"
-        android:layout_marginRight="15pt"
-        android:layout_marginTop="10pt"
-        android:layout_marginBottom="2pt"
-        android:text="Customize meal"
-        android:onClick="sendToCustomize"/>
 
-    <Button
-        android:id="@+id/btClearBreakfastSelection"
-        android:layout_width="125pt"
-        android:layout_height="wrap_content"
-        android:text="Clear selection"
-        android:onClick="clearBreakfastSelection"/>
-</LinearLayout>
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:padding="10pt"
+            android:text="Choose your breakfast, from the options below:"
+            android:textSize="10pt" />
+
+        <ListView
+            android:id="@+id/listViewBreakfast"
+            android:layout_width="match_parent"
+            android:layout_height="475dp" >
+        </ListView>
+
+        <Button
+            android:id="@+id/btSendBreakfastToCustomize"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15pt"
+            android:layout_marginTop="10pt"
+            android:layout_marginRight="15pt"
+            android:layout_marginBottom="2pt"
+            android:onClick="sendToCustomize"
+            android:text="Customize meal" />
+
+        <Button
+            android:id="@+id/btClearBreakfastSelection"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:onClick="clearBreakfastSelection"
+            android:text="Clear selection" />
+    </LinearLayout>
+
+</RelativeLayout>

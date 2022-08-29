@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,12 +14,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import java.util.ArrayList;
 
 public class breakfastSelection extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
+    VideoView videoView;
     Intent me;
     ArrayList<String> mealsList;
     ArrayAdapter<String> adapter;
@@ -50,8 +53,20 @@ public class breakfastSelection extends AppCompatActivity {
         mealsList.add("1");
 
         listView = (ListView) findViewById(R.id.listViewBreakfast);
+        videoView = (VideoView) findViewById(R.id.breakfastVideoView);
         btSendBreakfastToCustomize = (Button) findViewById(R.id.btSendBreakfastToCustomize);
         btClearBreakfastSelection = (Button) findViewById(R.id.btClearBreakfastSelection);
+
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.morning_background_video);
+        videoView.setVideoURI(uri);
+        videoView.start();
+
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
 
         String[] fields = new String[mealsList.size() / 3];
         for(int i = 0; i < mealsList.size(); i += 3){
@@ -78,6 +93,20 @@ public class breakfastSelection extends AppCompatActivity {
         mediaPlayer.start();
     }
 
+    @Override
+    protected void onPostResume() {
+        videoView.resume();
+        super.onPostResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        videoView.start();
+        super.onRestart();
+    }
+
+
+
     public void sendToCustomize(View v){
         me.setClass(breakfastSelection.this, customMeals.class);
         me.putExtra("cameFrom", "breakfast");
@@ -97,20 +126,22 @@ public class breakfastSelection extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
         mediaPlayer.start();
+        super.onResume();
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
+        videoView.suspend();
         mediaPlayer.pause();
+        super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        videoView.stopPlayback();
         mediaPlayer.stop();
         mediaPlayer.release();
+        super.onDestroy();
     }
 }
