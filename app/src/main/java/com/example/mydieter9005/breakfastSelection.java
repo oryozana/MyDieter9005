@@ -22,7 +22,7 @@ public class breakfastSelection extends AppCompatActivity {
     Intent me;
     ArrayList<String> mealsList;
     ArrayAdapter<String> adapter;
-    Button btSendBreakfastToCustomize;
+    Button btSendBreakfastToCustomize, btClearBreakfastSelection;
     ListView listView;
 
     @Override
@@ -49,15 +49,11 @@ public class breakfastSelection extends AppCompatActivity {
         mealsList.add("200");
         mealsList.add("1");
 
-        mealsList.add("Clear selection");
-        mealsList.add("0");
-        mealsList.add("0");
-
         listView = (ListView) findViewById(R.id.listViewBreakfast);
         btSendBreakfastToCustomize = (Button) findViewById(R.id.btSendBreakfastToCustomize);
+        btClearBreakfastSelection = (Button) findViewById(R.id.btClearBreakfastSelection);
 
         String[] fields = new String[mealsList.size() / 3];
-        double total = 0;
         for(int i = 0; i < mealsList.size(); i += 3){
             String field = mealsList.get(i) + ": " + mealsList.get(i + 1) + " calories, " + mealsList.get(i + 2) + " minutes.";
             fields[i / 3] = field;
@@ -86,6 +82,17 @@ public class breakfastSelection extends AppCompatActivity {
         me.setClass(breakfastSelection.this, customMeals.class);
         me.putExtra("cameFrom", "breakfast");
         startActivity(me);
+    }
+
+    public void clearBreakfastSelection(View v){
+        if(me.hasExtra("breakfast")){
+            me.removeExtra("breakfast");
+            me.setClass(breakfastSelection.this, mealsMenu.class);
+            startActivity(me);
+        }
+        else{
+            Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

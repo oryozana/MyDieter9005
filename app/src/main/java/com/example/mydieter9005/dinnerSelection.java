@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ public class dinnerSelection extends AppCompatActivity {
     Intent me;
     ArrayList<String> mealsList;
     ArrayAdapter<String> adapter;
-    Button btSendDinnerToCustomize;
+    Button btSendDinnerToCustomize, btClearDinnerSelection;
     ListView listView;
 
     @Override
@@ -58,12 +59,9 @@ public class dinnerSelection extends AppCompatActivity {
         mealsList.add("460");
         mealsList.add("18");
 
-        mealsList.add("Clear selection");
-        mealsList.add("0");
-        mealsList.add("0");
-
         listView = (ListView) findViewById(R.id.listViewDinner);
         btSendDinnerToCustomize = (Button) findViewById(R.id.btSendDinnerToCustomize);
+        btClearDinnerSelection = (Button) findViewById(R.id.btClearDinnerSelection);
 
         String[] fields = new String[mealsList.size() / 3];
         double total = 0;
@@ -95,6 +93,17 @@ public class dinnerSelection extends AppCompatActivity {
         me.setClass(dinnerSelection.this, customMeals.class);
         me.putExtra("cameFrom", "dinner");
         startActivity(me);
+    }
+
+    public void clearDinnerSelection(View v){
+        if(me.hasExtra("dinner")){
+            me.removeExtra("dinner");
+            me.setClass(dinnerSelection.this, mealsMenu.class);
+            startActivity(me);
+        }
+        else{
+            Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
