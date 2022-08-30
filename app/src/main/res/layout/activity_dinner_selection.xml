@@ -1,42 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     android:background="@drawable/night_background"
+    android:gravity="center"
+    android:orientation="vertical"
     tools:context=".dinnerSelection">
 
-    <TextView
-        android:id="@+id/textView"
+    <VideoView
+        android:id="@+id/dinnerVideoView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:padding="10pt"
-        android:text="Choose your dinner, from the options below:"
-        android:textSize="10pt" />
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"/>
 
-    <ListView
-        android:id="@+id/listViewDinner"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="500dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <Button
-        android:id="@+id/btSendDinnerToCustomize"
-        android:layout_width="125pt"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15pt"
-        android:layout_marginRight="15pt"
-        android:layout_marginTop="10pt"
-        android:layout_marginBottom="2pt"
-        android:text="Customize meal"
-        android:onClick="sendToCustomize"/>
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:padding="10pt"
+            android:text="Choose your dinner, from the options below:"
+            android:textSize="10pt" />
 
-    <Button
-        android:id="@+id/btClearDinnerSelection"
-        android:layout_width="125pt"
-        android:layout_height="wrap_content"
-        android:text="Clear selection"
-        android:onClick="clearDinnerSelection"/>
-</LinearLayout>
+        <ListView
+            android:id="@+id/listViewDinner"
+            android:layout_width="match_parent"
+            android:layout_height="500dp" >
+        </ListView>
+
+        <Button
+            android:id="@+id/btSendDinnerToCustomize"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15pt"
+            android:layout_marginTop="10pt"
+            android:layout_marginRight="15pt"
+            android:layout_marginBottom="2pt"
+            android:onClick="sendToCustomize"
+            android:text="Customize meal" />
+
+        <Button
+            android:id="@+id/btClearDinnerSelection"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:onClick="clearDinnerSelection"
+            android:text="Clear selection" />
+    </LinearLayout>
+
+</RelativeLayout>

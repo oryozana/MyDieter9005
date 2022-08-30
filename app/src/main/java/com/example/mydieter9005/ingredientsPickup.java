@@ -20,7 +20,7 @@ public class ingredientsPickup extends AppCompatActivity {
     ImageView foodImg;
     Button btNext;
     String[] meals, mealParts;
-    ArrayList<String> ingredients, finalIngredients;
+    ArrayList<String> ingredients, finalIngredients, foodCompanies;
     ArrayList<Integer> foodImages;
     int[] amount;
     int counter = 0, ingredient_counter = 0, ingredient_amount = 0;
@@ -34,6 +34,7 @@ public class ingredientsPickup extends AppCompatActivity {
         me = getIntent();
         meals = me.getStringArrayExtra("meals");
 
+        foodCompanies = new ArrayList<String>();
         ingredients = new ArrayList<String>();
         finalIngredients = new ArrayList<String>();
         foodImages = new ArrayList<Integer>();
@@ -66,7 +67,7 @@ public class ingredientsPickup extends AppCompatActivity {
         ingredients.add("egg");
         ingredients.add("patit");
         ingredients.add("bread");
-        ingredients.add("cereals");
+        ingredients.add("nestle cereals");
         ingredients.add("honey");
         ingredients.add("rice");
         ingredients.add("pasta");
@@ -89,6 +90,8 @@ public class ingredientsPickup extends AppCompatActivity {
         ingredients.add("olive oil");
         ingredients.add("canola oil");
 
+        // Food companies:
+        foodCompanies.add("nestle");
 
         initiateAmountCounter();
         initiateIngredientsPictures();
@@ -121,12 +124,12 @@ public class ingredientsPickup extends AppCompatActivity {
     public void initiateIngredientsPictures(){
         String customIngredient;
         for(String ingredient : ingredients) {
-            if(ingredient.contains(" ")){
-                customIngredient = ingredient.replaceAll(" ", "_");;
-                foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier(customIngredient, "drawable", getPackageName()));
-            }
-            else{
-                if(ingredients.contains(ingredient)) {
+            if(ingredients.contains(ingredient)){
+                if(ingredient.contains(" ")){
+                    customIngredient = ingredient.replaceAll(" ", "_");
+                    foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier(customIngredient, "drawable", getPackageName()));
+                }
+                else{
                     foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier(ingredient, "drawable", getPackageName()));
                 }
             }
@@ -136,7 +139,7 @@ public class ingredientsPickup extends AppCompatActivity {
     public void initiateMealsRecipes(){
         for(String meal : meals){
             if(meal != null){
-                mealParts = meal.split(" ", 100);
+                mealParts = meal.split("and|with| ");
                 mealParts[0] = mealParts[0].toLowerCase();
                 for(int i = 0; i < mealParts.length; i++) {
                     mealParts[i] = mealParts[i].replaceAll(" ", "");
@@ -150,6 +153,7 @@ public class ingredientsPickup extends AppCompatActivity {
 
                     i = lookForSpecialWords(mealParts, i);
                     addIfMiniMealInside(mealParts[i]);
+                    Toast.makeText(this, "make it", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -167,7 +171,7 @@ public class ingredientsPickup extends AppCompatActivity {
             return i;
         }
 
-        if(mealParts[i].equals("ice")){
+        if(mealParts[i].equals("ice") || foodCompanies.contains(mealParts[i])){
             previousIngredient = mealParts[i] + " " + mealParts[i + 1];
             addIfNeeded(previousIngredient);
             i += combo;
@@ -176,7 +180,7 @@ public class ingredientsPickup extends AppCompatActivity {
 
         if (mealParts[i].equals("flavored")){
             middleIngredient = mealParts[i - 1] + " " + mealParts[i] + " " + mealParts[i + 1];
-            if(mealParts[i + 1].equals("ice")){
+            if(mealParts[i + 1].equals("ice") || foodCompanies.contains(mealParts[i])){
                 middleIngredient += " " + mealParts[i + 2];
                 combo++;
             }
@@ -247,6 +251,7 @@ public class ingredientsPickup extends AppCompatActivity {
     public void finish(View v){
         me.setClass(this, finishMeals.class);
         me.putExtra("ingredients", ingredients);
+        me.putExtra("foodCompanies", foodCompanies);
         startActivity(me);
     }
 

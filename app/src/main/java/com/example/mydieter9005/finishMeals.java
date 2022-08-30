@@ -20,7 +20,7 @@ public class finishMeals extends AppCompatActivity {
     TextView tvBreakfastInfo, tvLunchInfo, tvDinnerInfo;
     ListView breakfastIngredients, lunchIngredients, dinnerIngredients;
     String[] meals, mealParts;
-    ArrayList<String> ingredients;
+    ArrayList<String> ingredients, foodCompanies;
     ArrayList<String> breakfastIngredientsList, lunchIngredientsList, dinnerIngredientsList;
     ArrayList<Integer> breakfastIngredientsAmount, lunchIngredientsAmount, dinnerIngredientsAmount;
     ArrayAdapter<String> breakfastIngredientsAdapter, lunchIngredientsAdapter, dinnerIngredientsAdapter;
@@ -34,6 +34,7 @@ public class finishMeals extends AppCompatActivity {
         me = getIntent();
         meals = me.getStringArrayExtra("meals");
         ingredients = me.getStringArrayListExtra("ingredients");
+        foodCompanies = me.getStringArrayListExtra("foodCompanies");
 
         breakfastIngredientsList = new ArrayList<String>();
         breakfastIngredientsAmount = new ArrayList<Integer>();
@@ -97,7 +98,7 @@ public class finishMeals extends AppCompatActivity {
             return i;
         }
 
-        if(mealParts[i].equals("ice")){
+        if(mealParts[i].equals("ice") || foodCompanies.contains(mealParts[i])){
             previousIngredient = mealParts[i] + " " + mealParts[i + 1];
             addIfNeeded(previousIngredient, mealIndex);
             i += combo;
@@ -106,7 +107,7 @@ public class finishMeals extends AppCompatActivity {
 
         if (mealParts[i].equals("flavored")){
             middleIngredient = mealParts[i - 1] + " " + mealParts[i] + " " + mealParts[i + 1];
-            if(mealParts[i + 1].equals("ice")){
+            if(mealParts[i + 1].equals("ice") || foodCompanies.contains(mealParts[i])){
                 middleIngredient += " " + mealParts[i + 2];
                 combo++;
             }

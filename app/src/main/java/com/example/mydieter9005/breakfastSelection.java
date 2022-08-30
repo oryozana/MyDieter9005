@@ -21,12 +21,13 @@ import java.util.ArrayList;
 public class breakfastSelection extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
-    VideoView videoView;
-    Intent me;
+    private VideoView videoView;
+
+    Button btSendBreakfastToCustomize, btClearBreakfastSelection;
     ArrayList<String> mealsList;
     ArrayAdapter<String> adapter;
-    Button btSendBreakfastToCustomize, btClearBreakfastSelection;
     ListView listView;
+    Intent me;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +37,11 @@ public class breakfastSelection extends AppCompatActivity {
         me = getIntent();
 
         mealsList = new ArrayList<>();
-        mealsList.add("Cereals");
+        mealsList.add("Nestle cereals");
         mealsList.add("185");
         mealsList.add("1");
 
-        mealsList.add("Chocolate cereals");
+        mealsList.add("Chocolate flavored nestle cereals");
         mealsList.add("230");
         mealsList.add("1");
 
@@ -54,26 +55,28 @@ public class breakfastSelection extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.listViewBreakfast);
         videoView = (VideoView) findViewById(R.id.breakfastVideoView);
+
         btSendBreakfastToCustomize = (Button) findViewById(R.id.btSendBreakfastToCustomize);
         btClearBreakfastSelection = (Button) findViewById(R.id.btClearBreakfastSelection);
 
-        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.morning_background_video);
-        videoView.setVideoURI(uri);
-        videoView.start();
+        setListViewFields();
+        initiateVideoPlayer();
 
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mp.setLooping(true);
-            }
-        });
+        mediaPlayer = MediaPlayer.create(breakfastSelection.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
+    }
 
+    public void setListViewFields(){
         String[] fields = new String[mealsList.size() / 3];
         for(int i = 0; i < mealsList.size(); i += 3){
             String field = mealsList.get(i) + ": " + mealsList.get(i + 1) + " calories, " + mealsList.get(i + 2) + " minutes.";
             fields[i / 3] = field;
         }
+        setListViewAdapter(fields);
+    }
 
+    public void setListViewAdapter(String[] fields){
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fields);
         listView.setAdapter(adapter);
 
@@ -87,25 +90,7 @@ public class breakfastSelection extends AppCompatActivity {
                 startActivity(me);
             }
         });
-
-        mediaPlayer = MediaPlayer.create(breakfastSelection.this, R.raw.my_song);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
     }
-
-    @Override
-    protected void onPostResume() {
-        videoView.resume();
-        super.onPostResume();
-    }
-
-    @Override
-    protected void onRestart() {
-        videoView.start();
-        super.onRestart();
-    }
-
-
 
     public void sendToCustomize(View v){
         me.setClass(breakfastSelection.this, customMeals.class);
@@ -122,6 +107,31 @@ public class breakfastSelection extends AppCompatActivity {
         else{
             Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void initiateVideoPlayer(){
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.morning_background_video);
+        videoView.setVideoURI(uri);
+        videoView.start();
+
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
+    }
+
+    @Override
+    protected void onPostResume() {
+        videoView.resume();
+        super.onPostResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        videoView.start();
+        super.onRestart();
     }
 
     @Override

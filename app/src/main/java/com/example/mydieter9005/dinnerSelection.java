@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,17 +12,20 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import java.util.ArrayList;
 
 public class dinnerSelection extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
-    Intent me;
+    private VideoView videoView;
+
+    Button btSendDinnerToCustomize, btClearDinnerSelection;
     ArrayList<String> mealsList;
     ArrayAdapter<String> adapter;
-    Button btSendDinnerToCustomize, btClearDinnerSelection;
     ListView listView;
+    Intent me;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,16 +64,29 @@ public class dinnerSelection extends AppCompatActivity {
         mealsList.add("18");
 
         listView = (ListView) findViewById(R.id.listViewDinner);
+        videoView = (VideoView) findViewById(R.id.dinnerVideoView);
+
         btSendDinnerToCustomize = (Button) findViewById(R.id.btSendDinnerToCustomize);
         btClearDinnerSelection = (Button) findViewById(R.id.btClearDinnerSelection);
 
+        setListViewFields();
+        initiateVideoPlayer();
+
+        mediaPlayer = MediaPlayer.create(dinnerSelection.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
+    }
+
+    public void setListViewFields(){
         String[] fields = new String[mealsList.size() / 3];
-        double total = 0;
         for(int i = 0; i < mealsList.size(); i += 3){
             String field = mealsList.get(i) + ": " + mealsList.get(i + 1) + " calories, " + mealsList.get(i + 2) + " minutes.";
             fields[i / 3] = field;
         }
+        setListViewAdapter(fields);
+    }
 
+    public void setListViewAdapter(String[] fields){
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fields);
         listView.setAdapter(adapter);
 
@@ -83,10 +100,6 @@ public class dinnerSelection extends AppCompatActivity {
                 startActivity(me);
             }
         });
-
-        mediaPlayer = MediaPlayer.create(dinnerSelection.this, R.raw.my_song);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
     }
 
     public void sendToCustomize(View v){
@@ -106,22 +119,49 @@ public class dinnerSelection extends AppCompatActivity {
         }
     }
 
+    public void initiateVideoPlayer(){
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.night_background_video);
+        videoView.setVideoURI(uri);
+        videoView.start();
+
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
+    }
+
+    @Override
+    protected void onPostResume() {
+        videoView.resume();
+        super.onPostResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        videoView.start();
+        super.onRestart();
+    }
+
     @Override
     protected void onResume() {
-        super.onResume();
         mediaPlayer.start();
+        super.onResume();
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
+        videoView.suspend();
         mediaPlayer.pause();
+        super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        videoView.stopPlayback();
         mediaPlayer.stop();
         mediaPlayer.release();
+        super.onDestroy();
     }
 }
