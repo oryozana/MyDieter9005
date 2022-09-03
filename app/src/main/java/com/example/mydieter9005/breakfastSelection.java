@@ -1,8 +1,10 @@
 package com.example.mydieter9005;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -23,9 +25,12 @@ public class breakfastSelection extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    Button btSendBreakfastToCustomize, btClearBreakfastSelection;
+    Button btSendBreakfastToCustomize, btClearBreakfastSelection, btMultiBreakfastSelect;
     ArrayList<String> mealsList;
     ArrayAdapter<String> adapter;
+    boolean multiSelect = false;
+    String chosenBreakfastName = "";
+    int chosenBreakfastCalories = 0, chosenBreakfastMinutes = 0, multiSelectCounter = 0;
     ListView listView;
     Intent me;
 
@@ -45,7 +50,7 @@ public class breakfastSelection extends AppCompatActivity {
         mealsList.add("230");
         mealsList.add("1");
 
-        mealsList.add("Yogurt (small)");
+        mealsList.add("Yogurt");
         mealsList.add("100");
         mealsList.add("1");
 
@@ -62,6 +67,7 @@ public class breakfastSelection extends AppCompatActivity {
 
         btSendBreakfastToCustomize = (Button) findViewById(R.id.btSendBreakfastToCustomize);
         btClearBreakfastSelection = (Button) findViewById(R.id.btClearBreakfastSelection);
+        btMultiBreakfastSelect = (Button) findViewById(R.id.btMultiBreakfastSelect);
 
         setListViewFields();
         initiateVideoPlayer();
@@ -89,11 +95,60 @@ public class breakfastSelection extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String selectedItem = (String) adapterView.getItemAtPosition(i);
 
-                me.setClass(breakfastSelection.this, mealsMenu.class);
-                me.putExtra("breakfast", selectedItem);
-                startActivity(me);
+                if(!multiSelect){
+                    me.setClass(breakfastSelection.this, mealsMenu.class);
+                    me.putExtra("breakfast", selectedItem);
+                    startActivity(me);
+                }
+                else{
+                    String[] mealInfo = organizeMeal(selectedItem);
+                    Toast.makeText(breakfastSelection.this, mealInfo[0] + " has added.", Toast.LENGTH_SHORT).show();
+                    chosenBreakfastName += mealInfo[0].toLowerCase() + " and ";
+                    chosenBreakfastCalories += getCaloriesOrMinutesOutOfString(mealInfo[1]);
+                    chosenBreakfastMinutes += getCaloriesOrMinutesOutOfString(mealInfo[2]);
+                    multiSelectCounter += 1;
+                }
             }
         });
+    }
+
+    public String[] organizeMeal(String meal){
+        String mealName = "", mealCalories = "", mealTime = "";
+        int start = 0;
+        for(int i = 0; i < meal.length(); i++){
+            if(!Character.toString(meal.charAt(i)).equals(":")){
+                mealName += Character.toString(meal.charAt(i));
+            }
+            else {
+                start = i + 2;
+                break;
+            }
+        }
+        for(int i = start; i < meal.length(); i++){
+            if(!Character.toString(meal.charAt(i)).equals(",")){
+                mealCalories += Character.toString(meal.charAt(i));
+            }
+            else {
+                start = i + 2;
+                break;
+            }
+        }
+        for(int i = start; i < meal.length(); i++){
+            mealTime += Character.toString(meal.charAt(i));
+        }
+        return new String[] {mealName, mealCalories, mealTime};
+    }
+
+    public int getCaloriesOrMinutesOutOfString(String caloriesOrMinutes){
+        char currentChar;
+        String amount = "";
+        for(int i = 0; i < caloriesOrMinutes.length(); i++){
+            currentChar = caloriesOrMinutes.charAt(i);
+            if(Character.isDigit(currentChar)) {
+                amount += currentChar;
+            }
+        }
+        return Integer.parseInt(amount);
     }
 
     public void sendToCustomize(View v){
@@ -102,14 +157,45 @@ public class breakfastSelection extends AppCompatActivity {
         startActivity(me);
     }
 
-    public void clearBreakfastSelection(View v){
-        if(me.hasExtra("breakfast")){
-            me.removeExtra("breakfast");
-            me.setClass(breakfastSelection.this, mealsMenu.class);
-            startActivity(me);
+    public void multiOrSingleSelectUpdate(View v){
+        if(!multiSelect){
+            Toast.makeText(this, "Multi select has enabled.", Toast.LENGTH_SHORT).show();
+            btMultiBreakfastSelect.setText("Disable multi select");
+            btClearBreakfastSelection.setText("Finish choosing");
+            multiSelectCounter = 0;
+            multiSelect = true;
         }
         else{
-            Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Multi select has disabled.", Toast.LENGTH_SHORT).show();
+            btMultiBreakfastSelect.setText("Enable multi select");
+            btClearBreakfastSelection.setText("Clear selection");
+            multiSelectCounter = 0;
+            multiSelect = false;
+        }
+    }
+
+    public void clearBreakfastSelection(View v){
+        if(multiSelect){
+            if(multiSelectCounter == 0){
+                Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                chosenBreakfastName = chosenBreakfastName.substring(0, chosenBreakfastName.length() - 5);  // 5 = " and "
+                String chosenBreakfast = chosenBreakfastName + ": " + chosenBreakfastCalories + " calories, " + chosenBreakfastMinutes + " minutes.";
+                me.setClass(breakfastSelection.this, mealsMenu.class);
+                me.putExtra("breakfast", chosenBreakfast);
+                startActivity(me);
+            }
+        }
+        else{
+            if(me.hasExtra("breakfast")){
+                me.removeExtra("breakfast");
+                me.setClass(breakfastSelection.this, mealsMenu.class);
+                startActivity(me);
+            }
+            else{
+                Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

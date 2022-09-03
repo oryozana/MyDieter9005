@@ -21,9 +21,12 @@ public class dinnerSelection extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    Button btSendDinnerToCustomize, btClearDinnerSelection;
+    Button btSendDinnerToCustomize, btClearDinnerSelection, btMultiDinnerSelect;
     ArrayList<String> mealsList;
     ArrayAdapter<String> adapter;
+    boolean multiSelect = false;
+    String chosenDinnerName = "";
+    int chosenDinnerCalories = 0, chosenDinnerMinutes = 0, multiSelectCounter = 0;
     ListView listView;
     Intent me;
 
@@ -68,6 +71,7 @@ public class dinnerSelection extends AppCompatActivity {
 
         btSendDinnerToCustomize = (Button) findViewById(R.id.btSendDinnerToCustomize);
         btClearDinnerSelection = (Button) findViewById(R.id.btClearDinnerSelection);
+        btMultiDinnerSelect = (Button) findViewById(R.id.btMultiDinnerSelect);
 
         setListViewFields();
         initiateVideoPlayer();
@@ -95,12 +99,79 @@ public class dinnerSelection extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String selectedItem = (String) adapterView.getItemAtPosition(i);
 
-                me.setClass(dinnerSelection.this, mealsMenu.class);
-                me.putExtra("dinner", selectedItem);
-                startActivity(me);
+                if(!multiSelect){
+                    me.setClass(dinnerSelection.this, mealsMenu.class);
+                    me.putExtra("dinner", selectedItem);
+                    startActivity(me);
+                }
+                else{
+                    String[] mealInfo = organizeMeal(selectedItem);
+                    Toast.makeText(dinnerSelection.this, mealInfo[0] + " has added.", Toast.LENGTH_SHORT).show();
+                    chosenDinnerName += mealInfo[0].toLowerCase() + " and ";
+                    chosenDinnerCalories += getCaloriesOrMinutesOutOfString(mealInfo[1]);
+                    chosenDinnerMinutes += getCaloriesOrMinutesOutOfString(mealInfo[2]);
+                    multiSelectCounter += 1;
+                }
             }
         });
     }
+
+    public String[] organizeMeal(String meal){
+        String mealName = "", mealCalories = "", mealTime = "";
+        int start = 0;
+        for(int i = 0; i < meal.length(); i++){
+            if(!Character.toString(meal.charAt(i)).equals(":")){
+                mealName += Character.toString(meal.charAt(i));
+            }
+            else {
+                start = i + 2;
+                break;
+            }
+        }
+        for(int i = start; i < meal.length(); i++){
+            if(!Character.toString(meal.charAt(i)).equals(",")){
+                mealCalories += Character.toString(meal.charAt(i));
+            }
+            else {
+                start = i + 2;
+                break;
+            }
+        }
+        for(int i = start; i < meal.length(); i++){
+            mealTime += Character.toString(meal.charAt(i));
+        }
+        return new String[] {mealName, mealCalories, mealTime};
+    }
+
+    public int getCaloriesOrMinutesOutOfString(String caloriesOrMinutes){
+        char currentChar;
+        String amount = "";
+        for(int i = 0; i < caloriesOrMinutes.length(); i++){
+            currentChar = caloriesOrMinutes.charAt(i);
+            if(Character.isDigit(currentChar)) {
+                amount += currentChar;
+            }
+        }
+        return Integer.parseInt(amount);
+    }
+
+    public void multiOrSingleSelectUpdate(View v){
+        if(!multiSelect){
+            Toast.makeText(this, "Multi select has enabled.", Toast.LENGTH_SHORT).show();
+            btMultiDinnerSelect.setText("Disable multi select");
+            btClearDinnerSelection.setText("Finish choosing");
+            multiSelectCounter = 0;
+            multiSelect = true;
+        }
+        else{
+            Toast.makeText(this, "Multi select has disabled.", Toast.LENGTH_SHORT).show();
+            btMultiDinnerSelect.setText("Enable multi select");
+            btClearDinnerSelection.setText("Clear selection");
+            multiSelectCounter = 0;
+            multiSelect = false;
+        }
+    }
+
 
     public void sendToCustomize(View v){
         me.setClass(dinnerSelection.this, customMeals.class);
@@ -109,13 +180,27 @@ public class dinnerSelection extends AppCompatActivity {
     }
 
     public void clearDinnerSelection(View v){
-        if(me.hasExtra("dinner")){
-            me.removeExtra("dinner");
-            me.setClass(dinnerSelection.this, mealsMenu.class);
-            startActivity(me);
+        if(multiSelect){
+            if(multiSelectCounter == 0){
+                Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                chosenDinnerName = chosenDinnerName.substring(0, chosenDinnerName.length() - 5);  // 5 = " and "
+                String chosenDinner = chosenDinnerName + ": " + chosenDinnerCalories + " calories, " + chosenDinnerMinutes + " minutes.";
+                me.setClass(dinnerSelection.this, mealsMenu.class);
+                me.putExtra("dinner", chosenDinner);
+                startActivity(me);
+            }
         }
         else{
-            Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
+            if(me.hasExtra("dinner")){
+                me.removeExtra("dinner");
+                me.setClass(dinnerSelection.this, mealsMenu.class);
+                startActivity(me);
+            }
+            else{
+                Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
