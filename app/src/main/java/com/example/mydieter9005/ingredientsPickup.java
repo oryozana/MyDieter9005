@@ -34,10 +34,10 @@ public class ingredientsPickup extends AppCompatActivity {
         me = getIntent();
         meals = me.getStringArrayExtra("meals");
 
-        foodCompanies = new ArrayList<String>();
-        ingredients = new ArrayList<String>();
-        finalIngredients = new ArrayList<String>();
-        foodImages = new ArrayList<Integer>();
+        foodCompanies = new ArrayList<String>();  // Food common companies names list.
+        ingredients = new ArrayList<String>();  // All the ingredients that inside the app.
+        finalIngredients = new ArrayList<String>();  // The needed ingredients to make the meals.
+        foodImages = new ArrayList<Integer>();  // All the ingredients pictures IDs.
 
         // Vegetables, fruits and mushrooms:
         ingredients.add("tomato");
@@ -114,14 +114,14 @@ public class ingredientsPickup extends AppCompatActivity {
         mediaPlayer.start();
     }
 
-    public void initiateAmountCounter(){
+    public void initiateAmountCounter(){  // Represent all the ingredients amount.
         amount = new int[ingredients.size()];
         for(int i = 0; i < ingredients.size(); i++){
             amount[i] = 0;
         }
     }
 
-    public void initiateIngredientsPictures(){
+    public void initiateIngredientsPictures(){  // Save all the ingredients pictures IDs.
         String customIngredient;
         for(String ingredient : ingredients) {
             if(ingredients.contains(ingredient)){
@@ -136,61 +136,73 @@ public class ingredientsPickup extends AppCompatActivity {
         }
     }
 
-    public void initiateMealsRecipes(){
+    public void initiateMealsRecipes(){  // Separate the meals into ingredients.
+        char firstChar, lastChar;
+        String ingredient;
         for(String meal : meals){
             if(meal != null){
-                mealParts = meal.split("and|with| ");
-                mealParts[0] = mealParts[0].toLowerCase();
+                mealParts = meal.split(" and | with | include ");
                 for(int i = 0; i < mealParts.length; i++) {
-                    mealParts[i] = mealParts[i].replaceAll(" ", "");
+                    mealParts[i] = mealParts[i].toLowerCase();
 
-                    if (ingredients.contains(mealParts[i])) {
-                        addIfNeeded(mealParts[i]);
-                        if (mealParts[i].equals("olive")) {
+                    firstChar = mealParts[i].charAt(0);
+                    lastChar = mealParts[i].charAt(mealParts[i].length() - 1);
+                    ingredient = "";
+
+                    for(int letter = 0; letter < mealParts[i].length(); letter++){
+                        if(!(firstChar != ' ' && letter == 0) || !(lastChar != ' ' && letter == mealParts[i].length() - 1)){
+                            ingredient += mealParts[i].charAt(letter);
+                        }
+                    }
+
+                    Toast.makeText(this, ingredient + "", Toast.LENGTH_SHORT).show();
+
+                    if (ingredients.contains(ingredient)) {
+                        addIfNeeded(ingredient);
+                        if (ingredient.equals("olive")) {
                             amount[ingredients.indexOf("olive")] += 7;
                         }
                     }
 
-                    i = lookForSpecialWords(mealParts, i);
-                    addIfMiniMealInside(mealParts[i]);
-                    Toast.makeText(this, "make it", Toast.LENGTH_SHORT).show();
+//                    lookForSpecialWords(ingredient);
+                    addIfMiniMealInside(ingredient);
                 }
             }
         }
     }
 
-    public int lookForSpecialWords(String[] mealParts, int i){
-        String previousIngredient, middleIngredient, nextIngredient;
-        int combo = 1;
-
-        if(mealParts[i].equals("oil") || mealParts[i].equals("powder")){
-            nextIngredient = mealParts[i - 1] + " " + mealParts[i];
-            removeIfNeeded(mealParts[i - 1], 1);
-            addIfNeeded(nextIngredient);
-            i += combo;
-            return i;
-        }
-
-        if(mealParts[i].equals("ice") || foodCompanies.contains(mealParts[i])){
-            previousIngredient = mealParts[i] + " " + mealParts[i + 1];
-            addIfNeeded(previousIngredient);
-            i += combo;
-            return i;
-        }
-
-        if (mealParts[i].equals("flavored")){
-            middleIngredient = mealParts[i - 1] + " " + mealParts[i] + " " + mealParts[i + 1];
-            if(mealParts[i + 1].equals("ice") || foodCompanies.contains(mealParts[i])){
-                middleIngredient += " " + mealParts[i + 2];
-                combo++;
-            }
-            addIfNeeded(middleIngredient);
-            removeIfNeeded(mealParts[i - 1], 1);
-            i += combo;
-            return i;
-        }
-        return i;
-    }
+//    public int lookForSpecialWords(String[] mealParts, int i){
+//        String previousIngredient, middleIngredient, nextIngredient;
+//        int combo = 1;
+//
+//        if(mealParts[i].equals("oil") || mealParts[i].equals("powder")){
+//            nextIngredient = mealParts[i - 1] + " " + mealParts[i];
+//            removeIfNeeded(mealParts[i - 1], 1);
+//            addIfNeeded(nextIngredient);
+//            i += combo;
+//            return i;
+//        }
+//
+//        if(mealParts[i].equals("ice") || foodCompanies.contains(mealParts[i])){
+//            previousIngredient = mealParts[i] + " " + mealParts[i + 1];
+//            addIfNeeded(previousIngredient);
+//            i += combo;
+//            return i;
+//        }
+//
+//        if (mealParts[i].equals("flavored")){
+//            middleIngredient = mealParts[i - 1] + " " + mealParts[i] + " " + mealParts[i + 1];
+//            if(mealParts[i + 1].equals("ice") || foodCompanies.contains(mealParts[i])){
+//                middleIngredient += " " + mealParts[i + 2];
+//                combo++;
+//            }
+//            addIfNeeded(middleIngredient);
+//            removeIfNeeded(mealParts[i - 1], 1);
+//            i += combo;
+//            return i;
+//        }
+//        return i;
+//    }
 
     public void addIfMiniMealInside(String mealPart){
         if (mealPart.equals("toast")) {
@@ -213,16 +225,23 @@ public class ingredientsPickup extends AppCompatActivity {
         if(btNext.getText() == "Finish"){
             finish(v);
         }
+
         if(counter < ingredients.size()){
             String ingredient = finalIngredients.get(counter);
             int index = ingredients.indexOf(ingredient);
-            if(amount[index] >= 1){
-                tvFoodName.setText("Name: " + ingredient);
-                tvFoodAmount.setText("Amount: " + amount[index]);
-                foodImg.setImageResource(foodImages.get(index));
-                ingredient_counter += 1;
-                btNext.setText("Next" + "\n" + "Item: " + ingredient_counter + " out of " + ingredient_amount);
+            tvFoodName.setText("Name: " + ingredient);
+            tvFoodAmount.setText("Amount: 1");
+
+            if(index != -1){  // If item exists inside ingredients
+                if(amount[index] >= 1){
+                    tvFoodAmount.setText("Amount: " + amount[index]);
+                    foodImg.setImageResource(foodImages.get(index));
+                }
             }
+
+            ingredient_counter += 1;
+            btNext.setText("Next" + "\n" + "Item: " + ingredient_counter + " out of " + ingredient_amount);
+
             counter += 1;
             if(ingredient_counter == ingredient_amount){
                 btNext.setText("Finish");
@@ -231,7 +250,7 @@ public class ingredientsPickup extends AppCompatActivity {
     }
 
     public void addIfNeeded(String ingredient){
-        if(amount[ingredients.indexOf(ingredient)] == 0){
+        if(!finalIngredients.contains(ingredient)){
             finalIngredients.add(ingredient);
             ingredient_amount += 1;
         }

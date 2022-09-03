@@ -53,6 +53,10 @@ public class breakfastSelection extends AppCompatActivity {
         mealsList.add("200");
         mealsList.add("1");
 
+        mealsList.add("Chocolate flavored ice cream");
+        mealsList.add("300");
+        mealsList.add("1");
+
         listView = (ListView) findViewById(R.id.listViewBreakfast);
         videoView = (VideoView) findViewById(R.id.breakfastVideoView);
 
