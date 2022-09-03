@@ -257,15 +257,15 @@ public class ingredientsPickup extends AppCompatActivity {
         amount[ingredients.indexOf(ingredient)] += 1;
     }
 
-    public void removeIfNeeded(String ingredient, int amountToRemove){
-        if(amount[ingredients.indexOf(ingredient)] == amountToRemove){
-            finalIngredients.remove(ingredient);
-            ingredient_amount -= 1;
-        }
-        else{
-            amount[ingredients.indexOf(ingredient)] -= amountToRemove;
-        }
-    }
+//    public void removeIfNeeded(String ingredient, int amountToRemove){
+//        if(amount[ingredients.indexOf(ingredient)] == amountToRemove){
+//            finalIngredients.remove(ingredient);
+//            ingredient_amount -= 1;
+//        }
+//        else{
+//            amount[ingredients.indexOf(ingredient)] -= amountToRemove;
+//        }
+//    }
 
     public void finish(View v){
         me.setClass(this, finishMeals.class);
