@@ -14,7 +14,7 @@
         android:theme="@style/Theme.MyDieter9005"
         tools:targetApi="31">
         <activity
-            android:name=".removed_functions"
+            android:name=".removedFunctions"
             android:exported="false" />
         <activity
             android:name=".customMeals"

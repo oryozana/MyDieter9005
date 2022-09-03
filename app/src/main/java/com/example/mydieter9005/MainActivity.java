@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
             me = new Intent(this, mealsMenu.class);
             me.putExtra("exists", true);
         }
-        me.putExtra("isPlaying", true);
         return me;
     }
 
@@ -89,12 +88,7 @@ public class MainActivity extends AppCompatActivity {
     public void initiateMediaPlayer(){
         mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.my_song);
         mediaPlayer.setLooping(true);
-        if(me.getBooleanExtra("isPlaying", true)){
-            mediaPlayer.start();
-        }
-        else{
-            mediaPlayer.pause();
-        }
+        mediaPlayer.start();
     }
 
     @Override
@@ -127,14 +121,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemID = item.getItemId();
         if(itemID == R.id.musicController){
-            if(me.getBooleanExtra("isPlaying", true)){
+            if(mediaPlayer.isPlaying()){
                 mediaPlayer.pause();
-                me.putExtra("isPlaying", false);
                 item.setIcon(R.drawable.ic_music_off_icon);
             }
             else{
                 mediaPlayer.start();
-                me.putExtra("isPlaying", true);
                 item.setIcon(R.drawable.ic_music_on_icon);
             }
         }

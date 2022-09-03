@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class removed_functions extends AppCompatActivity {
+public class removedFunctions extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

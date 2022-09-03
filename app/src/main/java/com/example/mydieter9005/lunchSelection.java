@@ -1,11 +1,15 @@
 package com.example.mydieter9005;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -214,6 +218,29 @@ public class lunchSelection extends AppCompatActivity {
                 mp.setLooping(true);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.music_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemID = item.getItemId();
+        if(itemID == R.id.musicController){
+            if(mediaPlayer.isPlaying()){
+                mediaPlayer.pause();
+                item.setIcon(R.drawable.ic_music_off_icon);
+            }
+            else{
+                mediaPlayer.start();
+                item.setIcon(R.drawable.ic_music_on_icon);
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

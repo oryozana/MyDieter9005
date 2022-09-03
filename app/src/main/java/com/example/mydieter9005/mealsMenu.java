@@ -23,7 +23,6 @@ public class mealsMenu extends AppCompatActivity {
     String breakfast = "", lunch = "", dinner = "";
     String[] list, meals = new String[3];
     int totalCalories = 0, totalTime = 0;
-    boolean isPlaying = true;
     Intent me;
 
     @Override
@@ -32,7 +31,7 @@ public class mealsMenu extends AppCompatActivity {
         setContentView(R.layout.activity_meals_menu);
 
         me = getIntent();
-        isPlaying = initiateMediaPlayer();
+        initiateMediaPlayer();
 
         tvBreakfast = (TextView) findViewById(R.id.tvBreakfast);
         tvLunch = (TextView) findViewById(R.id.tvLunch);
@@ -68,7 +67,6 @@ public class mealsMenu extends AppCompatActivity {
                 me.setClass(this, ingredientsPickup.class);
                 me.putExtra("meals", meals);
                 me.putExtra("totalCalories", totalCalories);
-                me.putExtra("isPlaying", isPlaying);
                 startActivity(me);
             }
             else{
@@ -155,17 +153,10 @@ public class mealsMenu extends AppCompatActivity {
         tvTotalTime.setText("Total time: " + totalTime + " minutes.");
     }
 
-    public boolean initiateMediaPlayer(){
+    public void initiateMediaPlayer(){
         mediaPlayer = MediaPlayer.create(mealsMenu.this, R.raw.my_song);
         mediaPlayer.setLooping(true);
-        isPlaying = me.getBooleanExtra("isPlaying", true);
-        if(isPlaying){
-            mediaPlayer.start();
-        }
-        else{
-            mediaPlayer.pause();
-        }
-        return isPlaying;
+        mediaPlayer.start();
     }
 
     @Override
@@ -198,14 +189,12 @@ public class mealsMenu extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemID = item.getItemId();
         if(itemID == R.id.musicController){
-            if(isPlaying){
+            if(mediaPlayer.isPlaying()){
                 mediaPlayer.pause();
-                isPlaying = false;
                 item.setIcon(R.drawable.ic_music_off_icon);
             }
             else{
-                initiateMediaPlayer();
-                isPlaying = true;
+                mediaPlayer.start();
                 item.setIcon(R.drawable.ic_music_on_icon);
             }
         }
