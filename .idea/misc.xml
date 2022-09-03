@@ -4,8 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/User/AndroidStudioProjects/MyDieter9005/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MyDieter9005/app/src/main/res/drawable/ic_baseline_music_note_24.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MyDieter9005/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MyDieter9005/app/src/main/res/drawable/ic_music_icon.xml" value="0.1" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MyDieter9005/app/src/main/res/drawable/ic_music_off_icon.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MyDieter9005/app/src/main/res/drawable/ic_music_on_icon.xml" value="0.1" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MyDieter9005/app/src/main/res/layout/activity_breakfast_selection.xml" value="0.11005434782608696" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MyDieter9005/app/src/main/res/layout/activity_custom_meals.xml" value="0.11005434782608696" />

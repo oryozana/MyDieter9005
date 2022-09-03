@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-@SuppressWarnings("SuspiciousRegexArgument")
 public class customMeals extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
@@ -100,7 +99,7 @@ public class customMeals extends AppCompatActivity {
         AlertDialog ad;
         AlertDialog.Builder adb;
         adb = new AlertDialog.Builder(this);
-        mealInfo = organizeMeal(customMeal.getText().toString());
+        mealInfo = multiUsageFunctions.organizeMeal(customMeal.getText().toString());
         adb.setTitle("Your meal is: ");
         adb.setMessage("Name: " + mealInfo[0] + "\n" + "Calories: " + mealInfo[1] + "\n" + "Minutes: " + mealInfo[2]);
         adb.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
@@ -118,36 +117,6 @@ public class customMeals extends AppCompatActivity {
         });
         ad = adb.create();
         ad.show();
-    }
-
-    public String[] organizeMeal(String meal){
-        String mealName = "", mealCalories = "", mealTime = "";
-        int start = 0;
-        for(int i = 0; i < meal.length(); i++){
-            if(!Character.toString(meal.charAt(i)).equals(":")){
-                mealName += Character.toString(meal.charAt(i));
-            }
-            else {
-                start = i + 2;
-                break;
-            }
-        }
-
-        for(int i = start; i < meal.length(); i++){
-            if(!Character.toString(meal.charAt(i)).equals(",")){
-                mealCalories += Character.toString(meal.charAt(i));
-            }
-            else {
-                start = i + 2;
-                break;
-            }
-        }
-
-        for(int i = start; i < meal.length(); i++){
-            mealTime += Character.toString(meal.charAt(i));
-        }
-
-        return new String[] {mealName, mealCalories, mealTime};
     }
 
     public void finishCustomize(){

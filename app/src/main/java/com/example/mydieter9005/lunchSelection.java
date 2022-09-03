@@ -106,54 +106,15 @@ public class lunchSelection extends AppCompatActivity {
                     startActivity(me);
                 }
                 else{
-                    String[] mealInfo = organizeMeal(selectedItem);
+                    String[] mealInfo = multiUsageFunctions.organizeMeal(selectedItem);
                     Toast.makeText(lunchSelection.this, mealInfo[0] + " has added.", Toast.LENGTH_SHORT).show();
                     chosenLunchName += mealInfo[0].toLowerCase() + " and ";
-                    chosenLunchCalories += getCaloriesOrMinutesOutOfString(mealInfo[1]);
-                    chosenLunchMinutes += getCaloriesOrMinutesOutOfString(mealInfo[2]);
+                    chosenLunchCalories += multiUsageFunctions.getCaloriesOrMinutesOutOfString(mealInfo[1]);
+                    chosenLunchMinutes += multiUsageFunctions.getCaloriesOrMinutesOutOfString(mealInfo[2]);
                     multiSelectCounter += 1;
                 }
             }
         });
-    }
-
-    public String[] organizeMeal(String meal){
-        String mealName = "", mealCalories = "", mealTime = "";
-        int start = 0;
-        for(int i = 0; i < meal.length(); i++){
-            if(!Character.toString(meal.charAt(i)).equals(":")){
-                mealName += Character.toString(meal.charAt(i));
-            }
-            else {
-                start = i + 2;
-                break;
-            }
-        }
-        for(int i = start; i < meal.length(); i++){
-            if(!Character.toString(meal.charAt(i)).equals(",")){
-                mealCalories += Character.toString(meal.charAt(i));
-            }
-            else {
-                start = i + 2;
-                break;
-            }
-        }
-        for(int i = start; i < meal.length(); i++){
-            mealTime += Character.toString(meal.charAt(i));
-        }
-        return new String[] {mealName, mealCalories, mealTime};
-    }
-
-    public int getCaloriesOrMinutesOutOfString(String caloriesOrMinutes){
-        char currentChar;
-        String amount = "";
-        for(int i = 0; i < caloriesOrMinutes.length(); i++){
-            currentChar = caloriesOrMinutes.charAt(i);
-            if(Character.isDigit(currentChar)) {
-                amount += currentChar;
-            }
-        }
-        return Integer.parseInt(amount);
     }
 
     public void multiOrSingleSelectUpdate(View v){

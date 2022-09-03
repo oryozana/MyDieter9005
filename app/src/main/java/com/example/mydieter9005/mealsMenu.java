@@ -75,36 +75,6 @@ public class mealsMenu extends AppCompatActivity {
         }
     }
 
-    public String[] organizeMeal(String meal){
-        String mealName = "", mealCalories = "", mealTime = "";
-        int start = 0;
-        for(int i = 0; i < meal.length(); i++){
-            if(!Character.toString(meal.charAt(i)).equals(":")){
-                mealName += Character.toString(meal.charAt(i));
-            }
-            else {
-                start = i + 2;
-                break;
-            }
-        }
-
-        for(int i = start; i < meal.length(); i++){
-            if(!Character.toString(meal.charAt(i)).equals(",")){
-                mealCalories += Character.toString(meal.charAt(i));
-            }
-            else {
-                start = i + 2;
-                break;
-            }
-        }
-
-        for(int i = start; i < meal.length(); i++){
-            mealTime += Character.toString(meal.charAt(i));
-        }
-
-        return new String[] {mealName, mealCalories, mealTime};
-    }
-
     public String separateInfo(String listPart){
         String info = "";
         for(int i = 0; i < listPart.length(); i++){
@@ -121,7 +91,7 @@ public class mealsMenu extends AppCompatActivity {
     public void updateMeals(){
         if(me.hasExtra("breakfast")){
             breakfast = me.getStringExtra("breakfast");
-            list = organizeMeal(breakfast);
+            list = multiUsageFunctions.organizeMeal(breakfast);
             tvBreakfast.setText("Your breakfast is: " + list[0] + ".");
             btBreakfast.setText(list[1] + "." + "\n" + list[2]);
             totalCalories += Integer.parseInt(separateInfo(list[1]));
@@ -131,7 +101,7 @@ public class mealsMenu extends AppCompatActivity {
 
         if(me.hasExtra("lunch")){
             lunch = me.getStringExtra("lunch");
-            list = organizeMeal(lunch);
+            list = multiUsageFunctions.organizeMeal(lunch);
             tvLunch.setText("Your lunch is: " + list[0] + ".");
             btLunch.setText(list[1] + "." + "\n" + list[2]);
             totalCalories += Integer.parseInt(separateInfo(list[1]));
@@ -141,7 +111,7 @@ public class mealsMenu extends AppCompatActivity {
 
         if(me.hasExtra("dinner")){
             dinner = me.getStringExtra("dinner");
-            list = organizeMeal(dinner);
+            list = multiUsageFunctions.organizeMeal(dinner);
             tvDinner.setText("Your dinner is: " + list[0] + ".");
             btDinner.setText(list[1] + "." + "\n" + list[2]);
             totalCalories += Integer.parseInt(separateInfo(list[1]));
