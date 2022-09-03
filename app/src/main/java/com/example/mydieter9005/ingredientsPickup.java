@@ -57,6 +57,8 @@ public class ingredientsPickup extends AppCompatActivity {
         ingredients.add("dwarf corn");
         ingredients.add("strawberry");
         ingredients.add("avocado");
+        ingredients.add("garlic");
+        ingredients.add("onion");
 
         // Milky ingredients:
         ingredients.add("milk");
@@ -66,6 +68,8 @@ public class ingredientsPickup extends AppCompatActivity {
         ingredients.add("yellow cheese");
         ingredients.add("chocolate");
         ingredients.add("chocolate flavored ice cream");
+        ingredients.add("butter");
+        ingredients.add("cheddar");
 
         // Parve ingredients:
         ingredients.add("egg");
@@ -76,26 +80,45 @@ public class ingredientsPickup extends AppCompatActivity {
         ingredients.add("rice");
         ingredients.add("pasta");
         ingredients.add("breadcrumbs");
+        ingredients.add("flour");
         ingredients.add("sugar");
+        ingredients.add("brown sugar");
+        ingredients.add("spaghetti");
+        ingredients.add("peanut butter");
+        ingredients.add("cumin");
+
+        // Fleshy ingredients:
+        ingredients.add("chicken breast");
 
         // Powders:
-        ingredients.add("flour");
         ingredients.add("baking soda powder");
         ingredients.add("cocoa powder");
         ingredients.add("cafe powder");
+        ingredients.add("sweet paprika powder");
+        ingredients.add("garlic powder");
+        ingredients.add("cinnamon powder");
+        ingredients.add("baking powder");
+        ingredients.add("oregano powder");
+        ingredients.add("paprika powder");
+        ingredients.add("vanilla powder");
+        ingredients.add("chili powder");
 
         // Sauces:
         ingredients.add("ketchup");
         ingredients.add("tehina");
         ingredients.add("mayonnaise");
         ingredients.add("thousand island dressing");
+        ingredients.add("soy sauce");
+        ingredients.add("mustard sauce");
 
         // Oils:
         ingredients.add("olive oil");
         ingredients.add("canola oil");
+        ingredients.add("vegetable oil");
 
         // Food companies:
         foodCompanies.add("nestle");
+
 
         initiateAmountCounter();
         initiateIngredientsPictures();
