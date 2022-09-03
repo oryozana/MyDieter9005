@@ -113,9 +113,7 @@ public class ingredientsPickup extends AppCompatActivity {
             btNext.setText("Next" + "\n" + "Item: " + ingredient_counter + " out of " + ingredient_amount);
         }
 
-        mediaPlayer = MediaPlayer.create(ingredientsPickup.this, R.raw.my_song);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
+        initiateMediaPlayer();
     }
 
     public void initiateAmountCounter(){  // Represent all the ingredients amount.
@@ -232,6 +230,12 @@ public class ingredientsPickup extends AppCompatActivity {
         me.putExtra("ingredients", ingredients);
         me.putExtra("foodCompanies", foodCompanies);
         startActivity(me);
+    }
+
+    public void initiateMediaPlayer(){
+        mediaPlayer = MediaPlayer.create(ingredientsPickup.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 
     @Override

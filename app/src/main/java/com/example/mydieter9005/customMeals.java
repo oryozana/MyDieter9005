@@ -49,10 +49,7 @@ public class customMeals extends AppCompatActivity {
 
         writeTheInstructions();
         initiateVideoPlayer();
-
-        mediaPlayer = MediaPlayer.create(customMeals.this, R.raw.my_song);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
+        initiateMediaPlayer();
     }
 
     public void writeTheInstructions(){
@@ -170,6 +167,12 @@ public class customMeals extends AppCompatActivity {
                 mp.setLooping(true);
             }
         });
+    }
+
+    public void initiateMediaPlayer(){
+        mediaPlayer = MediaPlayer.create(customMeals.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 
     @Override

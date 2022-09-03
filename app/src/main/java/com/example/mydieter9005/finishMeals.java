@@ -59,11 +59,8 @@ public class finishMeals extends AppCompatActivity {
         dinnerIngredients = (ListView) findViewById(R.id.dinnerIngredients);
 
         initiateMealsRecipes();
+        initiateMediaPlayer();
         setAdapters();
-
-        mediaPlayer = MediaPlayer.create(finishMeals.this, R.raw.my_song);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
     }
 
     public void initiateMealsRecipes(){
@@ -278,6 +275,12 @@ public class finishMeals extends AppCompatActivity {
     public void finish(View v){
         me.setClass(this, MainActivity.class);
         startActivity(me);
+    }
+
+    public void initiateMediaPlayer(){
+        mediaPlayer = MediaPlayer.create(finishMeals.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 
     @Override

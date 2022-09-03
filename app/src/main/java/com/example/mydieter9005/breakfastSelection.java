@@ -75,10 +75,7 @@ public class breakfastSelection extends AppCompatActivity {
 
         setListViewFields();
         initiateVideoPlayer();
-
-        mediaPlayer = MediaPlayer.create(breakfastSelection.this, R.raw.my_song);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
+        initiateMediaPlayer();
     }
 
     public void setListViewFields(){
@@ -214,6 +211,12 @@ public class breakfastSelection extends AppCompatActivity {
                 mp.setLooping(true);
             }
         });
+    }
+
+    public void initiateMediaPlayer(){
+        mediaPlayer = MediaPlayer.create(breakfastSelection.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 
     @Override
