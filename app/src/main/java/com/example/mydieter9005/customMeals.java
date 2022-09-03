@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -13,11 +14,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 @SuppressWarnings("SuspiciousRegexArgument")
 public class customMeals extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
+    private VideoView videoView;
+
     Button btFinishCustomize;
     TextView tvInstructions;
     EditText customMeal;
@@ -35,10 +39,12 @@ public class customMeals extends AppCompatActivity {
         Toast.makeText(this, "selected meal: " + cameFrom, Toast.LENGTH_SHORT).show();
 
         btFinishCustomize = (Button) findViewById(R.id.btFinishCustomize);
+        videoView = (VideoView) findViewById(R.id.customVideoView);
         tvInstructions = (TextView) findViewById(R.id.tvInstructions);
         customMeal = (EditText) findViewById(R.id.customMeal);
 
         writeTheInstructions();
+        initiateVideoPlayer();
 
         mediaPlayer = MediaPlayer.create(customMeals.this, R.raw.my_song);
         mediaPlayer.setLooping(true);
@@ -47,7 +53,7 @@ public class customMeals extends AppCompatActivity {
 
     public void writeTheInstructions(){
         tvInstructions.setText(
-                "Make sure to use words like: 'with' and 'and' instead of using ','." + "\n" +
+                "Make sure to use words like: 'with', 'and' and 'include' instead of using ','." + "\n" +
                 "You need to use the special word 'flavored' to make something flavored, like this: " + "\n" +
                 "chocolate flavored ice cream or chocolate flavored yogurt and so on..." + "\n" +
                 "You can also use 'mini-meals' like: salad, toast and cereals in your text." + "\n" +
@@ -69,9 +75,9 @@ public class customMeals extends AppCompatActivity {
                     Toast.makeText(this, "There should be one ',' .", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    char lastChar = meal.charAt(meal.length() - 1);
-                    if(lastChar != '.'){
-                        Toast.makeText(this, meal.length() + " " + testMeal.length(), Toast.LENGTH_SHORT).show();
+                    testMeal = meal.replaceAll("\\.", "");
+                    if(meal.length() != testMeal.length() + 1){
+                        Toast.makeText(this, "There should be one '.' .", Toast.LENGTH_SHORT).show();
                     }
                     else{
                         if(meal.contains("_") || meal.contains("-")){
@@ -96,7 +102,6 @@ public class customMeals extends AppCompatActivity {
         mealInfo = organizeMeal(customMeal.getText().toString());
         adb.setTitle("Your meal is: ");
         adb.setMessage("Name: " + mealInfo[0] + "\n" + "Calories: " + mealInfo[1] + "\n" + "Minutes: " + mealInfo[2]);
-        adb.setCancelable(false);
         adb.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -150,22 +155,49 @@ public class customMeals extends AppCompatActivity {
         startActivity(me);
     }
 
+    public void initiateVideoPlayer(){
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.custom_background_video);
+        videoView.setVideoURI(uri);
+        videoView.start();
+
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
+    }
+
+    @Override
+    protected void onPostResume() {
+        videoView.resume();
+        super.onPostResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        videoView.start();
+        super.onRestart();
+    }
+
     @Override
     protected void onResume() {
-        super.onResume();
         mediaPlayer.start();
+        super.onResume();
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
+        videoView.suspend();
         mediaPlayer.pause();
+        super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        videoView.stopPlayback();
         mediaPlayer.stop();
         mediaPlayer.release();
+        super.onDestroy();
     }
 }

@@ -70,8 +70,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public Intent createTheFirstIntent(Intent me){
-        if(!me.hasExtra("meals")){
+        if(!me.hasExtra("exists")){
             me = new Intent(this, mealsMenu.class);
+            me.putExtra("exists", true);
         }
         me.putExtra("isPlaying", true);
         return me;
