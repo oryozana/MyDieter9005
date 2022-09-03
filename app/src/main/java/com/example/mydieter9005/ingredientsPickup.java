@@ -164,45 +164,11 @@ public class ingredientsPickup extends AppCompatActivity {
                         }
                     }
 
-//                    lookForSpecialWords(ingredient);
                     addIfMiniMealInside(ingredient);
                 }
             }
         }
     }
-
-//    public int lookForSpecialWords(String[] mealParts, int i){
-//        String previousIngredient, middleIngredient, nextIngredient;
-//        int combo = 1;
-//
-//        if(mealParts[i].equals("oil") || mealParts[i].equals("powder")){
-//            nextIngredient = mealParts[i - 1] + " " + mealParts[i];
-//            removeIfNeeded(mealParts[i - 1], 1);
-//            addIfNeeded(nextIngredient);
-//            i += combo;
-//            return i;
-//        }
-//
-//        if(mealParts[i].equals("ice") || foodCompanies.contains(mealParts[i])){
-//            previousIngredient = mealParts[i] + " " + mealParts[i + 1];
-//            addIfNeeded(previousIngredient);
-//            i += combo;
-//            return i;
-//        }
-//
-//        if (mealParts[i].equals("flavored")){
-//            middleIngredient = mealParts[i - 1] + " " + mealParts[i] + " " + mealParts[i + 1];
-//            if(mealParts[i + 1].equals("ice") || foodCompanies.contains(mealParts[i])){
-//                middleIngredient += " " + mealParts[i + 2];
-//                combo++;
-//            }
-//            addIfNeeded(middleIngredient);
-//            removeIfNeeded(mealParts[i - 1], 1);
-//            i += combo;
-//            return i;
-//        }
-//        return i;
-//    }
 
     public void addIfMiniMealInside(String mealPart){
         if (mealPart.equals("toast")) {
@@ -256,16 +222,6 @@ public class ingredientsPickup extends AppCompatActivity {
         }
         amount[ingredients.indexOf(ingredient)] += 1;
     }
-
-//    public void removeIfNeeded(String ingredient, int amountToRemove){
-//        if(amount[ingredients.indexOf(ingredient)] == amountToRemove){
-//            finalIngredients.remove(ingredient);
-//            ingredient_amount -= 1;
-//        }
-//        else{
-//            amount[ingredients.indexOf(ingredient)] -= amountToRemove;
-//        }
-//    }
 
     public void finish(View v){
         me.setClass(this, finishMeals.class);
