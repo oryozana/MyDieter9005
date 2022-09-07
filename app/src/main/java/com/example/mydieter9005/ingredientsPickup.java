@@ -58,7 +58,7 @@ public class ingredientsPickup extends AppCompatActivity {
         ingredients.add("strawberry");
         ingredients.add("avocado");
         ingredients.add("garlic");
-        ingredients.add("onion");
+        ingredients.add("red onion");
 
         // Milky ingredients:
         ingredients.add("milk");
@@ -118,6 +118,54 @@ public class ingredientsPickup extends AppCompatActivity {
 
         // Food companies:
         foodCompanies.add("nestle");
+
+
+        ingredients.add("onion powder");
+        ingredients.add("carrot");
+        ingredients.add("basil");
+        ingredients.add("parmesan");
+        ingredients.add("italian seasoning");
+        ingredients.add("thyme");
+        ingredients.add("bell pepper");
+        ingredients.add("scallion");
+        ingredients.add("onion");
+        ingredients.add("celery");
+        ingredients.add("chili pepper");
+        ingredients.add("canned tomato");
+        ingredients.add("jalapeno");
+        ingredients.add("zucchini");
+        ingredients.add("shallot");
+        ingredients.add("cherry tomato");
+        ingredients.add("spinach");
+        ingredients.add("sweat potato");
+        ingredients.add("broccoli");
+        ingredients.add("pumpkin");
+        ingredients.add("baby greens");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         initiateAmountCounter();
