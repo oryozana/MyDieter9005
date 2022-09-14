@@ -93,4 +93,11 @@
             android:text="Meals selector" />
     </androidx.gridlayout.widget.GridLayout>
 
+    <Button
+        android:id="@+id/btWriteMealsToExternalFile"
+        android:layout_width="125pt"
+        android:layout_height="wrap_content"
+        android:text="Save meals on external file"
+        android:onClick="write"/>
+
 </LinearLayout>

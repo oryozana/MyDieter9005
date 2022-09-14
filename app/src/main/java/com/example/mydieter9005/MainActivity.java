@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -14,15 +15,30 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class MainActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
     TextView tvBreakfastMain, tvLunchMain, tvDinnerMain;
     TextView tvTotalCaloriesMain, tvCaloriesLeftMain;
-    Button btMealsMenu;
+    Button btMealsMenu, btWriteMealsToExternalFile;
     int totalCalories, caloriesLeft;
     String[] meals;
+
+    FileOutputStream fos;
+    OutputStreamWriter osw;
+    BufferedWriter bw;
+    String todayDate;
     Intent me;
 
     @Override
@@ -33,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
         me = getIntent();
         me = createTheFirstIntent(me);
         initiateMediaPlayer();
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd_MM_yyyy");
+        LocalDateTime today = LocalDateTime.now();
+        todayDate = dtf.format(today) + " saved file.";
 
         tvBreakfastMain = (TextView) findViewById(R.id.tvBreakfastMain);
         tvBreakfastMain.setMovementMethod(new ScrollingMovementMethod());
@@ -45,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         tvCaloriesLeftMain = (TextView) findViewById(R.id.tvCaloriesLeftMain);
 
         btMealsMenu = (Button) findViewById(R.id.btMealsMenu);
+        btWriteMealsToExternalFile = (Button) findViewById(R.id.btWriteMealsToExternalFile);
 
         updateMealsIfNeeded();
     }
@@ -82,6 +103,31 @@ public class MainActivity extends AppCompatActivity {
         if (id == btMealsMenu.getId()) {
             me.setClass(this, mealsMenu.class);
             startActivity(me);
+        }
+    }
+
+    public void write(View v){
+        try {
+            fos = openFileOutput(todayDate, Context.MODE_PRIVATE);
+            Toast.makeText(this, todayDate, Toast.LENGTH_SHORT).show();
+            osw = new OutputStreamWriter(fos);
+            bw = new BufferedWriter(osw);
+
+            bw.write(todayDate + "\n");
+            bw.write(tvBreakfastMain.getText().toString() + "\n");
+            bw.write(tvLunchMain.getText().toString() + "\n");
+            bw.write(tvDinnerMain.getText().toString() + "\n");
+
+            bw.write(tvTotalCaloriesMain.getText().toString() + "\n");
+            bw.write(tvCaloriesLeftMain.getText().toString());
+
+            bw.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
