@@ -17,10 +17,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -39,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
     OutputStreamWriter osw;
     BufferedWriter bw;
     String todayDate;
+
+    FileInputStream is;
+    InputStreamReader isr;
+    BufferedReader br;
+    String currentLine, allData;
     Intent me;
 
     @Override
@@ -47,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         me = getIntent();
-        me = createTheFirstIntent(me);
         initiateMediaPlayer();
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd_MM_yyyy");
@@ -67,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         btMealsMenu = (Button) findViewById(R.id.btMealsMenu);
         btWriteMealsToExternalFile = (Button) findViewById(R.id.btWriteMealsToExternalFile);
 
+        me = createTheFirstIntent(me);
         updateMealsIfNeeded();
     }
 
@@ -107,20 +115,57 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void write(View v){
-        try {
-            fos = openFileOutput(todayDate, Context.MODE_PRIVATE);
-            osw = new OutputStreamWriter(fos);
-            bw = new BufferedWriter(osw);
+        if(me.hasExtra("meals")){
+            try {
+                fos = openFileOutput(todayDate, Context.MODE_PRIVATE);
+                osw = new OutputStreamWriter(fos);
+                bw = new BufferedWriter(osw);
 
-            bw.write(todayDate + "\n");
-            bw.write(tvBreakfastMain.getText().toString() + "\n");
-            bw.write(tvLunchMain.getText().toString() + "\n");
-            bw.write(tvDinnerMain.getText().toString() + "\n");
+                bw.write(todayDate + "\n");
 
-            bw.write(tvTotalCaloriesMain.getText().toString() + "\n");
-            bw.write(tvCaloriesLeftMain.getText().toString());
+                bw.write("Your breakfast: ");
+                if(me.hasExtra("breakfast"))
+                    bw.write(me.getStringExtra("breakfast"));
 
-            bw.close();
+                bw.write("\n" + "Your lunch: ");
+                if(me.hasExtra("lunch"))
+                    bw.write(me.getStringExtra("lunch"));
+
+                bw.write("\n" + "Your dinner: ");
+                if(me.hasExtra("dinner"))
+                    bw.write(me.getStringExtra("dinner"));
+
+                bw.write("\n" + tvTotalCaloriesMain.getText().toString() + "\n");
+                bw.write(tvCaloriesLeftMain.getText().toString());
+
+                bw.close();
+
+                Toast.makeText(this, todayDate + " wrote.", Toast.LENGTH_SHORT).show();
+            }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            Toast.makeText(this, "You didn't choose any meal yet.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public String getFileData(){
+        try{
+            is = openFileInput(todayDate);
+            isr = new InputStreamReader(is);
+            br = new BufferedReader(isr);
+
+            currentLine = br.readLine();
+            while(currentLine != null){
+                allData += currentLine + "\n";
+                currentLine = br.readLine();
+            }
+            br.close();
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -128,6 +173,42 @@ public class MainActivity extends AppCompatActivity {
         catch (IOException e) {
             e.printStackTrace();
         }
+        return allData;
+    }
+
+    public void showFileData(View v){
+        String[] dataParts = getFileData().split("\n");
+        String savedBreakfast="", savedLunch="", savedDinner="", savedTotalCalories="", savedCaloriesLeft="";
+        String[] meals = new String[3];
+
+        if(dataParts[1].replaceAll(":", "").length() == dataParts[1].length() - 2)
+            savedBreakfast = dataParts[1].split(": ")[1] + ": " + dataParts[1].split(": ")[2];
+        if(!savedBreakfast.equals("") && !savedBreakfast.equals(" "))
+            me.putExtra("breakfast", savedBreakfast);
+
+        if(dataParts[2].replaceAll(":", "").length() == dataParts[2].length() - 2)
+            savedLunch = dataParts[2].split(": ")[1] + ": " + dataParts[2].split(": ")[2];
+        if(!savedLunch.equals("") && !savedLunch.equals(" "))
+            me.putExtra("lunch", savedLunch);
+
+        if(dataParts[3].replaceAll(":", "").length() == dataParts[3].length() - 2)
+            savedDinner = dataParts[3].split(": ")[1] + ": " + dataParts[3].split(": ")[2];
+        if(!savedDinner.equals("") && !savedDinner.equals(" "))
+            me.putExtra("dinner", savedDinner);
+
+        savedTotalCalories = dataParts[4].split(": ")[1];
+        if(!savedTotalCalories.equals("") && !savedTotalCalories.equals(" "))
+            me.putExtra("totalCalories", Integer.parseInt(savedTotalCalories));
+        savedCaloriesLeft = dataParts[5].split(": ")[1];
+        if(!savedCaloriesLeft.equals("") && !savedCaloriesLeft.equals(" "))
+            me.putExtra("caloriesLeft", Integer.parseInt(savedCaloriesLeft));
+
+        meals[0] = savedBreakfast.split(":")[0];
+        meals[1] = savedLunch.split(":")[0];
+        meals[2] = savedDinner.split(":")[0];
+        me.putExtra("meals", meals);
+
+        updateMealsIfNeeded();
     }
 
     public void initiateMediaPlayer(){

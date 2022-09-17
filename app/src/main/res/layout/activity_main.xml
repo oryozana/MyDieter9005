@@ -100,4 +100,11 @@
         android:text="Save meals on external file"
         android:onClick="write"/>
 
+    <Button
+        android:id="@+id/btReadMealsFromExternalFile"
+        android:layout_width="125pt"
+        android:layout_height="wrap_content"
+        android:text="Load saved meals"
+        android:onClick="showFileData"/>
+
 </LinearLayout>

@@ -65,8 +65,8 @@ public class mealsMenu extends AppCompatActivity {
         if(id == btFinish.getId()) {
             if(me.hasExtra("breakfast") || me.hasExtra("lunch") || me.hasExtra("dinner")){
                 me.setClass(this, ingredientsPickup.class);
-                me.putExtra("meals", meals);
                 me.putExtra("totalCalories", totalCalories);
+                me.putExtra("meals", meals);
                 startActivity(me);
             }
             else{
