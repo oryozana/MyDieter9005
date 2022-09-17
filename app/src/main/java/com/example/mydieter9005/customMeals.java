@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -20,6 +21,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
 public class customMeals extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
@@ -30,6 +37,11 @@ public class customMeals extends AppCompatActivity {
     EditText customMeal;
     String[] mealInfo;
     String cameFrom;
+
+    FileOutputStream fos;
+    OutputStreamWriter osw;
+    BufferedWriter bw;
+    String fileName = "savedCustomMeals";
     Intent me;
 
     @Override
@@ -105,7 +117,7 @@ public class customMeals extends AppCompatActivity {
         adb.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                customMeal.setText("");
+
             }
         });
 
@@ -115,14 +127,47 @@ public class customMeals extends AppCompatActivity {
                 finishCustomize();
             }
         });
+
+        adb.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                saveCustomMeal();
+            }
+        });
+
         ad = adb.create();
         ad.show();
+    }
+
+    public void sendToCustomSelection(View v){
+        me.setClass(customMeals.this, customSelection.class);
+        startActivity(me);
     }
 
     public void finishCustomize(){
         me.setClass(customMeals.this, mealsMenu.class);
         me.putExtra(cameFrom, customMeal.getText().toString());
         startActivity(me);
+    }
+
+    public void saveCustomMeal(){
+        try {
+            fos = openFileOutput(fileName, Context.MODE_APPEND);
+            osw = new OutputStreamWriter(fos);
+            bw = new BufferedWriter(osw);
+
+            bw.write(customMeal.getText().toString() + "\n");
+
+            bw.close();
+
+            Toast.makeText(this, "Your custom meal has saved.", Toast.LENGTH_SHORT).show();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void initiateVideoPlayer(){

@@ -75,27 +75,14 @@ public class mealsMenu extends AppCompatActivity {
         }
     }
 
-    public String separateInfo(String listPart){
-        String info = "";
-        for(int i = 0; i < listPart.length(); i++){
-            if(!Character.toString(listPart.charAt(i)).equals(",") && !Character.toString(listPart.charAt(i)).equals(" ") && !Character.toString(listPart.charAt(i)).equals(":")){
-                info += Character.toString(listPart.charAt(i));
-            }
-            else {
-                return info;
-            }
-        }
-        return info;
-    }
-
     public void updateMeals(){
         if(me.hasExtra("breakfast")){
             breakfast = me.getStringExtra("breakfast");
             list = multiUsageFunctions.organizeMeal(breakfast);
             tvBreakfast.setText("Your breakfast is: " + list[0] + ".");
             btBreakfast.setText(list[1] + "." + "\n" + list[2]);
-            totalCalories += Integer.parseInt(separateInfo(list[1]));
-            totalTime += Integer.parseInt(separateInfo(list[2]));
+            totalCalories += Integer.parseInt(multiUsageFunctions.separateInfo(list[1]));
+            totalTime += Integer.parseInt(multiUsageFunctions.separateInfo(list[2]));
             meals[0] = list[0];
         }
 
@@ -104,8 +91,8 @@ public class mealsMenu extends AppCompatActivity {
             list = multiUsageFunctions.organizeMeal(lunch);
             tvLunch.setText("Your lunch is: " + list[0] + ".");
             btLunch.setText(list[1] + "." + "\n" + list[2]);
-            totalCalories += Integer.parseInt(separateInfo(list[1]));
-            totalTime += Integer.parseInt(separateInfo(list[2]));
+            totalCalories += Integer.parseInt(multiUsageFunctions.separateInfo(list[1]));
+            totalTime += Integer.parseInt(multiUsageFunctions.separateInfo(list[2]));
             meals[1] = list[0];
         }
 
@@ -114,8 +101,8 @@ public class mealsMenu extends AppCompatActivity {
             list = multiUsageFunctions.organizeMeal(dinner);
             tvDinner.setText("Your dinner is: " + list[0] + ".");
             btDinner.setText(list[1] + "." + "\n" + list[2]);
-            totalCalories += Integer.parseInt(separateInfo(list[1]));
-            totalTime += Integer.parseInt(separateInfo(list[2]));
+            totalCalories += Integer.parseInt(multiUsageFunctions.separateInfo(list[1]));
+            totalTime += Integer.parseInt(multiUsageFunctions.separateInfo(list[2]));
             meals[2] = list[0];
         }
 

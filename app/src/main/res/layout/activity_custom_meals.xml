@@ -50,6 +50,13 @@
             android:layout_marginBottom="5pt" />
 
         <Button
+            android:id="@+id/btSendToCustomSelection"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:onClick="sendToCustomSelection"
+            android:text="Choose from saved" />
+
+        <Button
             android:id="@+id/btFinishCustomize"
             android:layout_width="125pt"
             android:layout_height="wrap_content"

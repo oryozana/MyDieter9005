@@ -15,8 +15,8 @@ public class multiUsageFunctions extends AppCompatActivity {
         String mealName = "", mealCalories = "", mealTime = "";
         int start = 0;
         for(int i = 0; i < meal.length(); i++){
-            if(!Character.toString(meal.charAt(i)).equals(":")){
-                mealName += Character.toString(meal.charAt(i));
+            if(meal.charAt(i) != ':'){
+                mealName += meal.charAt(i);
             }
             else {
                 start = i + 2;
@@ -24,8 +24,8 @@ public class multiUsageFunctions extends AppCompatActivity {
             }
         }
         for(int i = start; i < meal.length(); i++){
-            if(!Character.toString(meal.charAt(i)).equals(",")){
-                mealCalories += Character.toString(meal.charAt(i));
+            if(meal.charAt(i) != ','){
+                mealCalories += meal.charAt(i);
             }
             else {
                 start = i + 2;
@@ -33,7 +33,7 @@ public class multiUsageFunctions extends AppCompatActivity {
             }
         }
         for(int i = start; i < meal.length(); i++){
-            mealTime += Character.toString(meal.charAt(i));
+            mealTime += meal.charAt(i);
         }
         return new String[] {mealName, mealCalories, mealTime};
     }
@@ -48,5 +48,18 @@ public class multiUsageFunctions extends AppCompatActivity {
             }
         }
         return Integer.parseInt(amount);
+    }
+
+    public static String separateInfo(String listPart){
+        String info = "";
+        for(int i = 0; i < listPart.length(); i++){
+            if(!Character.toString(listPart.charAt(i)).equals(",") && !Character.toString(listPart.charAt(i)).equals(" ") && !Character.toString(listPart.charAt(i)).equals(":")){
+                info += Character.toString(listPart.charAt(i));
+            }
+            else {
+                return info;
+            }
+        }
+        return info;
     }
 }
