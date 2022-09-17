@@ -228,8 +228,6 @@ public class ingredientsPickup extends AppCompatActivity {
                         }
                     }
 
-                    Toast.makeText(this, ingredient + "", Toast.LENGTH_SHORT).show();
-
                     if (ingredients.contains(ingredient)) {
                         addIfNeeded(ingredient);
                         if (ingredient.equals("olive")) {
