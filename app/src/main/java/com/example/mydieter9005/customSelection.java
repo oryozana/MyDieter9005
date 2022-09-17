@@ -1,11 +1,8 @@
 package com.example.mydieter9005;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -17,7 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -141,8 +137,20 @@ public class customSelection extends AppCompatActivity {
         }
     }
 
+    public void showFileData(){
+        mealsList = new ArrayList<String>();
+        String[] dataParts = getFileData(fileName).split("\n"), organizedMeal;
 
-    public String getFileData(){
+        for(String dataPart : dataParts){
+            organizedMeal = multiUsageFunctions.organizeMeal(dataPart);
+
+            mealsList.add(multiUsageFunctions.separateInfo(organizedMeal[0]));
+            mealsList.add(multiUsageFunctions.separateInfo(organizedMeal[1]));
+            mealsList.add(multiUsageFunctions.separateInfo(organizedMeal[2]));
+        }
+    }
+
+    public String getFileData(String fileName){
         try{
             is = openFileInput(fileName);
             isr = new InputStreamReader(is);
@@ -164,16 +172,18 @@ public class customSelection extends AppCompatActivity {
         return allData;
     }
 
-    public void showFileData(){
-        mealsList = new ArrayList<>();
-        String[] dataParts = getFileData().split("\n"), organizedMeal;
+    public void implementSettingsData(){
+        if(getFileData("settings") != null){
+            String[] settingsParts = getFileData("settings").split("\n");
+            Boolean playMusic, useVideos, useManuallySave;
 
-        for(String dataPart : dataParts){
-            organizedMeal = multiUsageFunctions.organizeMeal(dataPart);
+            playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
+            useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
+            useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
 
-            mealsList.add(multiUsageFunctions.separateInfo(organizedMeal[0]));
-            mealsList.add(multiUsageFunctions.separateInfo(organizedMeal[1]));
-            mealsList.add(multiUsageFunctions.separateInfo(organizedMeal[2]));
+            me.putExtra("playMusic", playMusic);
+            me.putExtra("useVideos", useVideos);
+            me.putExtra("useManuallySave", useManuallySave);
         }
     }
 
@@ -191,15 +201,17 @@ public class customSelection extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(customSelection.this, R.raw.my_song);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
+        if(me.getBooleanExtra("playMusic", true)){
+            mediaPlayer = MediaPlayer.create(customSelection.this, R.raw.my_song);
+            mediaPlayer.setLooping(true);
+            mediaPlayer.start();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.music_menu, menu);
+        inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -208,13 +220,21 @@ public class customSelection extends AppCompatActivity {
         int itemID = item.getItemId();
         if(itemID == R.id.musicController){
             if(mediaPlayer.isPlaying()){
-                mediaPlayer.pause();
+                me.putExtra("playMusic", false);
                 item.setIcon(R.drawable.ic_music_off_icon);
+                mediaPlayer.pause();
             }
             else{
-                mediaPlayer.start();
+                me.putExtra("playMusic", true);
                 item.setIcon(R.drawable.ic_music_on_icon);
+                initiateMediaPlayer();
+                mediaPlayer.start();
             }
+        }
+
+        if(itemID == R.id.sendToSettings){
+            me.setClass(customSelection.this, settingsSetter.class);
+            startActivity(me);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -233,8 +253,11 @@ public class customSelection extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        mediaPlayer.start();
         super.onResume();
+        mediaPlayer.start();
+        if(!me.getBooleanExtra("playMusic", true)){
+            mediaPlayer.stop();
+        }
     }
 
     @Override

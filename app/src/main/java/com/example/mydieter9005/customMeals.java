@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,10 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class customMeals extends AppCompatActivity {
@@ -42,6 +44,11 @@ public class customMeals extends AppCompatActivity {
     OutputStreamWriter osw;
     BufferedWriter bw;
     String fileName = "savedCustomMeals";
+
+    FileInputStream is;
+    InputStreamReader isr;
+    BufferedReader br;
+    String currentLine, allData;
     Intent me;
 
     @Override
@@ -61,6 +68,7 @@ public class customMeals extends AppCompatActivity {
         writeTheInstructions();
         initiateVideoPlayer();
         initiateMediaPlayer();
+        implementSettingsData();
     }
 
     public void writeTheInstructions(){
@@ -170,6 +178,43 @@ public class customMeals extends AppCompatActivity {
         }
     }
 
+    public String getFileData(String fileName){
+        try{
+            is = openFileInput(fileName);
+            isr = new InputStreamReader(is);
+            br = new BufferedReader(isr);
+
+            currentLine = br.readLine();
+            while(currentLine != null){
+                allData += currentLine + "\n";
+                currentLine = br.readLine();
+            }
+            br.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return allData;
+    }
+
+    public void implementSettingsData(){
+        if(getFileData("settings") != null){
+            String[] settingsParts = getFileData("settings").split("\n");
+            Boolean playMusic, useVideos, useManuallySave;
+
+            playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
+            useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
+            useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
+
+            me.putExtra("playMusic", playMusic);
+            me.putExtra("useVideos", useVideos);
+            me.putExtra("useManuallySave", useManuallySave);
+        }
+    }
+
     public void initiateVideoPlayer(){
         Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.custom_background_video);
         videoView.setVideoURI(uri);
@@ -184,15 +229,17 @@ public class customMeals extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(customMeals.this, R.raw.my_song);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
+        if(me.getBooleanExtra("playMusic", true)){
+            mediaPlayer = MediaPlayer.create(customMeals.this, R.raw.my_song);
+            mediaPlayer.setLooping(true);
+            mediaPlayer.start();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.music_menu, menu);
+        inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -201,13 +248,21 @@ public class customMeals extends AppCompatActivity {
         int itemID = item.getItemId();
         if(itemID == R.id.musicController){
             if(mediaPlayer.isPlaying()){
-                mediaPlayer.pause();
+                me.putExtra("playMusic", false);
                 item.setIcon(R.drawable.ic_music_off_icon);
+                mediaPlayer.pause();
             }
             else{
-                mediaPlayer.start();
+                me.putExtra("playMusic", true);
                 item.setIcon(R.drawable.ic_music_on_icon);
+                initiateMediaPlayer();
+                mediaPlayer.start();
             }
+        }
+
+        if(itemID == R.id.sendToSettings){
+            me.setClass(customMeals.this, settingsSetter.class);
+            startActivity(me);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -226,8 +281,11 @@ public class customMeals extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        mediaPlayer.start();
         super.onResume();
+        mediaPlayer.start();
+        if(!me.getBooleanExtra("playMusic", true)){
+            mediaPlayer.stop();
+        }
     }
 
     @Override

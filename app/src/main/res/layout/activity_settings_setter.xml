@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center|top"
+    tools:context=".settingsSetter">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="125pt"
+        android:layout_height="wrap_content"
+        android:layout_margin="15pt"
+        android:textSize="8pt"
+        android:text="Set your preferred settings here:" />
+
+    <RadioGroup
+        android:id="@+id/rgPlayMusic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5pt">
+
+        <RadioButton
+            android:id="@+id/rbPlayMusic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Play music" />
+
+        <RadioButton
+            android:id="@+id/rbMuteMusic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mute music" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/rgUseVideos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5pt">
+
+        <RadioButton
+            android:id="@+id/rbUseVideos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Use videos" />
+
+        <RadioButton
+            android:id="@+id/rbUseImages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Use images" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/rgUseManuallySave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5pt">
+
+        <RadioButton
+            android:id="@+id/rbManuallySave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Use manually save" />
+
+        <RadioButton
+            android:id="@+id/rbAutoSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Use auto save" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btSaveSettingsChanges"
+        android:layout_width="125pt"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10pt"
+        android:onClick="saveSettings"
+        android:text="Save changes" />
+
+    <Button
+        android:id="@+id/btReturnToRecentActivity"
+        android:layout_width="125pt"
+        android:layout_height="wrap_content"
+        android:onClick="returnToRecentActivity"
+        android:text="Finish" />
+</LinearLayout>

@@ -13,8 +13,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class ingredientsPickup extends AppCompatActivity {
@@ -28,6 +32,11 @@ public class ingredientsPickup extends AppCompatActivity {
     ArrayList<Integer> foodImages;
     int[] amount;
     int counter = 0, ingredient_counter = 0, ingredient_amount = 0;
+
+    FileInputStream is;
+    InputStreamReader isr;
+    BufferedReader br;
+    String currentLine, allData;
     Intent me;
 
     @Override
@@ -185,6 +194,7 @@ public class ingredientsPickup extends AppCompatActivity {
         }
 
         initiateMediaPlayer();
+        implementSettingsData();
     }
 
     public void initiateAmountCounter(){  // Represent all the ingredients amount.
@@ -301,16 +311,55 @@ public class ingredientsPickup extends AppCompatActivity {
         startActivity(me);
     }
 
+    public String getFileData(String fileName){
+        try{
+            is = openFileInput(fileName);
+            isr = new InputStreamReader(is);
+            br = new BufferedReader(isr);
+
+            currentLine = br.readLine();
+            while(currentLine != null){
+                allData += currentLine + "\n";
+                currentLine = br.readLine();
+            }
+            br.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return allData;
+    }
+
+    public void implementSettingsData(){
+        if(getFileData("settings") != null){
+            String[] settingsParts = getFileData("settings").split("\n");
+            Boolean playMusic, useVideos, useManuallySave;
+
+            playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
+            useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
+            useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
+
+            me.putExtra("playMusic", playMusic);
+            me.putExtra("useVideos", useVideos);
+            me.putExtra("useManuallySave", useManuallySave);
+        }
+    }
+
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(ingredientsPickup.this, R.raw.my_song);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
+        if(me.getBooleanExtra("playMusic", true)){
+            mediaPlayer = MediaPlayer.create(ingredientsPickup.this, R.raw.my_song);
+            mediaPlayer.setLooping(true);
+            mediaPlayer.start();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.music_menu, menu);
+        inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -319,13 +368,21 @@ public class ingredientsPickup extends AppCompatActivity {
         int itemID = item.getItemId();
         if(itemID == R.id.musicController){
             if(mediaPlayer.isPlaying()){
-                mediaPlayer.pause();
+                me.putExtra("playMusic", false);
                 item.setIcon(R.drawable.ic_music_off_icon);
+                mediaPlayer.pause();
             }
             else{
-                mediaPlayer.start();
+                me.putExtra("playMusic", true);
                 item.setIcon(R.drawable.ic_music_on_icon);
+                initiateMediaPlayer();
+                mediaPlayer.start();
             }
+        }
+
+        if(itemID == R.id.sendToSettings){
+            me.setClass(ingredientsPickup.this, settingsSetter.class);
+            startActivity(me);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -334,6 +391,9 @@ public class ingredientsPickup extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mediaPlayer.start();
+        if(!me.getBooleanExtra("playMusic", true)){
+            mediaPlayer.stop();
+        }
     }
 
     @Override

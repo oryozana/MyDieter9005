@@ -3,7 +3,6 @@ package com.example.mydieter9005;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -25,7 +24,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -75,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         btWriteMealsToExternalFile = (Button) findViewById(R.id.btWriteMealsToExternalFile);
 
         me = createTheFirstIntent(me);
+        implementSettingsData();
         updateMealsIfNeeded();
     }
 
@@ -102,6 +101,10 @@ public class MainActivity extends AppCompatActivity {
         if(!me.hasExtra("exists")){
             me = new Intent(this, mealsMenu.class);
             me.putExtra("exists", true);
+
+            me.putExtra("playMusic", true);
+            me.putExtra("useVideos", true);
+            me.putExtra("useManuallySave", true);
         }
         return me;
     }
@@ -154,30 +157,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public String getFileData(){
-        try{
-            is = openFileInput(todayDate);
-            isr = new InputStreamReader(is);
-            br = new BufferedReader(isr);
-
-            currentLine = br.readLine();
-            while(currentLine != null){
-                allData += currentLine + "\n";
-                currentLine = br.readLine();
-            }
-            br.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return allData;
-    }
-
     public void showFileData(View v){
-        String[] dataParts = getFileData().split("\n");
+        String[] dataParts = getFileData(todayDate).split("\n");
         String savedBreakfast="", savedLunch="", savedDinner="", savedTotalCalories="", savedCaloriesLeft="";
         String[] meals = new String[3];
 
@@ -211,16 +192,58 @@ public class MainActivity extends AppCompatActivity {
         updateMealsIfNeeded();
     }
 
+    public String getFileData(String fileName){
+        try{
+            is = openFileInput(fileName);
+            isr = new InputStreamReader(is);
+            br = new BufferedReader(isr);
+
+            currentLine = br.readLine();
+            while(currentLine != null){
+                allData += currentLine + "\n";
+                currentLine = br.readLine();
+            }
+            br.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return allData;
+    }
+
+    public void implementSettingsData(){
+        if(getFileData("settings") != null){
+            String[] settingsParts = getFileData("settings").split("\n");
+            Boolean playMusic, useVideos, useManuallySave;
+
+            playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
+            useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
+            useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
+
+            me.putExtra("playMusic", playMusic);
+            me.putExtra("useVideos", useVideos);
+            me.putExtra("useManuallySave", useManuallySave);
+        }
+    }
+
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.my_song);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
+        if(me.getBooleanExtra("playMusic", true)){
+            mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.my_song);
+            mediaPlayer.setLooping(true);
+            mediaPlayer.start();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mediaPlayer.start();
+        if(!me.getBooleanExtra("playMusic", true)){
+            mediaPlayer.stop();
+        }
     }
 
     @Override
@@ -239,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.music_menu, menu);
+        inflater.inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -248,13 +271,21 @@ public class MainActivity extends AppCompatActivity {
         int itemID = item.getItemId();
         if(itemID == R.id.musicController){
             if(mediaPlayer.isPlaying()){
-                mediaPlayer.pause();
+                me.putExtra("playMusic", false);
                 item.setIcon(R.drawable.ic_music_off_icon);
+                mediaPlayer.pause();
             }
             else{
-                mediaPlayer.start();
+                me.putExtra("playMusic", true);
                 item.setIcon(R.drawable.ic_music_on_icon);
+                initiateMediaPlayer();
+                mediaPlayer.start();
             }
+        }
+
+        if(itemID == R.id.sendToSettings){
+            me.setClass(MainActivity.this, settingsSetter.class);
+            startActivity(me);
         }
         return super.onOptionsItemSelected(item);
     }

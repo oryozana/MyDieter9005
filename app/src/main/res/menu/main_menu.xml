@@ -7,4 +7,10 @@
         android:icon="@drawable/ic_music_on_icon"
         android:title="Music controller"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/sendToSettings"
+        android:icon="@drawable/ic_settings_icon"
+        android:title="Settings"
+        app:showAsAction="ifRoom" />
 </menu>
