@@ -227,9 +227,9 @@ public class lunchSelection extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer(){
+        mediaPlayer = MediaPlayer.create(lunchSelection.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
-            mediaPlayer = MediaPlayer.create(lunchSelection.this, R.raw.my_song);
-            mediaPlayer.setLooping(true);
             mediaPlayer.start();
         }
     }

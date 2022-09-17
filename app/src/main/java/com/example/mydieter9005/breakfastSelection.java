@@ -219,9 +219,9 @@ public class breakfastSelection extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer(){
+        mediaPlayer = MediaPlayer.create(breakfastSelection.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
-            mediaPlayer = MediaPlayer.create(breakfastSelection.this, R.raw.my_song);
-            mediaPlayer.setLooping(true);
             mediaPlayer.start();
         }
     }

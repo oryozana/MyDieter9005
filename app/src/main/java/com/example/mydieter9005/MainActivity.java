@@ -230,9 +230,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer(){
+        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
-            mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.my_song);
-            mediaPlayer.setLooping(true);
             mediaPlayer.start();
         }
     }

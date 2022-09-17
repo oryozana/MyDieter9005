@@ -228,9 +228,9 @@ public class dinnerSelection extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer(){
+        mediaPlayer = MediaPlayer.create(dinnerSelection.this, R.raw.my_song);
+        mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
-            mediaPlayer = MediaPlayer.create(dinnerSelection.this, R.raw.my_song);
-            mediaPlayer.setLooping(true);
             mediaPlayer.start();
         }
     }
@@ -280,8 +280,11 @@ public class dinnerSelection extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        mediaPlayer.start();
         super.onResume();
+        mediaPlayer.start();
+        if(!me.getBooleanExtra("playMusic", true)){
+            mediaPlayer.stop();
+        }
     }
 
     @Override
