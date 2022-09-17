@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
     public void write(View v){
         try {
             fos = openFileOutput(todayDate, Context.MODE_PRIVATE);
-            Toast.makeText(this, todayDate, Toast.LENGTH_SHORT).show();
             osw = new OutputStreamWriter(fos);
             bw = new BufferedWriter(osw);
 
