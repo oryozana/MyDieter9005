@@ -262,6 +262,7 @@ public class lunchSelection extends AppCompatActivity {
 
         if(itemID == R.id.sendToSettings){
             me.setClass(lunchSelection.this, settingsSetter.class);
+            me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
         return super.onOptionsItemSelected(item);

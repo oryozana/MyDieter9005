@@ -237,6 +237,7 @@ public class customSelection extends AppCompatActivity {
 
         if(itemID == R.id.sendToSettings){
             me.setClass(customSelection.this, settingsSetter.class);
+            me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
         return super.onOptionsItemSelected(item);

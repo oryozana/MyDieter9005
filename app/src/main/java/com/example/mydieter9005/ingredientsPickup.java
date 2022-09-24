@@ -386,6 +386,7 @@ public class ingredientsPickup extends AppCompatActivity {
 
         if(itemID == R.id.sendToSettings){
             me.setClass(ingredientsPickup.this, settingsSetter.class);
+            me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
         return super.onOptionsItemSelected(item);

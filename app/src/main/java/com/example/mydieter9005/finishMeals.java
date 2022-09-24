@@ -361,6 +361,7 @@ public class finishMeals extends AppCompatActivity {
 
         if(itemID == R.id.sendToSettings){
             me.setClass(finishMeals.this, settingsSetter.class);
+            me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
         return super.onOptionsItemSelected(item);

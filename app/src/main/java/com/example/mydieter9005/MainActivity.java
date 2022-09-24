@@ -288,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(itemID == R.id.sendToSettings){
             me.setClass(MainActivity.this, settingsSetter.class);
+            me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
         return super.onOptionsItemSelected(item);

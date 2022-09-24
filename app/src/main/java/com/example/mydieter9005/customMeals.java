@@ -264,6 +264,7 @@ public class customMeals extends AppCompatActivity {
 
         if(itemID == R.id.sendToSettings){
             me.setClass(customMeals.this, settingsSetter.class);
+            me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
         return super.onOptionsItemSelected(item);

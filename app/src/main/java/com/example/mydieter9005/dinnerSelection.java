@@ -263,6 +263,7 @@ public class dinnerSelection extends AppCompatActivity {
 
         if(itemID == R.id.sendToSettings){
             me.setClass(dinnerSelection.this, settingsSetter.class);
+            me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
         return super.onOptionsItemSelected(item);

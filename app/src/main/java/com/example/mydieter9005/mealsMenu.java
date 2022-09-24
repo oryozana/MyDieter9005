@@ -217,6 +217,7 @@ public class mealsMenu extends AppCompatActivity {
 
         if(itemID == R.id.sendToSettings){
             me.setClass(mealsMenu.this, settingsSetter.class);
+            me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
         return super.onOptionsItemSelected(item);
