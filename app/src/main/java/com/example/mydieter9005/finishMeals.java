@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -36,7 +37,6 @@ public class finishMeals extends AppCompatActivity {
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
-    String currentLine, allData;
     Intent me;
 
     @Override
@@ -288,6 +288,7 @@ public class finishMeals extends AppCompatActivity {
     }
 
     public String getFileData(String fileName){
+        String currentLine = "", allData = "";
         try{
             is = openFileInput(fileName);
             isr = new InputStreamReader(is);
@@ -301,6 +302,8 @@ public class finishMeals extends AppCompatActivity {
             br.close();
         }
         catch (FileNotFoundException e) {
+            if(fileName.equals(me.getStringExtra("todayDate")))
+                Toast.makeText(this, "Today saved data not exists yet.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         catch (IOException e) {

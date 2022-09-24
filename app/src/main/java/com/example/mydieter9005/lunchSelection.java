@@ -41,7 +41,6 @@ public class lunchSelection extends AppCompatActivity {
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
-    String currentLine, allData;
     Intent me;
 
     @Override
@@ -177,6 +176,7 @@ public class lunchSelection extends AppCompatActivity {
     }
 
     public String getFileData(String fileName){
+        String currentLine = "", allData = "";
         try{
             is = openFileInput(fileName);
             isr = new InputStreamReader(is);
@@ -190,6 +190,8 @@ public class lunchSelection extends AppCompatActivity {
             br.close();
         }
         catch (FileNotFoundException e) {
+            if(fileName.equals(me.getStringExtra("todayDate")))
+                Toast.makeText(this, "Today saved data not exists yet.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         catch (IOException e) {

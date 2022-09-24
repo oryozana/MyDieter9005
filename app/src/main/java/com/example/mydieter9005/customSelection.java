@@ -41,7 +41,6 @@ public class customSelection extends AppCompatActivity {
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
-    String currentLine, allData;
     String fileName = "savedCustomMeals";
     Intent me;
 
@@ -62,6 +61,7 @@ public class customSelection extends AppCompatActivity {
         btFinishCustomSelection = (Button) findViewById(R.id.btFinishCustomSelection);
 
         setListViewFields();
+        implementSettingsData();
         initiateVideoPlayer();
         initiateMediaPlayer();
     }
@@ -151,6 +151,7 @@ public class customSelection extends AppCompatActivity {
     }
 
     public String getFileData(String fileName){
+        String currentLine = "", allData = "";
         try{
             is = openFileInput(fileName);
             isr = new InputStreamReader(is);
@@ -164,6 +165,8 @@ public class customSelection extends AppCompatActivity {
             br.close();
         }
         catch (FileNotFoundException e) {
+            if(fileName.equals(me.getStringExtra("todayDate")))
+                Toast.makeText(this, "Today saved data not exists yet.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         catch (IOException e) {

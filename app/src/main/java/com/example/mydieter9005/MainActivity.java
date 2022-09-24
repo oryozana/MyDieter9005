@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
-    String currentLine, allData;
     Intent me;
 
     @Override
@@ -105,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
             me.putExtra("playMusic", true);
             me.putExtra("useVideos", true);
             me.putExtra("useManuallySave", true);
+            me.putExtra("todayDate", todayDate);
         }
         return me;
     }
@@ -179,10 +179,10 @@ public class MainActivity extends AppCompatActivity {
 
         savedTotalCalories = dataParts[4].split(": ")[1];
         if(!savedTotalCalories.equals("") && !savedTotalCalories.equals(" "))
-            me.putExtra("totalCalories", Integer.parseInt(savedTotalCalories));
+            me.putExtra("totalCalories", multiUsageFunctions.getCaloriesOrMinutesOutOfString(savedTotalCalories));
         savedCaloriesLeft = dataParts[5].split(": ")[1];
         if(!savedCaloriesLeft.equals("") && !savedCaloriesLeft.equals(" "))
-            me.putExtra("caloriesLeft", Integer.parseInt(savedCaloriesLeft));
+            me.putExtra("caloriesLeft", multiUsageFunctions.getCaloriesOrMinutesOutOfString(savedCaloriesLeft));
 
         meals[0] = savedBreakfast.split(":")[0];
         meals[1] = savedLunch.split(":")[0];
@@ -193,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String getFileData(String fileName){
+        String currentLine = "", allData = "";
         try{
             is = openFileInput(fileName);
             isr = new InputStreamReader(is);
@@ -206,6 +207,8 @@ public class MainActivity extends AppCompatActivity {
             br.close();
         }
         catch (FileNotFoundException e) {
+            if(fileName.equals(me.getStringExtra("todayDate")))
+                Toast.makeText(this, "Today saved data not exists yet.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         catch (IOException e) {
