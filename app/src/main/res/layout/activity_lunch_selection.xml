@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/noon_background"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".lunchSelection">
@@ -17,6 +16,7 @@
         android:layout_alignParentBottom="true"/>
 
     <LinearLayout
+        android:id="@+id/lunchSelectionLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"

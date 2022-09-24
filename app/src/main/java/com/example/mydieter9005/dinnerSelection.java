@@ -219,7 +219,9 @@ public class dinnerSelection extends AppCompatActivity {
     public void initiateVideoPlayer(){
         Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.night_background_video);
         videoView.setVideoURI(uri);
-        videoView.start();
+
+        if(me.getBooleanExtra("useVideos", true))
+            videoView.start();
 
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -271,8 +273,14 @@ public class dinnerSelection extends AppCompatActivity {
 
     @Override
     protected void onPostResume() {
-        videoView.resume();
         super.onPostResume();
+        videoView.resume();
+        if(!me.getBooleanExtra("useVideos", true)){
+            findViewById(R.id.dinnerSelectionLinearLayout).setBackground(getDrawable(R.drawable.night_background));
+            videoView.stopPlayback();
+        }
+        else
+            videoView.start();
     }
 
     @Override

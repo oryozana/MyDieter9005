@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/night_background"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".dinnerSelection">
@@ -17,6 +16,7 @@
         android:layout_alignParentBottom="true"/>
 
     <LinearLayout
+        android:id="@+id/dinnerSelectionLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"

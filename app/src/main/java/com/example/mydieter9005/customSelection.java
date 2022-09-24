@@ -193,7 +193,9 @@ public class customSelection extends AppCompatActivity {
     public void initiateVideoPlayer(){
         Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.custom_selection_background_video);
         videoView.setVideoURI(uri);
-        videoView.start();
+
+        if(me.getBooleanExtra("useVideos", true))
+            videoView.start();
 
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -245,8 +247,14 @@ public class customSelection extends AppCompatActivity {
 
     @Override
     protected void onPostResume() {
-        videoView.resume();
         super.onPostResume();
+        videoView.resume();
+        if(!me.getBooleanExtra("useVideos", true)){
+            findViewById(R.id.customSelectionLinearLayout).setBackground(getDrawable(R.drawable.custom_selection_background));
+            videoView.stopPlayback();
+        }
+        else
+            videoView.start();
     }
 
     @Override

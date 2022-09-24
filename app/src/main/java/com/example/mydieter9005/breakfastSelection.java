@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -210,7 +211,9 @@ public class breakfastSelection extends AppCompatActivity {
     public void initiateVideoPlayer(){
         Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.morning_background_video);
         videoView.setVideoURI(uri);
-        videoView.start();
+
+        if(me.getBooleanExtra("useVideos", true))
+            videoView.start();
 
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -262,8 +265,14 @@ public class breakfastSelection extends AppCompatActivity {
 
     @Override
     protected void onPostResume() {
-        videoView.resume();
         super.onPostResume();
+        videoView.resume();
+        if(!me.getBooleanExtra("useVideos", true)){
+            findViewById(R.id.breakfastSelectionLinearLayout).setBackground(getDrawable(R.drawable.morning_background));
+            videoView.stopPlayback();
+        }
+        else
+            videoView.start();
     }
 
     @Override
