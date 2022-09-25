@@ -28,16 +28,15 @@ public class ingredientsPickup extends AppCompatActivity {
     TextView tvFoodName, tvFoodAmount;
     ImageView foodImg;
     Button btNext;
-    String[] meals, mealParts;
-    ArrayList<String> ingredients, finalIngredients, foodCompanies;
-    ArrayList<Integer> foodImages;
-    int[] amount;
+    Meal[] meals = new Meal[3];
+    Ingredient[] mealParts;
+    ArrayList<Ingredient> ingredients, finalIngredients;
+    ArrayList<String> foodCompanies;
     int counter = 0, ingredient_counter = 0, ingredient_amount = 0;
 
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
-    String currentLine, allData;
     Intent me;
 
     @Override
@@ -46,139 +45,17 @@ public class ingredientsPickup extends AppCompatActivity {
         setContentView(R.layout.activity_ingredients_pickup);
 
         me = getIntent();
-        meals = me.getStringArrayExtra("meals");
+        meals[0] = new Meal(me.getStringArrayExtra("meals")[0]);
+        meals[1] = new Meal(me.getStringArrayExtra("meals")[1]);
+        meals[2] = new Meal(me.getStringArrayExtra("meals")[2]);
 
         foodCompanies = new ArrayList<String>();  // Food common companies names list.
-        ingredients = new ArrayList<String>();  // All the ingredients that inside the app.
-        finalIngredients = new ArrayList<String>();  // The needed ingredients to make the meals.
-        foodImages = new ArrayList<Integer>();  // All the ingredients pictures IDs.
-
-        // Vegetables, fruits and mushrooms:
-        ingredients.add("tomato");
-        ingredients.add("cucumber");
-        ingredients.add("lettuce");
-        ingredients.add("parsley");
-        ingredients.add("olive");
-        ingredients.add("corn");
-        ingredients.add("potato");
-        ingredients.add("lemon");
-        ingredients.add("mushroom");
-        ingredients.add("cauliflower");
-        ingredients.add("dwarf corn");
-        ingredients.add("strawberry");
-        ingredients.add("avocado");
-        ingredients.add("garlic");
-        ingredients.add("red onion");
-
-        // Milky ingredients:
-        ingredients.add("milk");
-        ingredients.add("yogurt");
-        ingredients.add("chocolate flavored yogurt");
-        ingredients.add("cheese");
-        ingredients.add("yellow cheese");
-        ingredients.add("chocolate");
-        ingredients.add("chocolate flavored ice cream");
-        ingredients.add("butter");
-        ingredients.add("cheddar");
-
-        // Parve ingredients:
-        ingredients.add("egg");
-        ingredients.add("patit");
-        ingredients.add("bread");
-        ingredients.add("nestle cereals");
-        ingredients.add("honey");
-        ingredients.add("rice");
-        ingredients.add("pasta");
-        ingredients.add("breadcrumbs");
-        ingredients.add("flour");
-        ingredients.add("sugar");
-        ingredients.add("brown sugar");
-        ingredients.add("spaghetti");
-        ingredients.add("peanut butter");
-        ingredients.add("cumin");
-
-        // Fleshy ingredients:
-        ingredients.add("chicken breast");
-
-        // Powders:
-        ingredients.add("baking soda powder");
-        ingredients.add("cocoa powder");
-        ingredients.add("cafe powder");
-        ingredients.add("sweet paprika powder");
-        ingredients.add("garlic powder");
-        ingredients.add("cinnamon powder");
-        ingredients.add("baking powder");
-        ingredients.add("oregano powder");
-        ingredients.add("paprika powder");
-        ingredients.add("vanilla powder");
-        ingredients.add("chili powder");
-
-        // Sauces:
-        ingredients.add("ketchup");
-        ingredients.add("tehina");
-        ingredients.add("mayonnaise");
-        ingredients.add("thousand island dressing");
-        ingredients.add("soy sauce");
-        ingredients.add("mustard sauce");
-
-        // Oils:
-        ingredients.add("olive oil");
-        ingredients.add("canola oil");
-        ingredients.add("vegetable oil");
+        ingredients = Ingredient.getIngredientsList();  // All the ingredients that inside the app.
+        finalIngredients = new ArrayList<Ingredient>();  // The needed ingredients to make the meals.
 
         // Food companies:
         foodCompanies.add("nestle");
 
-
-        ingredients.add("onion powder");
-        ingredients.add("carrot");
-        ingredients.add("basil");
-        ingredients.add("parmesan");
-        ingredients.add("italian seasoning");
-        ingredients.add("thyme");
-        ingredients.add("bell pepper");
-        ingredients.add("scallion");
-        ingredients.add("onion");
-        ingredients.add("celery");
-        ingredients.add("chili pepper");
-        ingredients.add("canned tomato");
-        ingredients.add("jalapeno");
-        ingredients.add("zucchini");
-        ingredients.add("shallot");
-        ingredients.add("cherry tomato");
-        ingredients.add("spinach");
-        ingredients.add("sweat potato");
-        ingredients.add("broccoli");
-        ingredients.add("pumpkin");
-        ingredients.add("baby greens");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        initiateAmountCounter();
         initiateIngredientsPictures();
         initiateMealsRecipes();
 
@@ -198,23 +75,16 @@ public class ingredientsPickup extends AppCompatActivity {
         implementSettingsData();
     }
 
-    public void initiateAmountCounter(){  // Represent all the ingredients amount.
-        amount = new int[ingredients.size()];
-        for(int i = 0; i < ingredients.size(); i++){
-            amount[i] = 0;
-        }
-    }
-
     public void initiateIngredientsPictures(){  // Save all the ingredients pictures IDs.
-        String customIngredient;
-        for(String ingredient : ingredients) {
+        String customIngredientName;
+        for(Ingredient ingredient : ingredients) {
             if(ingredients.contains(ingredient)){
-                if(ingredient.contains(" ")){
-                    customIngredient = ingredient.replaceAll(" ", "_");
-                    foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier(customIngredient, "drawable", getPackageName()));
+                if(ingredient.getName().contains(" ")){
+                    customIngredientName = ingredient.getName().replaceAll(" ", "_");
+                    ingredient.setImgId(getResources().getIdentifier(customIngredientName, "drawable", getPackageName()));
                 }
                 else{
-                    foodImages.add(ingredients.indexOf(ingredient), getResources().getIdentifier(ingredient, "drawable", getPackageName()));
+                    ingredient.setImgId(getResources().getIdentifier(ingredient.getName(), "drawable", getPackageName()));
                 }
             }
         }
@@ -222,7 +92,7 @@ public class ingredientsPickup extends AppCompatActivity {
 
     public void initiateMealsRecipes(){  // Separate the meals into ingredients.
         char firstChar, lastChar;
-        String ingredient;
+        String ingredientName;
         for(String meal : meals){
             if(meal != null){
                 mealParts = meal.split(" and | with | include ");
@@ -231,22 +101,21 @@ public class ingredientsPickup extends AppCompatActivity {
 
                     firstChar = mealParts[i].charAt(0);
                     lastChar = mealParts[i].charAt(mealParts[i].length() - 1);
-                    ingredient = "";
+                    ingredientName = "";
 
                     for(int letter = 0; letter < mealParts[i].length(); letter++){
                         if(!(firstChar != ' ' && letter == 0) || !(lastChar != ' ' && letter == mealParts[i].length() - 1)){
-                            ingredient += mealParts[i].charAt(letter);
+                            ingredientName += mealParts[i].charAt(letter);
                         }
                     }
 
-                    if (ingredients.contains(ingredient)) {
-                        addIfNeeded(ingredient);
-                        if (ingredient.equals("olive")) {
-                            amount[ingredients.indexOf("olive")] += 7;
+                    if (ingredients.contains(Ingredient.getIngredientByName(ingredientName))) {
+                        addIfNeeded(Ingredient.getIngredientByName(ingredientName));
+                        if (ingredientName.equals("olive")) {
+                            Ingredient.getIngredientByName("olive").addAmount(7);
                         }
                     }
-
-                    addIfMiniMealInside(ingredient);
+                    addIfMiniMealInside(ingredientName);
                 }
             }
         }
@@ -254,18 +123,18 @@ public class ingredientsPickup extends AppCompatActivity {
 
     public void addIfMiniMealInside(String mealPart){
         if (mealPart.equals("toast")) {
-            addIfNeeded("bread");
-            addIfNeeded("yellow cheese");
-            addIfNeeded("ketchup");
-            addIfNeeded("thousand island dressing");
+            addIfNeeded(Ingredient.getIngredientByName("bread"));
+            addIfNeeded(Ingredient.getIngredientByName("yellow cheese"));
+            addIfNeeded(Ingredient.getIngredientByName("ketchup"));
+            addIfNeeded(Ingredient.getIngredientByName("thousand island dressing"));
         }
         if (mealPart.equals("cereals")) {
-            addIfNeeded("milk");
+            addIfNeeded(Ingredient.getIngredientByName("milk"));
         }
         if (mealPart.equals("salad")) {
-            addIfNeeded("tomato");
-            addIfNeeded("cucumber");
-            addIfNeeded("lettuce");
+            addIfNeeded(Ingredient.getIngredientByName("tomato"));
+            addIfNeeded(Ingredient.getIngredientByName("cucumber"));
+            addIfNeeded(Ingredient.getIngredientByName("lettuce"));
         }
     }
 
@@ -275,15 +144,15 @@ public class ingredientsPickup extends AppCompatActivity {
         }
 
         if(counter < ingredients.size()){
-            String ingredient = finalIngredients.get(counter);
-            int index = ingredients.indexOf(ingredient);
+            String ingredient = finalIngredients.get(counter).getName();
+            int index = ingredients.indexOf(Ingredient.getIngredientByName(ingredient));
             tvFoodName.setText("Name: " + ingredient);
             tvFoodAmount.setText("Amount: 1");
 
             if(index != -1){  // If item exists inside ingredients
-                if(amount[index] >= 1){
-                    tvFoodAmount.setText("Amount: " + amount[index]);
-                    foodImg.setImageResource(foodImages.get(index));
+                if(ingredients.get(index).getAmount() >= 1){
+                    tvFoodAmount.setText("Amount: " + ingredients.get(index).getAmount());
+                    foodImg.setImageResource(ingredients.get(index).getImgId());
                 }
             }
 
@@ -297,17 +166,16 @@ public class ingredientsPickup extends AppCompatActivity {
         }
     }
 
-    public void addIfNeeded(String ingredient){
+    public void addIfNeeded(Ingredient ingredient){
         if(!finalIngredients.contains(ingredient)){
             finalIngredients.add(ingredient);
             ingredient_amount += 1;
         }
-        amount[ingredients.indexOf(ingredient)] += 1;
+        ingredient.addAmount(1);
     }
 
     public void finish(View v){
         me.setClass(this, finishMeals.class);
-        me.putExtra("ingredients", ingredients);
         me.putExtra("foodCompanies", foodCompanies);
         startActivity(me);
     }

@@ -105,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
             me.putExtra("useVideos", true);
             me.putExtra("useManuallySave", true);
             me.putExtra("todayDate", todayDate);
+
+            Ingredient.initiateIngredientsList();
         }
         return me;
     }

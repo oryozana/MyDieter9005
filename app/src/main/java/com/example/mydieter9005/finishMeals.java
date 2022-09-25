@@ -29,10 +29,11 @@ public class finishMeals extends AppCompatActivity {
     TextView tvBreakfastInfo, tvLunchInfo, tvDinnerInfo;
     ListView breakfastIngredients, lunchIngredients, dinnerIngredients;
     String[] meals, mealParts;
-    ArrayList<String> ingredients, foodCompanies;
-    ArrayList<String> breakfastIngredientsList, lunchIngredientsList, dinnerIngredientsList;
+    ArrayList<String> foodCompanies;
+    ArrayList<Ingredient> ingredients;
+    ArrayList<Ingredient> breakfastIngredientsList, lunchIngredientsList, dinnerIngredientsList;
     ArrayList<Integer> breakfastIngredientsAmount, lunchIngredientsAmount, dinnerIngredientsAmount;
-    ArrayAdapter<String> breakfastIngredientsAdapter, lunchIngredientsAdapter, dinnerIngredientsAdapter;
+    ArrayAdapter<Ingredient> breakfastIngredientsAdapter, lunchIngredientsAdapter, dinnerIngredientsAdapter;
 
     FileInputStream is;
     InputStreamReader isr;
@@ -46,14 +47,14 @@ public class finishMeals extends AppCompatActivity {
 
         me = getIntent();
         meals = me.getStringArrayExtra("meals");
-        ingredients = me.getStringArrayListExtra("ingredients");
+        ingredients = Ingredient.getIngredientsList();
         foodCompanies = me.getStringArrayListExtra("foodCompanies");
 
-        breakfastIngredientsList = new ArrayList<String>();
+        breakfastIngredientsList = new ArrayList<Ingredient>();
         breakfastIngredientsAmount = new ArrayList<Integer>();
-        lunchIngredientsList = new ArrayList<String>();
+        lunchIngredientsList = new ArrayList<Ingredient>();
         lunchIngredientsAmount = new ArrayList<Integer>();
-        dinnerIngredientsList = new ArrayList<String>();
+        dinnerIngredientsList = new ArrayList<Ingredient>();
         dinnerIngredientsAmount = new ArrayList<Integer>();
 
         tvBreakfastInfo = (TextView) findViewById(R.id.tvBreakfastInfo);
@@ -82,7 +83,7 @@ public class finishMeals extends AppCompatActivity {
                 for (int i = 0; i < mealParts.length; i++) {
                     mealParts[i] = mealParts[i].replaceAll(" ", "");
 
-                    if (ingredients.contains(mealParts[i])) {
+                    if (ingredients.contains(Ingredient.getIngredientByName(mealParts[i]))) {
                         addIfNeeded(mealParts[i], mealIndex);
                         if (mealParts[i].equals("olive")) {
                             addExtra("olive", 7, mealIndex);
@@ -137,9 +138,6 @@ public class finishMeals extends AppCompatActivity {
             addIfNeeded("ketchup", mealIndex);
             addIfNeeded("thousand island dressing", mealIndex);
         }
-        if (mealPart.equals("cereals")) {
-            addIfNeeded("milk", mealIndex);
-        }
         if (mealPart.equals("salad")) {
             addIfNeeded("tomato", mealIndex);
             addIfNeeded("cucumber", mealIndex);
@@ -164,7 +162,8 @@ public class finishMeals extends AppCompatActivity {
         }
     }
 
-    public void addIfNeeded(String ingredient, int mealIndex){
+    public void addIfNeeded(String selectedIngredient, int mealIndex){
+        Ingredient ingredient = Ingredient.getIngredientByName(selectedIngredient);
         if(mealIndex == 0){
             if(!breakfastIngredientsList.contains(ingredient)){
                 breakfastIngredientsList.add(ingredient);
@@ -255,27 +254,27 @@ public class finishMeals extends AppCompatActivity {
                 if(mealIndex == 0){
                     for(int i = 0; i < breakfastIngredientsList.size(); i++){
                         String text = breakfastIngredientsList.get(i) + " X " + breakfastIngredientsAmount.get(i);
-                        breakfastIngredientsList.set(i, text);
+                        breakfastIngredientsList.set(i, Ingredient.getIngredientByName(text));
                     }
-                    breakfastIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, breakfastIngredientsList);
+                    breakfastIngredientsAdapter = new ArrayAdapter<Ingredient>(this, android.R.layout.simple_list_item_1, breakfastIngredientsList);
                     breakfastIngredients.setAdapter(breakfastIngredientsAdapter);
                 }
 
                 if(mealIndex == 1){
                     for(int i = 0; i < lunchIngredientsList.size(); i++){
                         String text = lunchIngredientsList.get(i) + " X " + lunchIngredientsAmount.get(i);
-                        lunchIngredientsList.set(i, text);
+                        lunchIngredientsList.set(i, Ingredient.getIngredientByName(text));
                     }
-                    lunchIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lunchIngredientsList);
+                    lunchIngredientsAdapter = new ArrayAdapter<Ingredient>(this, android.R.layout.simple_list_item_1, lunchIngredientsList);
                     lunchIngredients.setAdapter(lunchIngredientsAdapter);
                 }
 
                 if(mealIndex == 2){
                     for(int i = 0; i < dinnerIngredientsList.size(); i++){
                         String text = dinnerIngredientsList.get(i) + " X " + dinnerIngredientsAmount.get(i);
-                        dinnerIngredientsList.set(i, text);
+                        dinnerIngredientsList.set(i, Ingredient.getIngredientByName(text));
                     }
-                    dinnerIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dinnerIngredientsList);
+                    dinnerIngredientsAdapter = new ArrayAdapter<Ingredient>(this, android.R.layout.simple_list_item_1, dinnerIngredientsList);
                     dinnerIngredients.setAdapter(dinnerIngredientsAdapter);
                 }
             }

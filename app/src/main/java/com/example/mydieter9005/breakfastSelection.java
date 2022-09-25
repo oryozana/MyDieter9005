@@ -52,7 +52,7 @@ public class breakfastSelection extends AppCompatActivity {
         me = getIntent();
 
         mealsList = new ArrayList<String>();
-        mealsList.add("Nestle cereals");
+        mealsList.add("Nestle cereals with milk");
         mealsList.add("185");
         mealsList.add("1");
 
