@@ -107,8 +107,24 @@ public class MainActivity extends AppCompatActivity {
             me.putExtra("todayDate", todayDate);
 
             Ingredient.initiateIngredientsList();
+            initiateIngredientsPictures();
         }
         return me;
+    }
+
+    public void initiateIngredientsPictures(){  // Save all the ingredients pictures IDs.
+        String customIngredientName;
+        for(Ingredient ingredient : Ingredient.getIngredientsList()) {
+            if(Ingredient.getIngredientsList().contains(ingredient)){
+                if(ingredient.getName().contains(" ")){
+                    customIngredientName = ingredient.getName().replaceAll(" ", "_");
+                    ingredient.setImgId(getResources().getIdentifier(customIngredientName, "drawable", getPackageName()));
+                }
+                else{
+                    ingredient.setImgId(getResources().getIdentifier(ingredient.getName(), "drawable", getPackageName()));
+                }
+            }
+        }
     }
 
     public void sendToSelected(View v) {

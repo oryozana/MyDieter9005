@@ -1,11 +1,12 @@
 package com.example.mydieter9005;
 
+
 public class Food {
     protected String name;
-    protected double grams;
-    protected double proteins;
-    protected double fats;
-    protected double calories; // Per gram.
+    protected double grams = 0;
+    protected double proteins = 0;
+    protected double fats = 0;
+    protected double calories = 0; // Per gram.
     protected int amount;
 
     public Food(String name, double grams, double proteins, double fats, double calories) {

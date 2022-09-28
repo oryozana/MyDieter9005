@@ -29,7 +29,6 @@ public class ingredientsPickup extends AppCompatActivity {
     ImageView foodImg;
     Button btNext;
     Meal[] meals = new Meal[3];
-    Ingredient[] mealParts;
     ArrayList<Ingredient> ingredients, finalIngredients;
     ArrayList<String> foodCompanies;
     int counter = 0, ingredient_counter = 0, ingredient_amount = 0;
@@ -56,9 +55,6 @@ public class ingredientsPickup extends AppCompatActivity {
         // Food companies:
         foodCompanies.add("nestle");
 
-        initiateIngredientsPictures();
-        initiateMealsRecipes();
-
         tvFoodName = (TextView) findViewById(R.id.tvFoodName);
         tvFoodAmount = (TextView) findViewById(R.id.tvFoodAmount);
         foodImg = (ImageView) findViewById(R.id.foodImg);
@@ -73,69 +69,6 @@ public class ingredientsPickup extends AppCompatActivity {
 
         initiateMediaPlayer();
         implementSettingsData();
-    }
-
-    public void initiateIngredientsPictures(){  // Save all the ingredients pictures IDs.
-        String customIngredientName;
-        for(Ingredient ingredient : ingredients) {
-            if(ingredients.contains(ingredient)){
-                if(ingredient.getName().contains(" ")){
-                    customIngredientName = ingredient.getName().replaceAll(" ", "_");
-                    ingredient.setImgId(getResources().getIdentifier(customIngredientName, "drawable", getPackageName()));
-                }
-                else{
-                    ingredient.setImgId(getResources().getIdentifier(ingredient.getName(), "drawable", getPackageName()));
-                }
-            }
-        }
-    }
-
-    public void initiateMealsRecipes(){  // Separate the meals into ingredients.
-        char firstChar, lastChar;
-        String ingredientName;
-        for(String meal : meals){
-            if(meal != null){
-                mealParts = meal.split(" and | with | include ");
-                for(int i = 0; i < mealParts.length; i++) {
-                    mealParts[i] = mealParts[i].toLowerCase();
-
-                    firstChar = mealParts[i].charAt(0);
-                    lastChar = mealParts[i].charAt(mealParts[i].length() - 1);
-                    ingredientName = "";
-
-                    for(int letter = 0; letter < mealParts[i].length(); letter++){
-                        if(!(firstChar != ' ' && letter == 0) || !(lastChar != ' ' && letter == mealParts[i].length() - 1)){
-                            ingredientName += mealParts[i].charAt(letter);
-                        }
-                    }
-
-                    if (ingredients.contains(Ingredient.getIngredientByName(ingredientName))) {
-                        addIfNeeded(Ingredient.getIngredientByName(ingredientName));
-                        if (ingredientName.equals("olive")) {
-                            Ingredient.getIngredientByName("olive").addAmount(7);
-                        }
-                    }
-                    addIfMiniMealInside(ingredientName);
-                }
-            }
-        }
-    }
-
-    public void addIfMiniMealInside(String mealPart){
-        if (mealPart.equals("toast")) {
-            addIfNeeded(Ingredient.getIngredientByName("bread"));
-            addIfNeeded(Ingredient.getIngredientByName("yellow cheese"));
-            addIfNeeded(Ingredient.getIngredientByName("ketchup"));
-            addIfNeeded(Ingredient.getIngredientByName("thousand island dressing"));
-        }
-        if (mealPart.equals("cereals")) {
-            addIfNeeded(Ingredient.getIngredientByName("milk"));
-        }
-        if (mealPart.equals("salad")) {
-            addIfNeeded(Ingredient.getIngredientByName("tomato"));
-            addIfNeeded(Ingredient.getIngredientByName("cucumber"));
-            addIfNeeded(Ingredient.getIngredientByName("lettuce"));
-        }
     }
 
     public void nextItem(View v){
@@ -164,14 +97,6 @@ public class ingredientsPickup extends AppCompatActivity {
                 btNext.setText("Finish");
             }
         }
-    }
-
-    public void addIfNeeded(Ingredient ingredient){
-        if(!finalIngredients.contains(ingredient)){
-            finalIngredients.add(ingredient);
-            ingredient_amount += 1;
-        }
-        ingredient.addAmount(1);
     }
 
     public void finish(View v){

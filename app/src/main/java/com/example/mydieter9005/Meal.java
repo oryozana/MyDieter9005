@@ -1,27 +1,31 @@
 package com.example.mydieter9005;
 
 import java.util.ArrayList;
+import java.util.Locale;
+
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class Meal extends Food {
-    private ArrayList<Ingredient> ingredients = Ingredient.getIngredientsList();
+    private final ArrayList<Ingredient> ingredients = Ingredient.getIngredientsList();
     private ArrayList<Ingredient> neededIngredientsForMeal;
 
     public Meal(String name) {
         super(name);
+        this.neededIngredientsForMeal = new ArrayList<Ingredient>();
         initiateNeededIngredientsForMeal(name);
         updateMealInfo();
     }
 
     public void initiateNeededIngredientsForMeal(String name){
-        String[] mealsPart = name.split(" and | with | include ");
-        for(String mealPart : mealsPart){
-            Ingredient mealPartIngredient = Ingredient.getIngredientByName(mealPart);
-            if(ingredients.contains(mealPartIngredient)){
-                addIfNeeded(mealPartIngredient);
-            }
-            else{
+        String[] mealParts = name.split(" and | with | include ");
+        for(String mealPart : mealParts){
+            mealPart = mealPart.toLowerCase();
+            if(ingredients.contains(Ingredient.getIngredientByName(mealPart)))
+                addIfNeeded(Ingredient.getIngredientByName(mealPart));
+            else
                 addIfMiniMealInside(mealPart);
-            }
         }
     }
 
@@ -50,11 +54,14 @@ public class Meal extends Food {
     }
 
     public void updateMealInfo(){
-        for(Ingredient ingredient : neededIngredientsForMeal){
-            this.grams += ingredient.grams;
-            this.proteins += ingredient.proteins;
-            this.fats += ingredient.fats;
-            this.calories += ingredient.calories;
+        for(int i = 0; i < this.neededIngredientsForMeal.size(); i++){
+            if(this.neededIngredientsForMeal.get(i) != null) {
+                Ingredient ingredient = neededIngredientsForMeal.get(i);
+                this.grams += ingredient.grams;
+                this.proteins += ingredient.proteins;
+                this.fats += ingredient.fats;
+                this.calories += ingredient.calories;
+            }
         }
     }
 
@@ -65,4 +72,19 @@ public class Meal extends Food {
     public void setNeededIngredientsForMeal(ArrayList<Ingredient> neededIngredientsForMeal) {
         this.neededIngredientsForMeal = neededIngredientsForMeal;
     }
+
+    //    @Override
+    public String toString() {
+        return "Meal{" +
+                "name='" + name + '\'' +
+                ", grams=" + grams +
+                ", proteins=" + proteins +
+                ", fats=" + fats +
+                ", calories=" + calories +
+                ", amount=" + amount +
+                //", ingredients=" + ingredients +
+                ", neededIngredientsForMeal=" + neededIngredientsForMeal +
+                '}';
+    }
 }
+
