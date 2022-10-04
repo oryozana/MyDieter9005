@@ -11,14 +11,14 @@ public class Food {
 
     public Food(String name, double grams, double proteins, double fats, double calories) {
         this.name = name;
-        this.grams = 0;
-        this.proteins = proteins / grams;
-        this.fats = fats / grams;
-        this.calories = calories / grams;
+        this.grams = grams;
+        this.proteins = proteins;
+        this.fats = fats;
+        this.calories = calories;
         this.amount = 0;
     }
 
-    public Food(String name, double proteins, double fats, double calories) {
+    public Food(String name, double proteins, double fats, double calories) { // Default ingredient maker.
         this.name = name;
         this.grams = 100;
         this.proteins = proteins / grams;
@@ -82,6 +82,6 @@ public class Food {
 
     @Override
     public String toString() {
-        return name;
+        return name + ": " + this.calories + "calories, " + this.grams + " fats.";
     }
 }

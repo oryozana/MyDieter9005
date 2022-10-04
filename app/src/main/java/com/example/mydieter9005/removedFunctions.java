@@ -56,4 +56,15 @@ public class removedFunctions extends AppCompatActivity {
 //            amount[ingredients.indexOf(ingredient)] -= amountToRemove;
 //        }
 //    }
+
+        // From: selections activities.
+
+//    public void setListViewFields(){
+//        String[] fields = new String[mealsList.size()];
+//        for(int i = 0; i < mealsList.size(); i += 3){
+//            String field = mealsList.get(i) + ": " + mealsList.get(i + 1) + " calories, " + mealsList.get(i + 2) + " minutes.";
+//            fields[i / 3] = field;
+//        }
+//        setListViewAdapter(fields);
+//    }
 }

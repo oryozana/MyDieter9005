@@ -1,5 +1,7 @@
 package com.example.mydieter9005;
 
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -9,21 +11,28 @@ import java.util.Locale;
 
 public class Meal extends Food {
     private final ArrayList<Ingredient> ingredients = Ingredient.getIngredientsList();
-    private ArrayList<Ingredient> neededIngredientsForMeal;
+    private ArrayList<Ingredient> neededIngredientsForMeal = new ArrayList<Ingredient>();
 
-    public Meal(String name) {
-        super(name);
-        this.neededIngredientsForMeal = new ArrayList<Ingredient>();
-        initiateNeededIngredientsForMeal(name);
+    public Meal(String name, int grams) {  // Single ingredient meal.
+        super(name.toLowerCase());
+        name = name.toLowerCase();
+        initiateNeededIngredientsForMeal(name, grams);
         updateMealInfo();
     }
 
-    public void initiateNeededIngredientsForMeal(String name){
+    public Meal(String name, ArrayList<Ingredient> ingredientsNeeded){
+        super(name.toLowerCase());
+        for(int i = 0; i < ingredientsNeeded.size(); i++)
+            this.neededIngredientsForMeal.add(ingredientsNeeded.get(i));
+        updateMealInfo();
+    }
+
+    public void initiateNeededIngredientsForMeal(String name, int grams){
         String[] mealParts = name.split(" and | with | include ");
         for(String mealPart : mealParts){
             mealPart = mealPart.toLowerCase();
             if(ingredients.contains(Ingredient.getIngredientByName(mealPart)))
-                addIfNeeded(Ingredient.getIngredientByName(mealPart));
+                addIfNeeded(new Ingredient(Ingredient.getIngredientByName(mealPart), grams));
             else
                 addIfMiniMealInside(mealPart);
         }
@@ -44,19 +53,19 @@ public class Meal extends Food {
     }
 
     private void addIfNeeded(Ingredient ingredient) {
-        if(neededIngredientsForMeal.contains(ingredient)){
-            neededIngredientsForMeal.get(neededIngredientsForMeal.indexOf(ingredient)).addAmount(1);
+        if(this.neededIngredientsForMeal.contains(ingredient)){
+            this.neededIngredientsForMeal.get(this.neededIngredientsForMeal.indexOf(ingredient)).addAmount(1);
             if(ingredient.getName().equals("olive"))
-                neededIngredientsForMeal.get(neededIngredientsForMeal.indexOf(ingredient)).addAmount(7);
+                this.neededIngredientsForMeal.get(this.neededIngredientsForMeal.indexOf(ingredient)).addAmount(7);
         }
         else
-            neededIngredientsForMeal.add(ingredient);
+            this.neededIngredientsForMeal.add(ingredient);
     }
 
     public void updateMealInfo(){
         for(int i = 0; i < this.neededIngredientsForMeal.size(); i++){
             if(this.neededIngredientsForMeal.get(i) != null) {
-                Ingredient ingredient = neededIngredientsForMeal.get(i);
+                Ingredient ingredient = this.neededIngredientsForMeal.get(i);
                 this.grams += ingredient.grams;
                 this.proteins += ingredient.proteins;
                 this.fats += ingredient.fats;
@@ -73,18 +82,9 @@ public class Meal extends Food {
         this.neededIngredientsForMeal = neededIngredientsForMeal;
     }
 
-    //    @Override
+    @Override
     public String toString() {
-        return "Meal{" +
-                "name='" + name + '\'' +
-                ", grams=" + grams +
-                ", proteins=" + proteins +
-                ", fats=" + fats +
-                ", calories=" + calories +
-                ", amount=" + amount +
-                //", ingredients=" + ingredients +
-                ", neededIngredientsForMeal=" + neededIngredientsForMeal +
-                '}';
+        return this.name + ": " + this.calories + " calories, " + this.fats + " fats.";
     }
 }
 

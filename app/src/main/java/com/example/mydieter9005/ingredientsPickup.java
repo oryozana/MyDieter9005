@@ -44,9 +44,9 @@ public class ingredientsPickup extends AppCompatActivity {
         setContentView(R.layout.activity_ingredients_pickup);
 
         me = getIntent();
-        meals[0] = new Meal(me.getStringArrayExtra("meals")[0]);
-        meals[1] = new Meal(me.getStringArrayExtra("meals")[1]);
-        meals[2] = new Meal(me.getStringArrayExtra("meals")[2]);
+//        meals[0] = new Meal(me.getStringArrayExtra("meals")[0]);
+//        meals[1] = new Meal(me.getStringArrayExtra("meals")[1]);
+//        meals[2] = new Meal(me.getStringArrayExtra("meals")[2]);
 
         foodCompanies = new ArrayList<String>();  // Food common companies names list.
         ingredients = Ingredient.getIngredientsList();  // All the ingredients that inside the app.

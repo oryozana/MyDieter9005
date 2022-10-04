@@ -3,33 +3,35 @@ package com.example.mydieter9005;
 import java.util.ArrayList;
 
 public class Ingredient extends Food {
-
-    private int imgId;
+    private int imgId = 0;
     private static ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
 
-    public Ingredient(String name, double grams, double proteins, double fats, double calories) {
+    public Ingredient(String name, double grams, double proteins, double fats, double calories) {  // Full info ingredient, not for new ones.
         super(name, grams, proteins, fats, calories);
-        imgId = 0;
-        ingredients.add(this);
     }
 
-    public Ingredient(String name, double proteins, double fats, double calories) {
+    public Ingredient(Ingredient ingredient, double grams){  // Copy other ingredient info and adjust by grams.
+        super(ingredient.name, grams, ingredient.proteins, ingredient.fats, ingredient.calories);
+        this.proteins *= grams;
+        this.fats *= grams;
+        this.calories *= grams;
+    }
+
+    public Ingredient(String name, double proteins, double fats, double calories) {  // To initiate ingredients for the ingredients list.
         super(name, proteins, fats, calories);
-        imgId = 0;
         ingredients.add(this);
     }
 
-    public Ingredient(String name){
-        super(name);
-        imgId = 0;
-    }
+//    public Ingredient(String name){
+//        super(name);
+//    }  // For unknown ingredients, at the moment.
 
     public static Ingredient getIngredientByName(String name){
         for(Ingredient ingredient : Ingredient.ingredients){
             if(ingredient.name.equals(name))
                 return ingredient;
         }
-        return new Ingredient(name);
+        return new Ingredient(name, -1, -1, -1);
     }
 
     public int getImgId() {
@@ -42,6 +44,11 @@ public class Ingredient extends Food {
 
     public static ArrayList<Ingredient> getIngredientsList(){
         return Ingredient.ingredients;
+    }
+
+    @Override
+    public String toString() {
+        return this.name + ": " + this.calories + " calories, " + this.proteins + " proteins and " + this.fats + " fats.";
     }
 
     public static ArrayList<Ingredient> initiateIngredientsList(){

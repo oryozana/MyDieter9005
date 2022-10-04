@@ -1,8 +1,10 @@
 package com.example.mydieter9005;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
@@ -32,8 +34,8 @@ public class breakfastSelection extends AppCompatActivity {
     private VideoView videoView;
 
     Button btSendBreakfastToCustomize, btClearBreakfastSelection, btMultiBreakfastSelect;
-    ArrayList<String> mealsList;
-    ArrayAdapter<String> adapter;
+    ArrayList<Meal> mealsList;
+    ArrayAdapter<Meal> adapter;
     boolean multiSelect = false;
     String chosenBreakfastName = "";
     int chosenBreakfastCalories = 0, chosenBreakfastMinutes = 0, multiSelectCounter = 0;
@@ -51,26 +53,23 @@ public class breakfastSelection extends AppCompatActivity {
 
         me = getIntent();
 
-        mealsList = new ArrayList<String>();
-        mealsList.add("Nestle cereals with milk");
-        mealsList.add("185");
-        mealsList.add("1");
+        mealsList = new ArrayList<Meal>();
 
-        mealsList.add("Chocolate flavored nestle cereals");
-        mealsList.add("230");
-        mealsList.add("1");
+        ArrayList<Ingredient> ingredientsNeeded = new ArrayList<Ingredient>();  // For multi-ingredients meals.
 
-        mealsList.add("Yogurt");
-        mealsList.add("100");
-        mealsList.add("1");
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("Nestle cereals"), 30));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("milk"), 200));
+        mealsList.add(new Meal("Nestle cereals with milk", ingredientsNeeded));
+        ingredientsNeeded.clear();
 
-        mealsList.add("Chocolate flavored yogurt");
-        mealsList.add("200");
-        mealsList.add("1");
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("Chocolate flavored nestle cereals"), 30));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("milk"), 200));
+        mealsList.add(new Meal("Chocolate flavored nestle cereals", ingredientsNeeded));
+        ingredientsNeeded.clear();
 
-        mealsList.add("Chocolate flavored ice cream");
-        mealsList.add("300");
-        mealsList.add("1");
+        mealsList.add(new Meal("Yogurt", 100));
+        mealsList.add(new Meal("Chocolate flavored yogurt", 100));
+        mealsList.add(new Meal("Chocolate flavored ice cream", 250));
 
         listView = (ListView) findViewById(R.id.listViewBreakfast);
         videoView = (VideoView) findViewById(R.id.breakfastVideoView);
@@ -79,37 +78,28 @@ public class breakfastSelection extends AppCompatActivity {
         btClearBreakfastSelection = (Button) findViewById(R.id.btClearBreakfastSelection);
         btMultiBreakfastSelect = (Button) findViewById(R.id.btMultiBreakfastSelect);
 
-        setListViewFields();
+        setListViewAdapter();
         initiateVideoPlayer();
         initiateMediaPlayer();
         implementSettingsData();
     }
 
-    public void setListViewFields(){
-        String[] fields = new String[mealsList.size() / 3];
-        for(int i = 0; i < mealsList.size(); i += 3){
-            String field = mealsList.get(i) + ": " + mealsList.get(i + 1) + " calories, " + mealsList.get(i + 2) + " minutes.";
-            fields[i / 3] = field;
-        }
-        setListViewAdapter(fields);
-    }
-
-    public void setListViewAdapter(String[] fields){
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fields);
+    public void setListViewAdapter(){
+        adapter = new ArrayAdapter<Meal>(this, android.R.layout.simple_list_item_1, mealsList);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedItem = (String) adapterView.getItemAtPosition(i);
+                Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
 
                 if(!multiSelect){
                     me.setClass(breakfastSelection.this, mealsMenu.class);
-                    me.putExtra("breakfast", selectedItem);
+                    me.putExtra("breakfast", (CharSequence) selectedItem);
                     startActivity(me);
                 }
                 else{
-                    String[] mealInfo = multiUsageFunctions.organizeMeal(selectedItem);
+                    String[] mealInfo = multiUsageFunctions.organizeMeal(selectedItem.toString());
                     Toast.makeText(breakfastSelection.this, mealInfo[0] + " has added.", Toast.LENGTH_SHORT).show();
                     chosenBreakfastName += mealInfo[0].toLowerCase() + " and ";
                     chosenBreakfastCalories += multiUsageFunctions.getCaloriesOrMinutesOutOfString(mealInfo[1]);
@@ -118,6 +108,36 @@ public class breakfastSelection extends AppCompatActivity {
                 }
             }
         });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Meal selectedItem = (Meal) parent.getItemAtPosition(position);
+
+                showMealIngredientsInfo(selectedItem);
+                return true;
+            }
+        });
+    }
+
+    public void showMealIngredientsInfo(Meal meal){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Your meal ingredients: ");
+        String mealInfo = "";
+        for(Ingredient ingredient : meal.getNeededIngredientsForMeal())
+            mealInfo += ingredient.getName() + ": " + ingredient.getGrams() + " grams." + "\n";
+        adb.setMessage(mealInfo);
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
     }
 
     public void sendToCustomize(View v){
