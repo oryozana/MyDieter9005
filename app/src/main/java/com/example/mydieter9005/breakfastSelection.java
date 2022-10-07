@@ -98,7 +98,7 @@ public class breakfastSelection extends AppCompatActivity {
 
                 if(!multiSelect){
                     me.setClass(breakfastSelection.this, mealsMenu.class);
-                    me.putExtra("breakfast", (CharSequence) selectedItem);
+                    me.putExtra("breakfast", selectedItem);
                     startActivity(me);
                 }
                 else{

@@ -52,30 +52,30 @@
         android:text="Select" />
 
     <TextView
+        android:id="@+id/tvTotalProteins"
         android:layout_width="100pt"
         android:layout_height="wrap_content"
-        android:layout_margin="4pt" />
+        android:layout_marginTop="7pt"
+        android:textSize="8pt"
+        android:text="Total proteins: 0."
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/tvTotalFats"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:textSize="8pt"
+        android:text="Total fats: 0."
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/tvTotalCalories"
         android:layout_width="100pt"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="7pt"
         android:textSize="8pt"
-        android:text="Total Calories: 0 calories."
+        android:text="Total Calories: 0."
         android:textColor="@color/black"/>
-
-    <TextView
-        android:id="@+id/tvTotalTime"
-        android:layout_width="100pt"
-        android:layout_height="wrap_content"
-        android:textSize="8pt"
-        android:text="Total time: 0 minutes."
-        android:textColor="@color/black"/>
-
-    <TextView
-        android:layout_width="100pt"
-        android:layout_height="wrap_content"
-        android:layout_margin="4pt" />
 
     <Button
         android:id="@+id/btFinish"

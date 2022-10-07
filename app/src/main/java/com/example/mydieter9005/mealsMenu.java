@@ -24,11 +24,12 @@ public class mealsMenu extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
     TextView tvBreakfast, tvLunch, tvDinner;
-    TextView tvTotalCalories, tvTotalTime;
+    TextView tvTotalProteins, tvTotalFats, tvTotalCalories;
     Button btBreakfast, btLunch, btDinner, btFinish;
-    String breakfast = "", lunch = "", dinner = "";
-    String[] list, meals = new String[3];
-    int totalCalories = 0, totalTime = 0;
+
+    Meal breakfast, lunch, dinner;
+    Meal[] selectedMeals = new Meal[3];
+    double totalProteins = 0, totalFats = 0, totalCalories = 0;
 
     FileInputStream is;
     InputStreamReader isr;
@@ -41,7 +42,6 @@ public class mealsMenu extends AppCompatActivity {
         setContentView(R.layout.activity_meals_menu);
 
         me = getIntent();
-        initiateMediaPlayer();
 
         tvBreakfast = (TextView) findViewById(R.id.tvBreakfast);
         tvLunch = (TextView) findViewById(R.id.tvLunch);
@@ -52,10 +52,12 @@ public class mealsMenu extends AppCompatActivity {
         btDinner = (Button) findViewById(R.id.btDinner);
         btFinish = (Button) findViewById(R.id.btFinish);
 
+        tvTotalProteins = (TextView) findViewById(R.id.tvTotalProteins);
+        tvTotalFats = (TextView) findViewById(R.id.tvTotalFats);
         tvTotalCalories = (TextView) findViewById(R.id.tvTotalCalories);
-        tvTotalTime = (TextView) findViewById(R.id.tvTotalTime);
 
         implementSettingsData();
+        initiateMediaPlayer();
         updateMeals();
     }
 
@@ -75,9 +77,11 @@ public class mealsMenu extends AppCompatActivity {
         }
         if(id == btFinish.getId()) {
             if(me.hasExtra("breakfast") || me.hasExtra("lunch") || me.hasExtra("dinner")){
-                me.setClass(this, ingredientsPickup.class);
+                me.setClass(mealsMenu.this, ingredientsPickup.class);
+                me.putExtra("selectedMeals", selectedMeals);
+                me.putExtra("totalProteins", totalProteins);
+                me.putExtra("totalFats", totalFats);
                 me.putExtra("totalCalories", totalCalories);
-                me.putExtra("meals", meals);
                 startActivity(me);
             }
             else{
@@ -87,38 +91,43 @@ public class mealsMenu extends AppCompatActivity {
     }
 
     public void updateMeals(){
+        btBreakfast.setText("Select");
+        btLunch.setText("Select");
+        btDinner.setText("Select");
+
         if(me.hasExtra("breakfast")){
-            breakfast = me.getStringExtra("breakfast");
-            list = multiUsageFunctions.organizeMeal(breakfast);
-            tvBreakfast.setText("Your breakfast is: " + list[0] + ".");
-            btBreakfast.setText(list[1] + "." + "\n" + list[2]);
-            totalCalories += Integer.parseInt(multiUsageFunctions.separateInfo(list[1]));
-            totalTime += Integer.parseInt(multiUsageFunctions.separateInfo(list[2]));
-            meals[0] = list[0];
+            breakfast = (Meal) me.getSerializableExtra("breakfast");
+            tvBreakfast.setText("Your breakfast is: " + breakfast.getName() + ".");
+            btBreakfast.setText("Change breakfast");
+            totalProteins += breakfast.getProteins();
+            totalFats += breakfast.getFats();
+            totalCalories += breakfast.getCalories();
+            selectedMeals[0] = breakfast;
         }
 
         if(me.hasExtra("lunch")){
-            lunch = me.getStringExtra("lunch");
-            list = multiUsageFunctions.organizeMeal(lunch);
-            tvLunch.setText("Your lunch is: " + list[0] + ".");
-            btLunch.setText(list[1] + "." + "\n" + list[2]);
-            totalCalories += Integer.parseInt(multiUsageFunctions.separateInfo(list[1]));
-            totalTime += Integer.parseInt(multiUsageFunctions.separateInfo(list[2]));
-            meals[1] = list[0];
+            lunch = (Meal) me.getSerializableExtra("lunch");
+            tvLunch.setText("Your lunch is: " + lunch.getName() + ".");
+            btLunch.setText("Change lunch");
+            totalProteins += lunch.getProteins();
+            totalFats += lunch.getFats();
+            totalCalories += lunch.getCalories();
+            selectedMeals[1] = lunch;
         }
 
         if(me.hasExtra("dinner")){
-            dinner = me.getStringExtra("dinner");
-            list = multiUsageFunctions.organizeMeal(dinner);
-            tvDinner.setText("Your dinner is: " + list[0] + ".");
-            btDinner.setText(list[1] + "." + "\n" + list[2]);
-            totalCalories += Integer.parseInt(multiUsageFunctions.separateInfo(list[1]));
-            totalTime += Integer.parseInt(multiUsageFunctions.separateInfo(list[2]));
-            meals[2] = list[0];
+            dinner = (Meal) me.getSerializableExtra("dinner");
+            tvDinner.setText("Your dinner is: " + dinner.getName() + ".");
+            btDinner.setText("Change dinner");
+            totalProteins += dinner.getProteins();
+            totalFats += dinner.getFats();
+            totalCalories += dinner.getCalories();
+            selectedMeals[2] = dinner;
         }
 
-        tvTotalCalories.setText("Total calories: " + totalCalories + " calories.");
-        tvTotalTime.setText("Total time: " + totalTime + " minutes.");
+        tvTotalProteins.setText("Total proteins: " + totalProteins + " .");
+        tvTotalFats.setText("Total fats: " + totalFats + " .");
+        tvTotalCalories.setText("Total calories: " + totalCalories + " .");
     }
 
     public String getFileData(String fileName){
