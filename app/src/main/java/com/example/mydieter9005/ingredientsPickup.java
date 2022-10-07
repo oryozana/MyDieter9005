@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,14 +27,16 @@ public class ingredientsPickup extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
 
-    TextView tvFoodName, tvFoodGrams, tvFoodAmount;
+    TextView tvFoodName, tvFoodGrams, tvFoodAmount, tvCounterShow;
     ImageView ivFoodImg;
-    Button btNext, btPrevious, btFinishIngredientsPickup;
+    ImageButton ibtNext, ibtPrevious;
+    Button btFinishIngredientsPickup;
     Meal[] selectedMeals = new Meal[3];
     ArrayList<Ingredient> ingredients, finalIngredients;
     ArrayList<String> foodCompanies;
     int ingredientsCounter = 0, ingredientsAmount = 0;
     ArrayList<Ingredient> ingredientsToShow;
+    String lastClicked = "next";
 
     FileInputStream is;
     InputStreamReader isr;
@@ -57,6 +60,7 @@ public class ingredientsPickup extends AppCompatActivity {
         // Food companies:
         foodCompanies.add("nestle");
 
+        tvCounterShow = (TextView) findViewById(R.id.tvCounterShow);
         tvFoodName = (TextView) findViewById(R.id.tvFoodName);
         tvFoodGrams = (TextView) findViewById(R.id.tvFoodGrams);
         tvFoodAmount = (TextView) findViewById(R.id.tvFoodAmount);
@@ -64,8 +68,8 @@ public class ingredientsPickup extends AppCompatActivity {
         ivFoodImg = (ImageView) findViewById(R.id.ivFoodImg);
 
         btFinishIngredientsPickup = (Button) findViewById(R.id.btFinishIngredientsPickup);
-        btPrevious = (Button) findViewById(R.id.btPrevious);
-        btNext = (Button) findViewById(R.id.btNext);
+        ibtPrevious = (ImageButton) findViewById(R.id.ibtPrevious);
+        ibtNext = (ImageButton) findViewById(R.id.ibtNext);
 
         implementSettingsData();
         initiateIngredientsToShow();
@@ -96,33 +100,47 @@ public class ingredientsPickup extends AppCompatActivity {
         }
         ingredientsAmount = ingredientsToShow.size();
 
-        btNext.setText("Next" + "\n" + "Item: " + ingredientsCounter + " out of " + ingredientsAmount);
+        tvCounterShow.setText("Item: " + ingredientsCounter + " out of " + ingredientsAmount);
         if(ingredientsAmount == 0)
-            btNext.setText("Finish");
+            ibtNext.setVisibility(View.INVISIBLE);
     }
 
     public void nextItem(View v){
-        if(btNext.getText() == "Finish")
-            finish(v);
+        if(ingredientsCounter + 1 == ingredientsAmount)
+            ibtNext.setVisibility(View.INVISIBLE);
+        if(ibtPrevious.getVisibility() == View.INVISIBLE)
+            ibtPrevious.setVisibility(View.VISIBLE);
 
-        if(ingredientsCounter < ingredientsToShow.size()){
-            Ingredient ingredient = ingredientsToShow.get(ingredientsCounter);
-            tvFoodName.setText("Name: " + ingredient.getName());
-            tvFoodGrams.setText("Grams: " + ingredient.getGrams());
-            tvFoodAmount.setText("Amount: " + ingredient.getAmount());
+        ingredientsCounter++;
+        setIngredientInfo();
 
-            if(getIngredientIndexInArrayList(ingredient, ingredients) != -1)
-                ivFoodImg.setImageResource(ingredient.getImgId());
-            else
-                ivFoodImg.setImageResource(R.drawable.image_not_available);
+        lastClicked = "next";
+        tvCounterShow.setText("Item: " + ingredientsCounter + " out of " + ingredientsAmount);
+    }
 
-            ingredientsCounter++;
-            btNext.setText("Next" + "\n" + "Item: " + ingredientsCounter + " out of " + ingredientsAmount);
-        }
+    public void previousItem(View v){
+        if(ingredientsCounter == 2)
+            ibtPrevious.setVisibility(View.INVISIBLE);
+        if(ibtNext.getVisibility() == View.INVISIBLE)
+            ibtNext.setVisibility(View.VISIBLE);
 
-        if(ingredientsCounter == ingredientsAmount){
-            btNext.setText("Finish");
-        }
+        ingredientsCounter--;
+        setIngredientInfo();
+
+        lastClicked = "previous";
+        tvCounterShow.setText("Item: " + ingredientsCounter + " out of " + ingredientsAmount);
+    }
+
+    public void setIngredientInfo(){
+        Ingredient ingredient = ingredientsToShow.get(ingredientsCounter - 1);
+        tvFoodName.setText("Name: " + ingredient.getName());
+        tvFoodGrams.setText("Grams: " + ingredient.getGrams());
+        tvFoodAmount.setText("Amount: " + ingredient.getAmount());
+
+        if(getIngredientIndexInArrayList(ingredient, ingredients) != -1)
+            ivFoodImg.setImageResource(ingredient.getImgId());
+        else
+            ivFoodImg.setImageResource(R.drawable.image_not_available);
     }
 
     public void finish(View v){

@@ -44,6 +44,7 @@
         android:id="@+id/tvCounterShow"
         android:layout_width="100pt"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:gravity="center" />
 
     <androidx.gridlayout.widget.GridLayout
