@@ -28,13 +28,14 @@ public class finishMeals extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
 
     TextView tvBreakfastInfo, tvLunchInfo, tvDinnerInfo;
-    ListView breakfastIngredients, lunchIngredients, dinnerIngredients;
-    Meal[] selectedMeals, mealParts;
-    ArrayList<String> foodCompanies;
-    ArrayList<Ingredient> ingredients;
+    ListView lvBreakfastIngredients, lvLunchIngredients, lvDinnerIngredients;
+    Meal[] selectedMeals = new Meal[3];
+//    ArrayList<String> foodCompanies;
+
     ArrayList<Ingredient> breakfastIngredientsList, lunchIngredientsList, dinnerIngredientsList;
-    ArrayList<Integer> breakfastIngredientsAmount, lunchIngredientsAmount, dinnerIngredientsAmount;
-    ArrayAdapter<Ingredient> breakfastIngredientsAdapter, lunchIngredientsAdapter, dinnerIngredientsAdapter;
+
+    ArrayList<String> breakfastFields, lunchFields, dinnerFields;
+    ArrayAdapter<String> breakfastIngredientsAdapter, lunchIngredientsAdapter, dinnerIngredientsAdapter;
 
     FileInputStream is;
     InputStreamReader isr;
@@ -51,17 +52,7 @@ public class finishMeals extends AppCompatActivity {
         selectedMeals[1] = (Meal) me.getSerializableExtra("selectedLunch");
         selectedMeals[2] = (Meal) me.getSerializableExtra("selectedDinner");
 
-        ingredients = Ingredient.getIngredientsList();
-        foodCompanies = me.getStringArrayListExtra("foodCompanies");
-
-        breakfastIngredientsList = new ArrayList<Ingredient>();
-        breakfastIngredientsAmount = new ArrayList<Integer>();
-
-        lunchIngredientsList = new ArrayList<Ingredient>();
-        lunchIngredientsAmount = new ArrayList<Integer>();
-
-        dinnerIngredientsList = new ArrayList<Ingredient>();
-        dinnerIngredientsAmount = new ArrayList<Integer>();
+//        foodCompanies = me.getStringArrayListExtra("foodCompanies");
 
         tvBreakfastInfo = (TextView) findViewById(R.id.tvBreakfastInfo);
         tvBreakfastInfo.setMovementMethod(new ScrollingMovementMethod());
@@ -70,220 +61,76 @@ public class finishMeals extends AppCompatActivity {
         tvDinnerInfo = (TextView) findViewById(R.id.tvDinnerInfo);
         tvDinnerInfo.setMovementMethod(new ScrollingMovementMethod());
 
-        breakfastIngredients = (ListView) findViewById(R.id.breakfastIngredients);
-        lunchIngredients = (ListView) findViewById(R.id.lunchIngredients);
-        dinnerIngredients = (ListView) findViewById(R.id.dinnerIngredients);
+        lvBreakfastIngredients = (ListView) findViewById(R.id.lvBreakfastIngredients);
+        lvLunchIngredients = (ListView) findViewById(R.id.lvLunchIngredients);
+        lvDinnerIngredients = (ListView) findViewById(R.id.lvDinnerIngredients);
 
-        initiateMealsRecipes();
+        implementSettingsData();
         initiateMediaPlayer();
         setAdapters();
-        implementSettingsData();
-    }
-
-    public void initiateMealsRecipes(){
-        for(int mealIndex = 0; mealIndex < meals.length; mealIndex++) {
-            String meal = meals[mealIndex];
-            if (meal != null) {
-                mealParts = meal.split(" ", 100);
-                mealParts[0] = mealParts[0].toLowerCase();
-                for (int i = 0; i < mealParts.length; i++) {
-                    mealParts[i] = mealParts[i].replaceAll(" ", "");
-
-                    if (ingredients.contains(Ingredient.getIngredientByName(mealParts[i]))) {
-                        addIfNeeded(mealParts[i], mealIndex);
-                        if (mealParts[i].equals("olive")) {
-                            addExtra("olive", 7, mealIndex);
-                        }
-                    }
-
-                    i = lookForSpecialWords(mealParts, i, mealIndex);
-                    addIfMiniMealInside(mealParts[i], mealIndex);
-                }
-                updateMealName(meal, mealIndex);
-            }
-        }
-    }
-
-    public int lookForSpecialWords(String[] mealParts, int i, int mealIndex){
-        String previousIngredient, middleIngredient, nextIngredient;
-        int combo = 1;
-
-        if(mealParts[i].equals("oil") || mealParts[i].equals("powder")){
-            nextIngredient = mealParts[i - 1] + " " + mealParts[i];
-            removeIfNeeded(mealParts[i - 1], 1, mealIndex);
-            addIfNeeded(nextIngredient, mealIndex);
-            i += combo;
-            return i;
-        }
-
-        if(mealParts[i].equals("ice") || foodCompanies.contains(mealParts[i])){
-            previousIngredient = mealParts[i] + " " + mealParts[i + 1];
-            addIfNeeded(previousIngredient, mealIndex);
-            i += combo;
-            return i;
-        }
-
-        if (mealParts[i].equals("flavored")){
-            middleIngredient = mealParts[i - 1] + " " + mealParts[i] + " " + mealParts[i + 1];
-            if(mealParts[i + 1].equals("ice") || foodCompanies.contains(mealParts[i])){
-                middleIngredient += " " + mealParts[i + 2];
-                combo++;
-            }
-            addIfNeeded(middleIngredient, mealIndex);
-            removeIfNeeded(mealParts[i - 1], 1, mealIndex);
-            i += combo;
-            return i;
-        }
-        return i;
-    }
-
-    public void addIfMiniMealInside(String mealPart, int mealIndex){
-        if (mealPart.equals("toast")) {
-            addIfNeeded("bread", mealIndex);
-            addIfNeeded("yellow cheese", mealIndex);
-            addIfNeeded("ketchup", mealIndex);
-            addIfNeeded("thousand island dressing", mealIndex);
-        }
-        if (mealPart.equals("salad")) {
-            addIfNeeded("tomato", mealIndex);
-            addIfNeeded("cucumber", mealIndex);
-            addIfNeeded("lettuce", mealIndex);
-        }
-    }
-
-    public void addExtra(String ingredient, int amount, int mealIndex){
-        if(mealIndex == 0){
-            int index = breakfastIngredientsList.indexOf(ingredient);
-            breakfastIngredientsAmount.add(index, breakfastIngredientsAmount.get(index) + amount);
-        }
-
-        if(mealIndex == 1){
-            int index = lunchIngredientsList.indexOf(ingredient);
-            lunchIngredientsAmount.add(index, lunchIngredientsAmount.get(index) + amount);
-        }
-
-        if(mealIndex == 2){
-            int index = dinnerIngredientsList.indexOf(ingredient);
-            dinnerIngredientsAmount.add(index, dinnerIngredientsAmount.get(index) + amount);
-        }
-    }
-
-    public void addIfNeeded(String selectedIngredient, int mealIndex){
-        Ingredient ingredient = Ingredient.getIngredientByName(selectedIngredient);
-        if(mealIndex == 0){
-            if(!breakfastIngredientsList.contains(ingredient)){
-                breakfastIngredientsList.add(ingredient);
-                breakfastIngredientsAmount.add(1);
-            }
-            else{
-                int index = breakfastIngredientsList.indexOf(ingredient);
-                breakfastIngredientsAmount.add(index, breakfastIngredientsAmount.get(index) + 1);
-            }
-        }
-
-        if(mealIndex == 1){
-            if(!lunchIngredientsList.contains(ingredient)){
-                lunchIngredientsList.add(ingredient);
-                lunchIngredientsAmount.add(1);
-            }
-            else{
-                int index = lunchIngredientsList.indexOf(ingredient);
-                lunchIngredientsAmount.add(index, lunchIngredientsAmount.get(index) + 1);
-            }
-        }
-
-        if(mealIndex == 2){
-            if(!dinnerIngredientsList.contains(ingredient)){
-                dinnerIngredientsList.add(ingredient);
-                dinnerIngredientsAmount.add(1);
-            }
-            else{
-                int index = dinnerIngredientsList.indexOf(ingredient);
-                dinnerIngredientsAmount.add(index, dinnerIngredientsAmount.get(index) + 1);
-            }
-        }
-    }
-
-    public void removeIfNeeded(String ingredient, int amountToRemove, int mealIndex){
-        if(mealIndex == 0){
-            int index = breakfastIngredientsList.indexOf(ingredient);
-            if(breakfastIngredientsAmount.get(index) == amountToRemove){
-                breakfastIngredientsList.remove(index);
-                breakfastIngredientsAmount.remove(index);
-            }
-            else{
-                breakfastIngredientsAmount.add(index, breakfastIngredientsAmount.get(index) - amountToRemove);
-            }
-        }
-
-        if(mealIndex == 1){
-            int index = lunchIngredientsList.indexOf(ingredient);
-            if(lunchIngredientsAmount.get(index) == amountToRemove){
-                lunchIngredientsList.remove(index);
-                lunchIngredientsAmount.remove(index);
-            }
-            else{
-                lunchIngredientsAmount.add(index, lunchIngredientsAmount.get(index) - amountToRemove);
-            }
-        }
-
-        if(mealIndex == 2){
-            int index = dinnerIngredientsList.indexOf(ingredient);
-            if(dinnerIngredientsAmount.get(index) == amountToRemove){
-                dinnerIngredientsList.remove(index);
-                dinnerIngredientsAmount.remove(index);
-            }
-            else{
-                dinnerIngredientsAmount.add(index, dinnerIngredientsAmount.get(index) - amountToRemove);
-            }
-        }
-    }
-
-    public void updateMealName(String mealName, int mealIndex){
-        if(mealIndex == 0){
-            tvBreakfastInfo.setText("Breakfast: " + mealName);
-        }
-
-        if(mealIndex == 1){
-            tvLunchInfo.setText("Lunch: " + mealName);
-        }
-
-        if(mealIndex == 2){
-            tvDinnerInfo.setText("Dinner: " + mealName);
-        }
     }
 
     public void setAdapters(){
-        for(int mealIndex = 0; mealIndex < meals.length; mealIndex++) {
-            String meal = meals[mealIndex];
-            if (meal != null) {
-                if(mealIndex == 0){
-                    for(int i = 0; i < breakfastIngredientsList.size(); i++){
-                        String text = breakfastIngredientsList.get(i) + " X " + breakfastIngredientsAmount.get(i);
-                        breakfastIngredientsList.set(i, Ingredient.getIngredientByName(text));
-                    }
-                    breakfastIngredientsAdapter = new ArrayAdapter<Ingredient>(this, android.R.layout.simple_list_item_1, breakfastIngredientsList);
-                    breakfastIngredients.setAdapter(breakfastIngredientsAdapter);
-                }
+        initiateIngredientListsAndSetMealsNames();
+        initiateListViewsFields();
 
-                if(mealIndex == 1){
-                    for(int i = 0; i < lunchIngredientsList.size(); i++){
-                        String text = lunchIngredientsList.get(i) + " X " + lunchIngredientsAmount.get(i);
-                        lunchIngredientsList.set(i, Ingredient.getIngredientByName(text));
-                    }
-                    lunchIngredientsAdapter = new ArrayAdapter<Ingredient>(this, android.R.layout.simple_list_item_1, lunchIngredientsList);
-                    lunchIngredients.setAdapter(lunchIngredientsAdapter);
-                }
+        if(selectedMeals[0] != null){  // Breakfast.
+            breakfastIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, breakfastFields);
+            lvBreakfastIngredients.setAdapter(breakfastIngredientsAdapter);
+        }
 
-                if(mealIndex == 2){
-                    for(int i = 0; i < dinnerIngredientsList.size(); i++){
-                        String text = dinnerIngredientsList.get(i) + " X " + dinnerIngredientsAmount.get(i);
-                        dinnerIngredientsList.set(i, Ingredient.getIngredientByName(text));
-                    }
-                    dinnerIngredientsAdapter = new ArrayAdapter<Ingredient>(this, android.R.layout.simple_list_item_1, dinnerIngredientsList);
-                    dinnerIngredients.setAdapter(dinnerIngredientsAdapter);
-                }
-            }
+        if(selectedMeals[1] != null){  // Lunch.
+            lunchIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lunchFields);
+            lvLunchIngredients.setAdapter(lunchIngredientsAdapter);
+        }
+
+        if(selectedMeals[2] != null){  // Dinner.
+            dinnerIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dinnerFields);
+            lvDinnerIngredients.setAdapter(dinnerIngredientsAdapter);
+        }
+    }
+
+    public void initiateListViewsFields(){
+        Ingredient ingredient;
+        breakfastFields = new ArrayList<String>();
+        for(int i = 0; i < breakfastIngredientsList.size(); i++){
+            ingredient = breakfastIngredientsList.get(i);
+            breakfastFields.add(ingredient.getName() + ": " + ingredient.getGrams() + " grams.");
+        }
+
+        lunchFields = new ArrayList<String>();
+        for(int i = 0; i < lunchIngredientsList.size(); i++){
+            ingredient = lunchIngredientsList.get(i);
+            lunchFields.add(ingredient.getName() + ": " + ingredient.getGrams() + " grams.");
+        }
+
+        dinnerFields = new ArrayList<String>();
+        for(int i = 0; i < dinnerIngredientsList.size(); i++){
+            ingredient = dinnerIngredientsList.get(i);
+            dinnerFields.add(ingredient.getName() + ": " + ingredient.getGrams() + " grams.");
+        }
+    }
+
+    public void initiateIngredientListsAndSetMealsNames(){
+        breakfastIngredientsList = new ArrayList<Ingredient>();
+        if(selectedMeals[0] != null) {
+            tvBreakfastInfo.setText("Breakfast: " + selectedMeals[0].getName());
+            for (int i = 0; i < selectedMeals[0].getNeededIngredientsForMeal().size(); i++)
+                breakfastIngredientsList.add(new Ingredient(selectedMeals[0].getNeededIngredientsForMeal().get(i)));
+        }
+
+        lunchIngredientsList = new ArrayList<Ingredient>();
+        if(selectedMeals[1] != null){
+            tvLunchInfo.setText("Lunch: " + selectedMeals[1].getName());
+            for(int i = 0; i < selectedMeals[1].getNeededIngredientsForMeal().size(); i++)
+                lunchIngredientsList.add(new Ingredient(selectedMeals[1].getNeededIngredientsForMeal().get(i)));
+        }
+
+        dinnerIngredientsList = new ArrayList<Ingredient>();
+        if(selectedMeals[2] != null){
+            tvDinnerInfo.setText("Dinner: " + selectedMeals[2].getName());
+            for(int i = 0; i < selectedMeals[2].getNeededIngredientsForMeal().size(); i++)
+                dinnerIngredientsList.add(new Ingredient(selectedMeals[2].getNeededIngredientsForMeal().get(i)));
         }
     }
 

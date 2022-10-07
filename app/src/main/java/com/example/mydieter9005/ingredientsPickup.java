@@ -64,16 +64,9 @@ public class ingredientsPickup extends AppCompatActivity {
         ivFoodImg = (ImageView) findViewById(R.id.ivFoodImg);
         btNext = (Button) findViewById(R.id.btNext);
 
-        Toast.makeText(this, "Make it 1.", Toast.LENGTH_SHORT).show();
-
         implementSettingsData();
-        Toast.makeText(this, "Make it 2.", Toast.LENGTH_SHORT).show();
-
         initiateIngredientsToShow();
-        Toast.makeText(this, "Make it 3.", Toast.LENGTH_SHORT).show();
-
         initiateMediaPlayer();
-        Toast.makeText(this, "Make it 4.", Toast.LENGTH_SHORT).show();
     }
 
     public int getIngredientIndexInArrayList(Ingredient ingredient, ArrayList<Ingredient> ingredientsArrayList){

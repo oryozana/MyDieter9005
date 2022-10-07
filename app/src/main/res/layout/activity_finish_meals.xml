@@ -33,7 +33,7 @@
         </HorizontalScrollView>
 
         <ListView
-            android:id="@+id/breakfastIngredients"
+            android:id="@+id/lvBreakfastIngredients"
             android:layout_width="match_parent"
             android:layout_height="75pt" />
     </androidx.gridlayout.widget.GridLayout>
@@ -62,7 +62,7 @@
         </HorizontalScrollView>
 
         <ListView
-            android:id="@+id/lunchIngredients"
+            android:id="@+id/lvLunchIngredients"
             android:layout_width="match_parent"
             android:layout_height="75pt" />
     </androidx.gridlayout.widget.GridLayout>
@@ -91,7 +91,7 @@
         </HorizontalScrollView>
 
         <ListView
-            android:id="@+id/dinnerIngredients"
+            android:id="@+id/lvDinnerIngredients"
             android:layout_width="match_parent"
             android:layout_height="75pt" />
     </androidx.gridlayout.widget.GridLayout>
