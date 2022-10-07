@@ -1,7 +1,9 @@
 package com.example.mydieter9005;
 
 
-public class Food {
+import java.io.Serializable;
+
+public class Food implements Serializable {
     protected String name;
     protected double grams = 0;
     protected double proteins = 0;
@@ -11,10 +13,10 @@ public class Food {
 
     public Food(String name, double grams, double proteins, double fats, double calories) {
         this.name = name;
-        this.grams = grams;
-        this.proteins = proteins;
-        this.fats = fats;
-        this.calories = calories;
+        this.grams = Math.round(grams * 1000.0) / 1000.0;
+        this.proteins = Math.round(proteins * 1000.0) / 1000.0;
+        this.fats = Math.round(fats * 1000.0) / 1000.0;
+        this.calories = Math.round(calories * 1000.0) / 1000.0;;
         this.amount = 0;
     }
 
@@ -45,7 +47,13 @@ public class Food {
     }
 
     public void setGrams(double grams) {
+        this.calories /= this.grams;
+        this.proteins /= this.grams;
+        this.fats /= this.grams;
         this.grams = grams;
+        this.calories *= this.grams;
+        this.proteins *= this.grams;
+        this.fats *= this.grams;
     }
 
     public double getProteins() {

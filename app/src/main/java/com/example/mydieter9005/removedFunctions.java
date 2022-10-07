@@ -67,4 +67,30 @@ public class removedFunctions extends AppCompatActivity {
 //        }
 //        setListViewAdapter(fields);
 //    }
+
+
+
+//    public void setSavedModifiedMealsInfo(){
+//        String data = getFileData(modifiedMealsFileName);
+//        data = data.substring(data.indexOf('\n') + 1);
+//
+//        String[] dataParts = data.split("\n");
+//        String[] mealPart;
+//        String name;
+//        double grams, proteins, fats, calories;
+//        for(int i = 0; i < dataParts.length; i++){
+//            mealPart = dataParts[i].split(" , ");
+//
+//            name = mealPart[0];
+//            grams = Double.parseDouble(mealPart[1]);
+//            proteins = Double.parseDouble(mealPart[2]);
+//            fats = Double.parseDouble(mealPart[3]);
+//            calories = Double.parseDouble(mealPart[4]);
+//
+//            Meal modifiedMeal = new Meal(name, grams, proteins, fats, calories);
+//            if(getMealIndexInMealsList(modifiedMeal) != -1)  // Check if exist inside mealsList.
+//                mealsList.set(getMealIndexInMealsList(modifiedMeal), modifiedMeal);
+//        }
+//    }
+
 }

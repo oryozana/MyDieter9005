@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class breakfastSelection extends AppCompatActivity {
@@ -44,6 +45,7 @@ public class breakfastSelection extends AppCompatActivity {
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
+    String modifiedMealsFileName = "breakfastSelectionModifiedMeals";
     Intent me;
 
     @Override
@@ -57,7 +59,7 @@ public class breakfastSelection extends AppCompatActivity {
 
         ArrayList<Ingredient> ingredientsNeeded = new ArrayList<Ingredient>();  // For multi-ingredients meals.
 
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("Nestle cereals"), 30));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("nestle cereals"), 30));
         ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("milk"), 200));
         mealsList.add(new Meal("Nestle cereals with milk", ingredientsNeeded));
         ingredientsNeeded.clear();
@@ -78,6 +80,7 @@ public class breakfastSelection extends AppCompatActivity {
         btClearBreakfastSelection = (Button) findViewById(R.id.btClearBreakfastSelection);
         btMultiBreakfastSelect = (Button) findViewById(R.id.btMultiBreakfastSelect);
 
+        updateIfMealModified();
         setListViewAdapter();
         initiateVideoPlayer();
         initiateMediaPlayer();
@@ -120,6 +123,40 @@ public class breakfastSelection extends AppCompatActivity {
         });
     }
 
+    public void showMealInfo(Meal meal){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Your meal nutrition: ");
+        adb.setMessage(meal.getGrams() + " grams." + "\n" + meal.getProteins() + " proteins." + "\n" + meal.getFats() + " fats." + "\n" + meal.getCalories() + " calories.");
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        adb.setNegativeButton("Ingredients", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showMealIngredientsInfo(meal);
+            }
+        });
+
+        adb.setNeutralButton("Edit meal", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                me.setClass(breakfastSelection.this, mealModifier.class);
+                me.putExtra("mealToModify", meal);
+                me.putExtra("cameToMealModifierFrom", getLocalClassName());
+                startActivity(me);
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
+    }
+
     public void showMealIngredientsInfo(Meal meal){
         AlertDialog ad;
         AlertDialog.Builder adb;
@@ -136,8 +173,41 @@ public class breakfastSelection extends AppCompatActivity {
             }
         });
 
+        adb.setNegativeButton("Nutrition", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showMealInfo(meal);
+            }
+        });
+
+        adb.setNeutralButton("Edit meal", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                me.setClass(breakfastSelection.this, mealModifier.class);
+                me.putExtra("mealToModify", meal);
+                me.putExtra("cameToMealModifierFrom", getLocalClassName());
+                startActivity(me);
+            }
+        });
+
         ad = adb.create();
         ad.show();
+    }
+
+    public void updateIfMealModified(){
+        if(me.hasExtra("modifiedMeal")){
+            Meal modifiedMeal = (Meal) me.getSerializableExtra("modifiedMeal");
+            if(getMealIndexInMealsList(modifiedMeal) != -1)  // Check if exist inside mealsList.
+                mealsList.set(getMealIndexInMealsList(modifiedMeal), modifiedMeal);
+        }
+    }
+
+    public int getMealIndexInMealsList(Meal meal){
+        for(int i = 0; i < mealsList.size(); i++){
+            if(mealsList.get(i).getName().equals(meal.getName()))
+                return i;
+        }
+        return -1;
     }
 
     public void sendToCustomize(View v){

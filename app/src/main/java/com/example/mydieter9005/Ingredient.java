@@ -3,8 +3,8 @@ package com.example.mydieter9005;
 import java.util.ArrayList;
 
 public class Ingredient extends Food {
+    private static ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>(); // Contain every ingredient basic info.
     private int imgId = 0;
-    private static ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
 
     public Ingredient(String name, double grams, double proteins, double fats, double calories) {  // Full info ingredient, not for new ones.
         super(name, grams, proteins, fats, calories);
@@ -17,14 +17,14 @@ public class Ingredient extends Food {
         this.calories *= grams;
     }
 
+    public Ingredient(Ingredient ingredient){  // Copy other ingredient info.
+        super(ingredient.name, ingredient.grams, ingredient.proteins, ingredient.fats, ingredient.calories);
+    }
+
     public Ingredient(String name, double proteins, double fats, double calories) {  // To initiate ingredients for the ingredients list.
         super(name, proteins, fats, calories);
         ingredients.add(this);
     }
-
-//    public Ingredient(String name){
-//        super(name);
-//    }  // For unknown ingredients, at the moment.
 
     public static Ingredient getIngredientByName(String name){
         for(Ingredient ingredient : Ingredient.ingredients){
