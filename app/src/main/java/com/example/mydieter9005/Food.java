@@ -13,11 +13,12 @@ public class Food implements Serializable {
 
     public Food(String name, double grams, double proteins, double fats, double calories) {
         this.name = name;
-        this.grams = Math.round(grams * 1000.0) / 1000.0;
-        this.proteins = Math.round(proteins * 1000.0) / 1000.0;
-        this.fats = Math.round(fats * 1000.0) / 1000.0;
-        this.calories = Math.round(calories * 1000.0) / 1000.0;;
+        this.grams = grams;
+        this.proteins = proteins;
+        this.fats = fats;
+        this.calories = calories;
         this.amount = 0;
+        roundValues();
     }
 
     public Food(String name, double proteins, double fats, double calories) { // Default ingredient maker.
@@ -27,6 +28,7 @@ public class Food implements Serializable {
         this.fats = fats / grams;
         this.calories = calories / grams;
         this.amount = 0;
+        roundValues();
     }
 
     public Food(String name){
@@ -54,6 +56,14 @@ public class Food implements Serializable {
         this.calories *= this.grams;
         this.proteins *= this.grams;
         this.fats *= this.grams;
+        roundValues();
+    }
+
+    public void roundValues(){
+        this.grams = Math.round(this.grams * 1000.0) / 1000.0;
+        this.proteins = Math.round(this.proteins * 1000.0) / 1000.0;
+        this.fats = Math.round(this.fats * 1000.0) / 1000.0;
+        this.calories = Math.round(this.calories * 1000.0) / 1000.0;
     }
 
     public double getProteins() {
@@ -90,6 +100,6 @@ public class Food implements Serializable {
 
     @Override
     public String toString() {
-        return name + ": " + this.calories + "calories, " + this.grams + " fats.";
+        return name + ": " + this.grams + " grams, " + this.calories + " calories.";
     }
 }

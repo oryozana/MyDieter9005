@@ -9,89 +9,85 @@
     android:background="@drawable/morning_city_background"
     tools:context=".MainActivity">
 
-    <androidx.gridlayout.widget.GridLayout
+    <HorizontalScrollView
         android:layout_width="125pt"
-        android:layout_height="85pt"
-        app:orientation="vertical"
-        android:layout_gravity="center">
-
-        <HorizontalScrollView
-            android:layout_width="100pt"
-            android:layout_height="wrap_content"
-            app:layout_gravity="center">
-
-            <TextView
-                android:id="@+id/tvBreakfastMain"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="4pt"
-                android:gravity="center|start"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="Your breakfast:                            "
-                android:textColor="@color/black"
-                app:layout_gravity="center" />
-        </HorizontalScrollView>
-
-        <HorizontalScrollView
-            android:layout_width="100pt"
-            android:layout_height="wrap_content"
-            app:layout_gravity="center">
-
-            <TextView
-                android:id="@+id/tvLunchMain"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center|start"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="Your lunch:                                   "
-                android:textColor="@color/black"
-                app:layout_gravity="center" />
-        </HorizontalScrollView>
-
-        <HorizontalScrollView
-            android:layout_width="100pt"
-            android:layout_height="wrap_content"
-            app:layout_gravity="center">
-
-            <TextView
-                android:id="@+id/tvDinnerMain"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center|start"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="Your dinner:                                  "
-                android:textColor="@color/black"
-                app:layout_gravity="center" />
-        </HorizontalScrollView>
+        android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/tvTotalCaloriesMain"
-            android:layout_width="100pt"
-            android:layout_height="wrap_content"
-            app:layout_gravity="center"
-            android:layout_marginTop="6pt"
+            android:id="@+id/tvBreakfastMain"
+            android:layout_width="125pt"
+            android:layout_height="match_parent"
+            android:layout_marginTop="4pt"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="Your breakfast:                            "
             android:textColor="@color/black"
-            android:text="Total calories: " />
+            app:layout_gravity="center" />
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
+        android:layout_width="125pt"
+        android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/tvCaloriesLeftMain"
-            android:layout_width="100pt"
-            android:layout_height="wrap_content"
-            app:layout_gravity="center"
+            android:id="@+id/tvLunchMain"
+            android:layout_width="125pt"
+            android:layout_height="match_parent"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="Your lunch:                                   "
             android:textColor="@color/black"
-            android:text="Calories left: " />
+            app:layout_gravity="center" />
+    </HorizontalScrollView>
 
-        <Button
-            android:id="@+id/btMealsMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_gravity="center"
-            android:onClick="sendToSelected"
-            android:text="Meals selector" />
-    </androidx.gridlayout.widget.GridLayout>
+    <HorizontalScrollView
+        android:layout_width="125pt"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvDinnerMain"
+            android:layout_width="125pt"
+            android:layout_height="match_parent"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="Your dinner:                                  "
+            android:textColor="@color/black"
+            app:layout_gravity="center" />
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/tvTotalProteinsMain"
+        android:layout_width="125pt"
+        android:layout_height="wrap_content"
+        app:layout_gravity="center"
+        android:layout_marginTop="8pt"
+        android:textColor="@color/black"
+        android:text="Total proteins: " />
+
+    <TextView
+        android:id="@+id/tvTotalFatsMain"
+        android:layout_width="125pt"
+        android:layout_height="wrap_content"
+        app:layout_gravity="center"
+        android:textColor="@color/black"
+        android:text="Total fats: " />
+
+    <TextView
+        android:id="@+id/tvTotalCaloriesMain"
+        android:layout_width="125pt"
+        android:layout_height="wrap_content"
+        app:layout_gravity="center"
+        android:layout_marginBottom="8pt"
+        android:textColor="@color/black"
+        android:text="Total calories: " />
+
+    <Button
+        android:id="@+id/btMealsMenu"
+        android:layout_width="125pt"
+        android:layout_height="wrap_content"
+        app:layout_gravity="center"
+        android:onClick="sendToSelected"
+        android:text="Meals selector" />
 
     <Button
         android:id="@+id/btWriteMealsToExternalFile"

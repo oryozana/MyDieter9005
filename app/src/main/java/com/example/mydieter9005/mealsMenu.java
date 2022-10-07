@@ -147,9 +147,9 @@ public class mealsMenu extends AppCompatActivity {
             selectedMeals[2] = dinner;
         }
 
-        tvTotalProteins.setText("Total proteins: " + totalProteins + " .");
-        tvTotalFats.setText("Total fats: " + totalFats + " .");
-        tvTotalCalories.setText("Total calories: " + totalCalories + " .");
+        tvTotalProteins.setText("Total proteins: " + Math.round(totalProteins * 1000.0) / 1000.0 + " .");
+        tvTotalFats.setText("Total fats: " + Math.round(totalFats * 1000.0) / 1000.0 + " .");
+        tvTotalCalories.setText("Total calories: " + Math.round(totalCalories * 1000.0) / 1000.0 + " .");
     }
 
     public String getFileData(String fileName){

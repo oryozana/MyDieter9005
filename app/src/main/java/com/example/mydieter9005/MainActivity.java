@@ -30,11 +30,12 @@ import java.time.format.DateTimeFormatter;
 public class MainActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
+
     TextView tvBreakfastMain, tvLunchMain, tvDinnerMain;
-    TextView tvTotalCaloriesMain, tvCaloriesLeftMain;
+    TextView tvTotalProteinsMain, tvTotalFatsMain, tvTotalCaloriesMain;
     Button btMealsMenu, btWriteMealsToExternalFile;
-    int totalCalories, caloriesLeft;
-    String[] meals;
+    double totalProteins, totalFats, totalCalories;
+    Meal[] selectedMeals = new Meal[3];
 
     FileOutputStream fos;
     OutputStreamWriter osw;
@@ -66,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
         tvDinnerMain.setMovementMethod(new ScrollingMovementMethod());
 
         tvTotalCaloriesMain = (TextView) findViewById(R.id.tvTotalCaloriesMain);
-        tvCaloriesLeftMain = (TextView) findViewById(R.id.tvCaloriesLeftMain);
+        tvTotalProteinsMain = (TextView) findViewById(R.id.tvTotalProteinsMain);
+        tvTotalFatsMain = (TextView) findViewById(R.id.tvTotalFatsMain);
 
         btMealsMenu = (Button) findViewById(R.id.btMealsMenu);
         btWriteMealsToExternalFile = (Button) findViewById(R.id.btWriteMealsToExternalFile);
@@ -77,22 +79,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateMealsIfNeeded(){
-        if (me.hasExtra("meals")) {
-            meals = me.getStringArrayExtra("meals");
-            if (me.hasExtra("breakfast")) {
-                tvBreakfastMain.setText("Your breakfast: " + meals[0]);
-            }
-            if (me.hasExtra("lunch")) {
-                tvLunchMain.setText("Your lunch: " + meals[1]);
-            }
-            if (me.hasExtra("dinner")) {
-                tvDinnerMain.setText("Your dinner: " + meals[2]);
-            }
+        Toast.makeText(this, "Make it 1.", Toast.LENGTH_SHORT).show();
+        if(me.hasExtra("selectedBreakfast") || me.hasExtra("selectedLunch") || me.hasExtra("selectedDinner")) {
+            Toast.makeText(this, "Make it 2.", Toast.LENGTH_SHORT).show();
 
-            totalCalories = me.getIntExtra("totalCalories", 0);
-            tvTotalCaloriesMain.setText("Total calories: " + totalCalories);
-            caloriesLeft = 2000 - totalCalories;
-            tvCaloriesLeftMain.setText("Calories left: " + caloriesLeft);
+            selectedMeals[0] = (Meal) me.getSerializableExtra("selectedBreakfast");
+            selectedMeals[1] = (Meal) me.getSerializableExtra("selectedLunch");
+            selectedMeals[2] = (Meal) me.getSerializableExtra("selectedDinner");
+
+            if(selectedMeals[0] != null)
+                tvBreakfastMain.setText("Your breakfast: " + selectedMeals[0].getName());
+            if(selectedMeals[1] != null)
+                tvLunchMain.setText("Your lunch: " + selectedMeals[1].getName());
+            if(selectedMeals[2] != null)
+                tvDinnerMain.setText("Your dinner: " + selectedMeals[2].getName());
+
+            totalProteins = me.getDoubleExtra("totalProteins", 0);
+            tvTotalProteinsMain.setText("Total Proteins: " + totalProteins + " .");
+
+            totalFats = me.getDoubleExtra("totalFats", 0);
+            tvTotalFatsMain.setText("Total Fats: " + totalFats + " .");
+
+            totalCalories = me.getDoubleExtra("totalCalories", 0);
+            tvTotalCaloriesMain.setText("Total calories: " + totalCalories + " .");
         }
     }
 
@@ -157,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                     bw.write(me.getStringExtra("dinner"));
 
                 bw.write("\n" + tvTotalCaloriesMain.getText().toString() + "\n");
-                bw.write(tvCaloriesLeftMain.getText().toString());
+                //bw.write(tvCaloriesLeftMain.getText().toString());
 
                 bw.close();
 
