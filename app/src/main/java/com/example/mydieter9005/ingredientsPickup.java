@@ -28,7 +28,7 @@ public class ingredientsPickup extends AppCompatActivity {
 
     TextView tvFoodName, tvFoodGrams, tvFoodAmount;
     ImageView ivFoodImg;
-    Button btNext;
+    Button btNext, btPrevious, btFinishIngredientsPickup;
     Meal[] selectedMeals = new Meal[3];
     ArrayList<Ingredient> ingredients, finalIngredients;
     ArrayList<String> foodCompanies;
@@ -62,6 +62,9 @@ public class ingredientsPickup extends AppCompatActivity {
         tvFoodAmount = (TextView) findViewById(R.id.tvFoodAmount);
 
         ivFoodImg = (ImageView) findViewById(R.id.ivFoodImg);
+
+        btFinishIngredientsPickup = (Button) findViewById(R.id.btFinishIngredientsPickup);
+        btPrevious = (Button) findViewById(R.id.btPrevious);
         btNext = (Button) findViewById(R.id.btNext);
 
         implementSettingsData();

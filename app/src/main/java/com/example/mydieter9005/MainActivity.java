@@ -95,13 +95,13 @@ public class MainActivity extends AppCompatActivity {
                 tvDinnerMain.setText("Your dinner: " + selectedMeals[2].getName());
 
             totalProteins = me.getDoubleExtra("totalProteins", 0);
-            tvTotalProteinsMain.setText("Total Proteins: " + totalProteins + " .");
+            tvTotalProteinsMain.setText("Total Proteins: " + Math.round(totalProteins * 1000.0) / 1000.0 + " .");
 
             totalFats = me.getDoubleExtra("totalFats", 0);
-            tvTotalFatsMain.setText("Total Fats: " + totalFats + " .");
+            tvTotalFatsMain.setText("Total Fats: " + Math.round(totalFats * 1000.0) / 1000.0 + " .");
 
             totalCalories = me.getDoubleExtra("totalCalories", 0);
-            tvTotalCaloriesMain.setText("Total calories: " + totalCalories + " .");
+            tvTotalCaloriesMain.setText("Total calories: " + Math.round(totalCalories * 1000.0) / 1000.0 + " .");
         }
     }
 

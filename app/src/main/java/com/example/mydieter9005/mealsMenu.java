@@ -77,7 +77,7 @@ public class mealsMenu extends AppCompatActivity {
         }
         if(id == btFinish.getId()) {
             if(me.hasExtra("breakfast") || me.hasExtra("lunch") || me.hasExtra("dinner")){
-                me.setClass(mealsMenu.this, ingredientsPickup.class);
+                me.setClass(mealsMenu.this, finishMeals.class);
                 updateIngredientsAmount();
 
                 if(selectedMeals[0] != null)

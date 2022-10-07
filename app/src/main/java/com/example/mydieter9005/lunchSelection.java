@@ -57,7 +57,12 @@ public class lunchSelection extends AppCompatActivity {
 
         ArrayList<Ingredient> ingredientsNeeded = new ArrayList<Ingredient>();  // For multi-ingredients meals.
 
-        mealsList.add(new Meal("Toast", 250));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+        mealsList.add(new Meal("Toast", ingredientsNeeded));
+        ingredientsNeeded.clear();
 
         ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
         ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));

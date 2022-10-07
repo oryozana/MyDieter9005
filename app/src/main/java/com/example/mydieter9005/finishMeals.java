@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class finishMeals extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
 
+    Button btSendToIngredientsPickup, btFinishMeals;
     TextView tvBreakfastInfo, tvLunchInfo, tvDinnerInfo;
     ListView lvBreakfastIngredients, lvLunchIngredients, lvDinnerIngredients;
     Meal[] selectedMeals = new Meal[3];
@@ -64,6 +66,9 @@ public class finishMeals extends AppCompatActivity {
         lvBreakfastIngredients = (ListView) findViewById(R.id.lvBreakfastIngredients);
         lvLunchIngredients = (ListView) findViewById(R.id.lvLunchIngredients);
         lvDinnerIngredients = (ListView) findViewById(R.id.lvDinnerIngredients);
+
+        btSendToIngredientsPickup = (Button) findViewById(R.id.btSendToIngredientsPickup);
+        btFinishMeals = (Button) findViewById(R.id.btFinishMeals);
 
         implementSettingsData();
         initiateMediaPlayer();
@@ -132,6 +137,11 @@ public class finishMeals extends AppCompatActivity {
             for(int i = 0; i < selectedMeals[2].getNeededIngredientsForMeal().size(); i++)
                 dinnerIngredientsList.add(new Ingredient(selectedMeals[2].getNeededIngredientsForMeal().get(i)));
         }
+    }
+
+    public void sendToSeeAllIngredients(View v){
+        me.setClass(this, ingredientsPickup.class);
+        startActivity(me);
     }
 
     public void finish(View v){

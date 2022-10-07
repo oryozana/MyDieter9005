@@ -12,7 +12,7 @@
 
     <androidx.gridlayout.widget.GridLayout
         android:layout_width="125pt"
-        android:layout_height="85pt"
+        android:layout_height="80pt"
         app:orientation="vertical"
         android:layout_gravity="center"
         android:layout_margin="10pt">
@@ -35,13 +35,13 @@
         <ListView
             android:id="@+id/lvBreakfastIngredients"
             android:layout_width="match_parent"
-            android:layout_height="75pt" />
+            android:layout_height="70pt" />
     </androidx.gridlayout.widget.GridLayout>
 
 
     <androidx.gridlayout.widget.GridLayout
         android:layout_width="125pt"
-        android:layout_height="85pt"
+        android:layout_height="80pt"
         app:orientation="vertical"
         android:layout_gravity="center"
         android:layout_margin="10pt">
@@ -64,13 +64,13 @@
         <ListView
             android:id="@+id/lvLunchIngredients"
             android:layout_width="match_parent"
-            android:layout_height="75pt" />
+            android:layout_height="70pt" />
     </androidx.gridlayout.widget.GridLayout>
 
 
     <androidx.gridlayout.widget.GridLayout
         android:layout_width="125pt"
-        android:layout_height="85pt"
+        android:layout_height="80pt"
         app:orientation="vertical"
         android:layout_gravity="center"
         android:layout_margin="10pt">
@@ -93,8 +93,15 @@
         <ListView
             android:id="@+id/lvDinnerIngredients"
             android:layout_width="match_parent"
-            android:layout_height="75pt" />
+            android:layout_height="70pt" />
     </androidx.gridlayout.widget.GridLayout>
+
+    <Button
+        android:id="@+id/btSendToIngredientsPickup"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:text="See all ingredients"
+        android:onClick="sendToSeeAllIngredients"/>
 
     <Button
         android:id="@+id/btFinishMeals"

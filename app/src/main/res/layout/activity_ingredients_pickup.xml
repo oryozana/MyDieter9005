@@ -47,4 +47,19 @@
         android:text="Next"
         android:onClick="nextItem"/>
 
+    <Button
+        android:id="@+id/btPrevious"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:text="Previous"
+        android:visibility="invisible"
+        android:onClick="previousItem"/>
+
+    <Button
+        android:id="@+id/btFinishIngredientsPickup"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:text="Finish"
+        android:onClick="finish"/>
+
 </LinearLayout>
