@@ -26,9 +26,10 @@ import java.util.ArrayList;
 public class finishMeals extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
+
     TextView tvBreakfastInfo, tvLunchInfo, tvDinnerInfo;
     ListView breakfastIngredients, lunchIngredients, dinnerIngredients;
-    String[] meals, mealParts;
+    Meal[] selectedMeals, mealParts;
     ArrayList<String> foodCompanies;
     ArrayList<Ingredient> ingredients;
     ArrayList<Ingredient> breakfastIngredientsList, lunchIngredientsList, dinnerIngredientsList;
@@ -46,14 +47,19 @@ public class finishMeals extends AppCompatActivity {
         setContentView(R.layout.activity_finish_meals);
 
         me = getIntent();
-        meals = me.getStringArrayExtra("meals");
+        selectedMeals[0] = (Meal) me.getSerializableExtra("selectedBreakfast");
+        selectedMeals[1] = (Meal) me.getSerializableExtra("selectedLunch");
+        selectedMeals[2] = (Meal) me.getSerializableExtra("selectedDinner");
+
         ingredients = Ingredient.getIngredientsList();
         foodCompanies = me.getStringArrayListExtra("foodCompanies");
 
         breakfastIngredientsList = new ArrayList<Ingredient>();
         breakfastIngredientsAmount = new ArrayList<Integer>();
+
         lunchIngredientsList = new ArrayList<Ingredient>();
         lunchIngredientsAmount = new ArrayList<Integer>();
+
         dinnerIngredientsList = new ArrayList<Ingredient>();
         dinnerIngredientsAmount = new ArrayList<Integer>();
 

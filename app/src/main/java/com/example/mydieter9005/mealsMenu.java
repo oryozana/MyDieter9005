@@ -78,7 +78,15 @@ public class mealsMenu extends AppCompatActivity {
         if(id == btFinish.getId()) {
             if(me.hasExtra("breakfast") || me.hasExtra("lunch") || me.hasExtra("dinner")){
                 me.setClass(mealsMenu.this, ingredientsPickup.class);
-                me.putExtra("selectedMeals", selectedMeals);
+                updateIngredientsAmount();
+
+                if(selectedMeals[0] != null)
+                    me.putExtra("selectedBreakfast", selectedMeals[0]);
+                if(selectedMeals[1] != null)
+                    me.putExtra("selectedLunch", selectedMeals[1]);
+                if(selectedMeals[2] != null)
+                    me.putExtra("selectedDinner", selectedMeals[2]);
+
                 me.putExtra("totalProteins", totalProteins);
                 me.putExtra("totalFats", totalFats);
                 me.putExtra("totalCalories", totalCalories);
@@ -86,6 +94,20 @@ public class mealsMenu extends AppCompatActivity {
             }
             else{
                 Toast.makeText(this, "Please pick at least one meal !", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    public void updateIngredientsAmount(){
+        for(Meal meal : selectedMeals){
+            if(meal != null){
+                for(int i = 0; i < meal.getNeededIngredientsForMeal().size(); i++){
+                    Ingredient ingredient = meal.getNeededIngredientsForMeal().get(i);
+                    ingredient.addAmount(1);
+
+                    if(ingredient.getName().equals("olive"))
+                        ingredient.addAmount(7);
+                }
             }
         }
     }

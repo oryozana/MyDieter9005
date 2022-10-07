@@ -18,6 +18,14 @@
         android:textSize="10pt"/>
 
     <TextView
+        android:id="@+id/tvFoodGrams"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:text="Grams: "
+        android:textColor="@color/black"
+        android:textSize="10pt"/>
+
+    <TextView
         android:id="@+id/tvFoodAmount"
         android:layout_width="100pt"
         android:layout_height="wrap_content"
@@ -26,7 +34,7 @@
         android:textSize="10pt"/>
 
     <ImageView
-        android:id="@+id/foodImg"
+        android:id="@+id/ivFoodImg"
         android:layout_width="100pt"
         android:layout_height="80pt"
         android:layout_margin="6pt"

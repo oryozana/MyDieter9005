@@ -25,13 +25,15 @@ import java.util.ArrayList;
 public class ingredientsPickup extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
-    TextView tvFoodName, tvFoodAmount;
-    ImageView foodImg;
+
+    TextView tvFoodName, tvFoodGrams, tvFoodAmount;
+    ImageView ivFoodImg;
     Button btNext;
-    Meal[] meals = new Meal[3];
+    Meal[] selectedMeals = new Meal[3];
     ArrayList<Ingredient> ingredients, finalIngredients;
     ArrayList<String> foodCompanies;
-    int counter = 0, ingredient_counter = 0, ingredient_amount = 0;
+    int ingredientsCounter = 0, ingredientsAmount = 0;
+    ArrayList<Ingredient> ingredientsToShow;
 
     FileInputStream is;
     InputStreamReader isr;
@@ -44,9 +46,9 @@ public class ingredientsPickup extends AppCompatActivity {
         setContentView(R.layout.activity_ingredients_pickup);
 
         me = getIntent();
-//        meals[0] = new Meal(me.getStringArrayExtra("meals")[0]);
-//        meals[1] = new Meal(me.getStringArrayExtra("meals")[1]);
-//        meals[2] = new Meal(me.getStringArrayExtra("meals")[2]);
+        selectedMeals[0] = (Meal) me.getSerializableExtra("selectedBreakfast");
+        selectedMeals[1] = (Meal) me.getSerializableExtra("selectedLunch");
+        selectedMeals[2] = (Meal) me.getSerializableExtra("selectedDinner");
 
         foodCompanies = new ArrayList<String>();  // Food common companies names list.
         ingredients = Ingredient.getIngredientsList();  // All the ingredients that inside the app.
@@ -56,46 +58,74 @@ public class ingredientsPickup extends AppCompatActivity {
         foodCompanies.add("nestle");
 
         tvFoodName = (TextView) findViewById(R.id.tvFoodName);
+        tvFoodGrams = (TextView) findViewById(R.id.tvFoodGrams);
         tvFoodAmount = (TextView) findViewById(R.id.tvFoodAmount);
-        foodImg = (ImageView) findViewById(R.id.foodImg);
+
+        ivFoodImg = (ImageView) findViewById(R.id.ivFoodImg);
         btNext = (Button) findViewById(R.id.btNext);
 
-        if(ingredient_amount == 0){
-            btNext.setText("Finish");
-        }
-        else{
-            btNext.setText("Next" + "\n" + "Item: " + ingredient_counter + " out of " + ingredient_amount);
-        }
+        Toast.makeText(this, "Make it 1.", Toast.LENGTH_SHORT).show();
+
+        implementSettingsData();
+        Toast.makeText(this, "Make it 2.", Toast.LENGTH_SHORT).show();
+
+        initiateIngredientsToShow();
+        Toast.makeText(this, "Make it 3.", Toast.LENGTH_SHORT).show();
 
         initiateMediaPlayer();
-        implementSettingsData();
+        Toast.makeText(this, "Make it 4.", Toast.LENGTH_SHORT).show();
+    }
+
+    public int getIngredientIndexInArrayList(Ingredient ingredient, ArrayList<Ingredient> ingredientsArrayList){
+        for(int i = 0; i < ingredientsArrayList.size(); i++){
+            if(ingredientsArrayList.get(i).getName().equals(ingredient.getName()))
+                return i;
+        }
+        return -1;
+    }
+
+    public void initiateIngredientsToShow(){
+        ingredientsToShow = new ArrayList<Ingredient>();
+        for(Meal meal : selectedMeals) {
+            if(meal != null){
+                for(int i = 0; i < meal.getNeededIngredientsForMeal().size(); i++) {
+                    Ingredient ingredient = new Ingredient(meal.getNeededIngredientsForMeal().get(i));
+
+                    if(getIngredientIndexInArrayList(ingredient, ingredientsToShow) == -1)
+                        ingredientsToShow.add(new Ingredient(ingredient));
+                    else
+                        ingredientsToShow.get(getIngredientIndexInArrayList(ingredient, ingredientsToShow)).addGrams(ingredient.getGrams());
+                }
+            }
+        }
+        ingredientsAmount = ingredientsToShow.size();
+
+        btNext.setText("Next" + "\n" + "Item: " + ingredientsCounter + " out of " + ingredientsAmount);
+        if(ingredientsAmount == 0)
+            btNext.setText("Finish");
     }
 
     public void nextItem(View v){
-        if(btNext.getText() == "Finish"){
+        if(btNext.getText() == "Finish")
             finish(v);
+
+        if(ingredientsCounter < ingredientsToShow.size()){
+            Ingredient ingredient = ingredientsToShow.get(ingredientsCounter);
+            tvFoodName.setText("Name: " + ingredient.getName());
+            tvFoodGrams.setText("Grams: " + ingredient.getGrams());
+            tvFoodAmount.setText("Amount: " + ingredient.getAmount());
+
+            if(getIngredientIndexInArrayList(ingredient, ingredients) != -1)
+                ivFoodImg.setImageResource(ingredient.getImgId());
+            else
+                ivFoodImg.setImageResource(R.drawable.image_not_available);
+
+            ingredientsCounter++;
+            btNext.setText("Next" + "\n" + "Item: " + ingredientsCounter + " out of " + ingredientsAmount);
         }
 
-        if(counter < ingredients.size()){
-            String ingredient = finalIngredients.get(counter).getName();
-            int index = ingredients.indexOf(Ingredient.getIngredientByName(ingredient));
-            tvFoodName.setText("Name: " + ingredient);
-            tvFoodAmount.setText("Amount: 1");
-
-            if(index != -1){  // If item exists inside ingredients
-                if(ingredients.get(index).getAmount() >= 1){
-                    tvFoodAmount.setText("Amount: " + ingredients.get(index).getAmount());
-                    foodImg.setImageResource(ingredients.get(index).getImgId());
-                }
-            }
-
-            ingredient_counter += 1;
-            btNext.setText("Next" + "\n" + "Item: " + ingredient_counter + " out of " + ingredient_amount);
-
-            counter += 1;
-            if(ingredient_counter == ingredient_amount){
-                btNext.setText("Finish");
-            }
+        if(ingredientsCounter == ingredientsAmount){
+            btNext.setText("Finish");
         }
     }
 

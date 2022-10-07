@@ -15,10 +15,12 @@ public class Ingredient extends Food {
         this.proteins *= grams;
         this.fats *= grams;
         this.calories *= grams;
+        this.imgId = ingredient.imgId;
     }
 
     public Ingredient(Ingredient ingredient){  // Copy other ingredient info.
         super(ingredient.name, ingredient.grams, ingredient.proteins, ingredient.fats, ingredient.calories);
+        this.imgId = ingredient.imgId;
     }
 
     public Ingredient(String name, double proteins, double fats, double calories) {  // To initiate ingredients for the ingredients list.
@@ -44,6 +46,10 @@ public class Ingredient extends Food {
 
     public static ArrayList<Ingredient> getIngredientsList(){
         return Ingredient.ingredients;
+    }
+
+    public void addGrams(double grams){
+        this.grams += grams;
     }
 
     @Override
