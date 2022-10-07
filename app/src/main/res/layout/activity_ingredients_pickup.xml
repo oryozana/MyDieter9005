@@ -38,22 +38,40 @@
         android:layout_width="100pt"
         android:layout_height="80pt"
         android:layout_margin="6pt"
-        app:srcCompat="@drawable/foodtime_background" />
+        app:srcCompat="@drawable/food_time_background" />
 
-    <Button
-        android:id="@+id/btNext"
+    <TextView
+        android:id="@+id/tvCounterShow"
         android:layout_width="100pt"
         android:layout_height="wrap_content"
-        android:text="Next"
-        android:onClick="nextItem"/>
+        android:gravity="center" />
 
-    <Button
-        android:id="@+id/btPrevious"
+    <androidx.gridlayout.widget.GridLayout
         android:layout_width="100pt"
         android:layout_height="wrap_content"
-        android:text="Previous"
-        android:visibility="invisible"
-        android:onClick="previousItem"/>
+        android:layout_marginTop="4pt"
+        app:orientation="horizontal"
+        android:layoutDirection="ltr">
+
+        <ImageButton
+            android:id="@+id/ibtPrevious"
+            android:layout_width="48pt"
+            android:layout_height="wrap_content"
+            android:layout_margin="1pt"
+            android:onClick="previousItem"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_previous_arrow_icon"
+            android:layoutDirection="ltr"/>
+
+        <ImageButton
+            android:id="@+id/ibtNext"
+            android:layout_width="48pt"
+            android:layout_height="wrap_content"
+            android:layout_margin="1pt"
+            android:onClick="nextItem"
+            app:srcCompat="@drawable/ic_next_arrow_icon"
+            android:layoutDirection="ltr"/>
+    </androidx.gridlayout.widget.GridLayout>
 
     <Button
         android:id="@+id/btFinishIngredientsPickup"
