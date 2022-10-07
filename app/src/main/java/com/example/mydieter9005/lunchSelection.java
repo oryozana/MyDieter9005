@@ -1,8 +1,10 @@
 package com.example.mydieter9005;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -31,8 +33,8 @@ public class lunchSelection extends AppCompatActivity {
     private VideoView videoView;
 
     Button btSendLunchToCustomize, btClearLunchSelection, btMultiLunchSelect;
-    ArrayList<String> mealsList;
-    ArrayAdapter<String> adapter;
+    ArrayList<Meal> mealsList;
+    ArrayAdapter<Meal> adapter;
     boolean multiSelect = false;
     String chosenLunchName = "";
     int chosenLunchCalories = 0, chosenLunchMinutes = 0, multiSelectCounter = 0;
@@ -41,6 +43,7 @@ public class lunchSelection extends AppCompatActivity {
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
+    String modifiedMealsFileName = "lunchSelectionModifiedMeals";
     Intent me;
 
     @Override
@@ -51,33 +54,60 @@ public class lunchSelection extends AppCompatActivity {
         me = getIntent();
 
         mealsList = new ArrayList<>();
-        mealsList.add("Toast");
-        mealsList.add("400");
-        mealsList.add("15");
 
-        mealsList.add("Toast with tomato and cucumber");
-        mealsList.add("435");
-        mealsList.add("20");
+        ArrayList<Ingredient> ingredientsNeeded = new ArrayList<Ingredient>();  // For multi-ingredients meals.
 
-        mealsList.add("Toast with tomato");
-        mealsList.add("425");
-        mealsList.add("18");
+        mealsList.add(new Meal("Toast", 250));
 
-        mealsList.add("Toast with cucumber");
-        mealsList.add("410");
-        mealsList.add("18");
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("tomato"), 100));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("cucumber"), 100));
+        mealsList.add(new Meal("Toast with tomato and cucumber", ingredientsNeeded));
+        ingredientsNeeded.clear();
 
-        mealsList.add("Toast with olive and corn");
-        mealsList.add("500");
-        mealsList.add("20");
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("tomato"), 100));
+        mealsList.add(new Meal("Toast with tomato", ingredientsNeeded));
+        ingredientsNeeded.clear();
 
-        mealsList.add("Toast with olive");
-        mealsList.add("440");
-        mealsList.add("18");
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("cucumber"), 100));
+        mealsList.add(new Meal("Toast with cucumber", ingredientsNeeded));
+        ingredientsNeeded.clear();
 
-        mealsList.add("Toast with corn");
-        mealsList.add("460");
-        mealsList.add("18");
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("olive"), 100));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("corn"), 100));
+        mealsList.add(new Meal("Toast with olive and corn", ingredientsNeeded));
+        ingredientsNeeded.clear();
+
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("olive"), 100));
+        mealsList.add(new Meal("Toast with olive", ingredientsNeeded));
+        ingredientsNeeded.clear();
+
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("corn"), 100));
+        mealsList.add(new Meal("Toast with corn", ingredientsNeeded));
+        ingredientsNeeded.clear();
 
         listView = (ListView) findViewById(R.id.listViewLunch);
         videoView = (VideoView) findViewById(R.id.lunchVideoView);
@@ -86,29 +116,21 @@ public class lunchSelection extends AppCompatActivity {
         btClearLunchSelection = (Button) findViewById(R.id.btClearLunchSelection);
         btMultiLunchSelect = (Button) findViewById(R.id.btMultiLunchSelect);
 
-        setListViewFields();
+        updateIfMealModified();
+        setListViewAdapter();
         initiateVideoPlayer();
         initiateMediaPlayer();
         implementSettingsData();
     }
 
-    public void setListViewFields(){
-        String[] fields = new String[mealsList.size() / 3];
-        for(int i = 0; i < mealsList.size(); i += 3){
-            String field = mealsList.get(i) + ": " + mealsList.get(i + 1) + " calories, " + mealsList.get(i + 2) + " minutes.";
-            fields[i / 3] = field;
-        }
-        setListViewAdapter(fields);
-    }
-
-    public void setListViewAdapter(String[] fields){
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fields);
+    public void setListViewAdapter(){
+        adapter = new ArrayAdapter<Meal>(this, android.R.layout.simple_list_item_1, mealsList);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedItem = (String) adapterView.getItemAtPosition(i);
+                Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
 
                 if(!multiSelect){
                     me.setClass(lunchSelection.this, mealsMenu.class);
@@ -116,7 +138,7 @@ public class lunchSelection extends AppCompatActivity {
                     startActivity(me);
                 }
                 else{
-                    String[] mealInfo = multiUsageFunctions.organizeMeal(selectedItem);
+                    String[] mealInfo = multiUsageFunctions.organizeMeal(selectedItem.toString());
                     Toast.makeText(lunchSelection.this, mealInfo[0] + " has added.", Toast.LENGTH_SHORT).show();
                     chosenLunchName += mealInfo[0].toLowerCase() + " and ";
                     chosenLunchCalories += multiUsageFunctions.getCaloriesOrMinutesOutOfString(mealInfo[1]);
@@ -125,6 +147,87 @@ public class lunchSelection extends AppCompatActivity {
                 }
             }
         });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Meal selectedItem = (Meal) parent.getItemAtPosition(position);
+
+                showMealIngredientsInfo(selectedItem);
+                return true;
+            }
+        });
+    }
+
+    public void showMealInfo(Meal meal){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Your meal nutrition: ");
+        adb.setMessage(meal.getGrams() + " grams." + "\n" + meal.getProteins() + " proteins." + "\n" + meal.getFats() + " fats." + "\n" + meal.getCalories() + " calories.");
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        adb.setNegativeButton("Ingredients", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showMealIngredientsInfo(meal);
+            }
+        });
+
+        adb.setNeutralButton("Edit meal", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                me.setClass(lunchSelection.this, mealModifier.class);
+                me.putExtra("mealToModify", meal);
+                me.putExtra("cameToMealModifierFrom", getLocalClassName());
+                startActivity(me);
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
+    }
+
+    public void showMealIngredientsInfo(Meal meal){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Your meal ingredients: ");
+        String mealInfo = "";
+        for(Ingredient ingredient : meal.getNeededIngredientsForMeal())
+            mealInfo += ingredient.getName() + ": " + ingredient.getGrams() + " grams." + "\n";
+        adb.setMessage(mealInfo);
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        adb.setNegativeButton("Nutrition", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showMealInfo(meal);
+            }
+        });
+
+        adb.setNeutralButton("Edit meal", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                me.setClass(lunchSelection.this, mealModifier.class);
+                me.putExtra("mealToModify", meal);
+                me.putExtra("cameToMealModifierFrom", getLocalClassName());
+                startActivity(me);
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
     }
 
     public void multiOrSingleSelectUpdate(View v){
@@ -142,6 +245,22 @@ public class lunchSelection extends AppCompatActivity {
             multiSelectCounter = 0;
             multiSelect = false;
         }
+    }
+
+    public void updateIfMealModified(){
+        if(me.hasExtra("modifiedMeal")){
+            Meal modifiedMeal = (Meal) me.getSerializableExtra("modifiedMeal");
+            if(getMealIndexInMealsList(modifiedMeal) != -1)  // Check if exist inside mealsList.
+                mealsList.set(getMealIndexInMealsList(modifiedMeal), modifiedMeal);
+        }
+    }
+
+    public int getMealIndexInMealsList(Meal meal){
+        for(int i = 0; i < mealsList.size(); i++){
+            if(mealsList.get(i).getName().equals(meal.getName()))
+                return i;
+        }
+        return -1;
     }
 
     public void sendToCustomize(View v){

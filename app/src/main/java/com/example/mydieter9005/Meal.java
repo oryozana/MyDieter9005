@@ -30,30 +30,36 @@ public class Meal extends Food {
         updateMealInfo();
     }
 
+    public Meal(Meal meal1, Meal meal2){
+        super(meal1.name);
+        this.grams = meal1.grams + meal2.grams;
+        this.proteins = meal1.proteins + meal2.proteins;
+        this.fats = meal1.fats + meal2.fats;
+        this.calories = meal1.calories + meal2.calories;
+    }
+
     public void initiateNeededIngredientsForMeal(String name, int grams){
         String[] mealParts = name.split(" and | with | include ");
         for(String mealPart : mealParts){
             mealPart = mealPart.toLowerCase(Locale.ROOT);
             if(ingredients.contains(Ingredient.getIngredientByName(mealPart)))
                 addIfNeeded(new Ingredient(Ingredient.getIngredientByName(mealPart), grams));
-            else
-                addIfMiniMealInside(mealPart);
         }
     }
 
-    public void addIfMiniMealInside(String mealPart){
-        if (mealPart.equals("toast")) {
-            addIfNeeded(Ingredient.getIngredientByName("bread"));
-            addIfNeeded(Ingredient.getIngredientByName("yellow cheese"));
-            addIfNeeded(Ingredient.getIngredientByName("ketchup"));
-            addIfNeeded(Ingredient.getIngredientByName("thousand island dressing"));
-        }
-        if (mealPart.equals("salad")) {
-            addIfNeeded(Ingredient.getIngredientByName("tomato"));
-            addIfNeeded(Ingredient.getIngredientByName("cucumber"));
-            addIfNeeded(Ingredient.getIngredientByName("lettuce"));
-        }
-    }
+//    public void addIfMiniMealInside(String mealPart){
+//        if (mealPart.equals("toast")) {
+//            addIfNeeded(Ingredient.getIngredientByName("bread"));
+//            addIfNeeded(Ingredient.getIngredientByName("yellow cheese"));
+//            addIfNeeded(Ingredient.getIngredientByName("ketchup"));
+//            addIfNeeded(Ingredient.getIngredientByName("thousand island dressing"));
+//        }
+//        if (mealPart.equals("salad")) {
+//            addIfNeeded(Ingredient.getIngredientByName("tomato"));
+//            addIfNeeded(Ingredient.getIngredientByName("cucumber"));
+//            addIfNeeded(Ingredient.getIngredientByName("lettuce"));
+//        }
+//    }
 
     private void addIfNeeded(Ingredient ingredient) {
         if(this.neededIngredientsForMeal.contains(ingredient)){
