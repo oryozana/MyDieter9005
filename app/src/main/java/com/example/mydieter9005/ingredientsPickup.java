@@ -108,7 +108,7 @@ public class ingredientsPickup extends AppCompatActivity {
     public void nextItem(View v){
         if(ingredientsCounter + 1 == ingredientsAmount)
             ibtNext.setVisibility(View.INVISIBLE);
-        if(ibtPrevious.getVisibility() == View.INVISIBLE)
+        if(ibtPrevious.getVisibility() == View.INVISIBLE && ingredientsCounter != 0)
             ibtPrevious.setVisibility(View.VISIBLE);
 
         ingredientsCounter++;
