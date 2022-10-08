@@ -34,6 +34,7 @@ public class customMeals extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
+    Song activeSong = Song.getSongs().get(0);
     Button btFinishCustomize;
     TextView tvInstructions;
     EditText customMeal;
@@ -56,6 +57,9 @@ public class customMeals extends AppCompatActivity {
         setContentView(R.layout.activity_custom_meals);
 
         me = getIntent();
+        if(me.hasExtra("activeSong"))
+            activeSong = (Song) me.getSerializableExtra("activeSong");
+
         cameFrom = me.getStringExtra("cameFrom");
         Toast.makeText(this, "selected meal: " + cameFrom, Toast.LENGTH_SHORT).show();
 
@@ -210,10 +214,12 @@ public class customMeals extends AppCompatActivity {
             playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
             useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
             useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
+            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
 
             me.putExtra("playMusic", playMusic);
             me.putExtra("useVideos", useVideos);
             me.putExtra("useManuallySave", useManuallySave);
+            me.putExtra("activeSong", activeSong);
         }
     }
 
@@ -233,7 +239,7 @@ public class customMeals extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(customMeals.this, R.raw.happy_clappy_ukulele);
+        mediaPlayer = MediaPlayer.create(customMeals.this, activeSong.getId());
         mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
             mediaPlayer.start();

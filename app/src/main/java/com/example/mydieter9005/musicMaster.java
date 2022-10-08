@@ -38,14 +38,11 @@ public class musicMaster extends AppCompatActivity {
 
     ArrayList<Song> songs = Song.getSongs();
     boolean isPlaying = true;
-    final int maxVolume = 100;
-    int currentVolume = 100;
     Song activeSong;
 
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
-    String fileName = "settings";
     Intent me;
 
     @Override
@@ -59,9 +56,6 @@ public class musicMaster extends AppCompatActivity {
 
         videoView = (VideoView) findViewById(R.id.musicMasterVideoView);
         musicMasterLinearLayout = (LinearLayout) findViewById(R.id.musicMasterLinearLayout);
-
-        ibtLowerMusicVolume = (ImageButton) findViewById(R.id.ibtLowerMusicVolume);
-        ibtHigherMusicVolume = (ImageButton) findViewById(R.id.ibtHigherMusicVolume);
 
         ibtPauseOrPlayMusic = (ImageButton) findViewById(R.id.ibtPauseOrPlayMusic);
         ibtPauseOrPlayMusic.setOnClickListener(new View.OnClickListener() {
@@ -96,18 +90,6 @@ public class musicMaster extends AppCompatActivity {
         initiateVideoPlayer();
     }
 
-//    public void adjustVolumeChange(View v){
-//        int viewId = v.getId();
-//
-//        if(viewId == ibtLowerMusicVolume.getId())
-//            currentVolume -= 10;
-//        if(viewId == ibtLowerMusicVolume.getId())
-//            currentVolume += 10;
-//
-//        float volume = (float)(Math.log(maxVolume-currentVolume)/Math.log(maxVolume));
-//        mediaPlayer.setVolume(volume, volume);
-//    }
-
     public void getRadioGroupOptionSelected(){
         int radioID = rgMusicChose.getCheckedRadioButtonId();
 
@@ -118,13 +100,11 @@ public class musicMaster extends AppCompatActivity {
     public void initiateRadioButtons(){
         for(int i = 0; i < rgMusicChose.getChildCount(); i++){
             RadioButton rbCurrent = (RadioButton) rgMusicChose.getChildAt(i);
-
             rbCurrent.setText(songs.get(i).getName().replaceAll("_", " "));
         }
-        activeSong.playSong();
-        Toast.makeText(this, Song.getActiveSongIndex() + "", Toast.LENGTH_SHORT).show();
+
         RadioButton rbSelected = (RadioButton) rgMusicChose.getChildAt(Song.getActiveSongIndex());
-        rgMusicChose.check(rbSelected.getId());
+        rbSelected.setChecked(true);
     }
 
     public void finish(View v){

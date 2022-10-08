@@ -35,10 +35,10 @@ public class finishMeals extends AppCompatActivity {
     Button btSendToIngredientsPickup, btFinishMeals;
     TextView tvBreakfastInfo, tvLunchInfo, tvDinnerInfo;
     ListView lvBreakfastIngredients, lvLunchIngredients, lvDinnerIngredients;
+    Song activeSong = Song.getSongs().get(0);
     Meal[] selectedMeals = new Meal[3];
 
     ArrayList<Ingredient> breakfastIngredientsList, lunchIngredientsList, dinnerIngredientsList;
-
     ArrayList<String> breakfastFields, lunchFields, dinnerFields;
     ArrayAdapter<String> breakfastIngredientsAdapter, lunchIngredientsAdapter, dinnerIngredientsAdapter;
 
@@ -53,6 +53,9 @@ public class finishMeals extends AppCompatActivity {
         setContentView(R.layout.activity_finish_meals);
 
         me = getIntent();
+        if(me.hasExtra("activeSong"))
+            activeSong = (Song) me.getSerializableExtra("activeSong");
+
         selectedMeals[0] = (Meal) me.getSerializableExtra("selectedBreakfast");
         selectedMeals[1] = (Meal) me.getSerializableExtra("selectedLunch");
         selectedMeals[2] = (Meal) me.getSerializableExtra("selectedDinner");
@@ -229,15 +232,17 @@ public class finishMeals extends AppCompatActivity {
             playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
             useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
             useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
+            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
 
             me.putExtra("playMusic", playMusic);
             me.putExtra("useVideos", useVideos);
             me.putExtra("useManuallySave", useManuallySave);
+            me.putExtra("activeSong", activeSong);
         }
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(finishMeals.this, R.raw.happy_clappy_ukulele);
+        mediaPlayer = MediaPlayer.create(finishMeals.this, activeSong.getId());
         mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
             mediaPlayer.start();

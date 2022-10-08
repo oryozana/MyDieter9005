@@ -9,7 +9,6 @@
     tools:context=".settingsSetter">
 
     <TextView
-        android:id="@+id/textView2"
         android:layout_width="125pt"
         android:layout_height="wrap_content"
         android:layout_margin="15pt"
@@ -76,11 +75,19 @@
             android:text="Use auto save" />
     </RadioGroup>
 
+    <TextView
+        android:id="@+id/tvCurrentSongName"
+        android:layout_width="125pt"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:layout_marginTop="10pt"
+        android:layout_marginBottom="4pt"
+        android:text="Current song: " />
+
     <Button
         android:id="@+id/btChangeMusic"
         android:layout_width="125pt"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10pt"
         android:onClick="goToMusicMaster"
         android:text="Change music" />
 

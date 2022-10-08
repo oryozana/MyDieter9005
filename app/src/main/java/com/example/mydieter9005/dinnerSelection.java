@@ -38,6 +38,7 @@ public class dinnerSelection extends AppCompatActivity {
     boolean multiSelect = false;
     String chosenDinnerName = "";
     int chosenDinnerCalories = 0, chosenDinnerMinutes = 0, multiSelectCounter = 0;
+    Song activeSong = Song.getSongs().get(0);
     ListView listView;
 
     FileInputStream is;
@@ -52,6 +53,8 @@ public class dinnerSelection extends AppCompatActivity {
         setContentView(R.layout.activity_dinner_selection);
 
         me = getIntent();
+        if(me.hasExtra("activeSong"))
+            activeSong = (Song) me.getSerializableExtra("activeSong");
 
         mealsList = new ArrayList<>();
         ArrayList<Ingredient> ingredientsNeeded = new ArrayList<Ingredient>();  // For multi-ingredients meals.
@@ -332,10 +335,12 @@ public class dinnerSelection extends AppCompatActivity {
             playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
             useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
             useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
+            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
 
             me.putExtra("playMusic", playMusic);
             me.putExtra("useVideos", useVideos);
             me.putExtra("useManuallySave", useManuallySave);
+            me.putExtra("activeSong", activeSong);
         }
     }
 
@@ -355,7 +360,7 @@ public class dinnerSelection extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(dinnerSelection.this, R.raw.happy_clappy_ukulele);
+        mediaPlayer = MediaPlayer.create(dinnerSelection.this, activeSong.getId());
         mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
             mediaPlayer.start();

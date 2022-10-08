@@ -36,6 +36,7 @@ public class customSelection extends AppCompatActivity {
     boolean multiSelect = false;
     String chosenCustomName = "", cameFrom;
     int chosenCustomCalories = 0, chosenCustomMinutes = 0, multiSelectCounter = 0;
+    Song activeSong = Song.getSongs().get(0);
     ListView listView;
 
     FileInputStream is;
@@ -50,6 +51,8 @@ public class customSelection extends AppCompatActivity {
         setContentView(R.layout.activity_custom_selection);
 
         me = getIntent();
+        if(me.hasExtra("activeSong"))
+            activeSong = (Song) me.getSerializableExtra("activeSong");
         cameFrom = me.getStringExtra("cameFrom");
 
         showFileData();
@@ -183,10 +186,12 @@ public class customSelection extends AppCompatActivity {
             playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
             useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
             useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
+            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
 
             me.putExtra("playMusic", playMusic);
             me.putExtra("useVideos", useVideos);
             me.putExtra("useManuallySave", useManuallySave);
+            me.putExtra("activeSong", activeSong);
         }
     }
 
@@ -206,7 +211,7 @@ public class customSelection extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(customSelection.this, R.raw.happy_clappy_ukulele);
+        mediaPlayer = MediaPlayer.create(customSelection.this, activeSong.getId());
         mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
             mediaPlayer.start();

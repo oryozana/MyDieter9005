@@ -39,6 +39,7 @@ public class breakfastSelection extends AppCompatActivity {
     String chosenBreakfastName = "";
     int chosenBreakfastCalories = 0, chosenBreakfastMinutes = 0, multiSelectCounter = 0;
     ListView listView;
+    Song activeSong = Song.getSongs().get(0);
 
     FileInputStream is;
     InputStreamReader isr;
@@ -52,6 +53,8 @@ public class breakfastSelection extends AppCompatActivity {
         setContentView(R.layout.activity_breakfast_selection);
 
         me = getIntent();
+        if(me.hasExtra("activeSong"))
+            activeSong = (Song) me.getSerializableExtra("activeSong");
 
         mealsList = new ArrayList<Meal>();
 
@@ -289,15 +292,17 @@ public class breakfastSelection extends AppCompatActivity {
             playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
             useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
             useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
+            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
 
             me.putExtra("playMusic", playMusic);
             me.putExtra("useVideos", useVideos);
             me.putExtra("useManuallySave", useManuallySave);
+            me.putExtra("activeSong", activeSong);
         }
     }
 
     public void initiateVideoPlayer(){
-        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.morning_background_video);
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + activeSong.getId());
         videoView.setVideoURI(uri);
 
         if(me.getBooleanExtra("useVideos", true))

@@ -44,6 +44,7 @@ public class mealModifier extends AppCompatActivity {
     ListView listView;
 
     ArrayList<Ingredient> ingredientsForMeal = new ArrayList<Ingredient>();
+    Song activeSong = Song.getSongs().get(0);
     ArrayAdapter<Ingredient> adapter;
     Meal meal;
 
@@ -64,6 +65,9 @@ public class mealModifier extends AppCompatActivity {
         setContentView(R.layout.activity_meal_modifier);
 
         me = getIntent();
+        if(me.hasExtra("activeSong"))
+            activeSong = (Song) me.getSerializableExtra("activeSong");
+
         meal = (Meal)(me.getSerializableExtra("mealToModify"));
         cameFrom = me.getStringExtra("cameToMealModifierFrom");
 
@@ -238,18 +242,20 @@ public class mealModifier extends AppCompatActivity {
         return allData;
     }
 
-    public void implementSettingsData() {
-        if (getFileData("settings") != null) {
+    public void implementSettingsData(){
+        if(getFileData("settings") != null){
             String[] settingsParts = getFileData("settings").split("\n");
             Boolean playMusic, useVideos, useManuallySave;
 
             playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
             useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
             useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
+            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
 
             me.putExtra("playMusic", playMusic);
             me.putExtra("useVideos", useVideos);
             me.putExtra("useManuallySave", useManuallySave);
+            me.putExtra("activeSong", activeSong);
         }
     }
 
@@ -269,7 +275,7 @@ public class mealModifier extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer() {
-        mediaPlayer = MediaPlayer.create(mealModifier.this, R.raw.happy_clappy_ukulele);
+        mediaPlayer = MediaPlayer.create(mealModifier.this, activeSong.getId());
         mediaPlayer.setLooping(true);
         if (me.getBooleanExtra("playMusic", true)) {
             mediaPlayer.start();

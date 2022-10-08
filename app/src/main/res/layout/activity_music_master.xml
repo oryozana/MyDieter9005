@@ -37,93 +37,62 @@
                 android:id="@+id/rbMusicTrack1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="Happy clappy ukulele" />
+                android:checked="true" />
 
             <RadioButton
                 android:id="@+id/rbMusicTrack2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Best time" />
+                android:layout_height="wrap_content" />
 
             <RadioButton
                 android:id="@+id/rbMusicTrack3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Energetic hip hop" />
+                android:layout_height="wrap_content" />
 
             <RadioButton
                 android:id="@+id/rbMusicTrack4"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Jazzy abstract beat" />
+                android:layout_height="wrap_content" />
 
             <RadioButton
                 android:id="@+id/rbMusicTrack5"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Soft lofi beat" />
+                android:layout_height="wrap_content" />
 
             <RadioButton
                 android:id="@+id/rbMusicTrack6"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Childish prank" />
+                android:layout_height="wrap_content" />
 
             <RadioButton
                 android:id="@+id/rbMusicTrack7"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Electric rock king around here" />
+                android:layout_height="wrap_content" />
 
             <RadioButton
                 android:id="@+id/rbMusicTrack8"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Freshness" />
+                android:layout_height="wrap_content" />
 
             <RadioButton
                 android:id="@+id/rbMusicTrack9"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Happy summer" />
+                android:layout_height="wrap_content" />
 
             <RadioButton
                 android:id="@+id/rbMusicTrack10"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Life of a wondering wizard" />
+                android:layout_height="wrap_content" />
         </RadioGroup>
 
-        <androidx.gridlayout.widget.GridLayout
+        <ImageButton
+            android:id="@+id/ibtPauseOrPlayMusic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layoutDirection="ltr"
-            android:layout_marginBottom="5pt">
-
-            <ImageButton
-                android:id="@+id/ibtLowerMusicVolume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layoutDirection="ltr"
-                app:srcCompat="@drawable/ic_volume_down_icon" />
-
-            <ImageButton
-                android:id="@+id/ibtPauseOrPlayMusic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layoutDirection="ltr"
-                android:layout_marginRight="30pt"
-                android:layout_marginLeft="30pt"
-                app:srcCompat="@drawable/ic_pause_music_icon" />
-
-            <ImageButton
-                android:id="@+id/ibtHigherMusicVolume"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layoutDirection="ltr"
-                app:srcCompat="@drawable/ic_volume_up_icon" />
-        </androidx.gridlayout.widget.GridLayout>
+            android:layout_marginRight="30pt"
+            android:layout_marginLeft="30pt"
+            app:srcCompat="@drawable/ic_pause_music_icon" />
 
         <Button
             android:id="@+id/btFinishMusicMaster"

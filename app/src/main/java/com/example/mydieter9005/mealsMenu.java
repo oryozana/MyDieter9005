@@ -30,6 +30,7 @@ public class mealsMenu extends AppCompatActivity {
     Meal breakfast, lunch, dinner;
     Meal[] selectedMeals = new Meal[3];
     double totalProteins = 0, totalFats = 0, totalCalories = 0;
+    Song activeSong = Song.getSongs().get(0);
 
     FileInputStream is;
     InputStreamReader isr;
@@ -42,6 +43,8 @@ public class mealsMenu extends AppCompatActivity {
         setContentView(R.layout.activity_meals_menu);
 
         me = getIntent();
+        if(me.hasExtra("activeSong"))
+            activeSong = (Song) me.getSerializableExtra("activeSong");
 
         tvBreakfast = (TextView) findViewById(R.id.tvBreakfast);
         tvLunch = (TextView) findViewById(R.id.tvLunch);
@@ -185,15 +188,17 @@ public class mealsMenu extends AppCompatActivity {
             playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
             useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
             useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
+            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
 
             me.putExtra("playMusic", playMusic);
             me.putExtra("useVideos", useVideos);
             me.putExtra("useManuallySave", useManuallySave);
+            me.putExtra("activeSong", activeSong);
         }
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(mealsMenu.this, R.raw.happy_clappy_ukulele);
+        mediaPlayer = MediaPlayer.create(mealsMenu.this, activeSong.getId());
         mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
             mediaPlayer.start();

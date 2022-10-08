@@ -35,6 +35,7 @@ public class ingredientsPickup extends AppCompatActivity {
     ArrayList<Ingredient> ingredients, finalIngredients;
     int ingredientsCounter = 0, ingredientsAmount = 0;
     ArrayList<Ingredient> ingredientsToShow;
+    Song activeSong = Song.getSongs().get(0);
     String lastClicked = "next";
 
     FileInputStream is;
@@ -48,6 +49,9 @@ public class ingredientsPickup extends AppCompatActivity {
         setContentView(R.layout.activity_ingredients_pickup);
 
         me = getIntent();
+        if(me.hasExtra("activeSong"))
+            activeSong = (Song) me.getSerializableExtra("activeSong");
+
         selectedMeals[0] = (Meal) me.getSerializableExtra("selectedBreakfast");
         selectedMeals[1] = (Meal) me.getSerializableExtra("selectedLunch");
         selectedMeals[2] = (Meal) me.getSerializableExtra("selectedDinner");
@@ -176,15 +180,17 @@ public class ingredientsPickup extends AppCompatActivity {
             playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
             useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
             useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
+            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
 
             me.putExtra("playMusic", playMusic);
             me.putExtra("useVideos", useVideos);
             me.putExtra("useManuallySave", useManuallySave);
+            me.putExtra("activeSong", activeSong);
         }
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(ingredientsPickup.this, R.raw.happy_clappy_ukulele);
+        mediaPlayer = MediaPlayer.create(ingredientsPickup.this, activeSong.getId());
         mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
             mediaPlayer.start();

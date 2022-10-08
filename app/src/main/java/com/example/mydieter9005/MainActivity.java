@@ -54,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         me = getIntent();
-        if(me.hasExtra("activeSong"))
-            activeSong = (Song) me.getSerializableExtra("activeSong");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd_MM_yyyy");
         LocalDateTime today = LocalDateTime.now();
@@ -76,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         btWriteMealsToExternalFile = (Button) findViewById(R.id.btWriteMealsToExternalFile);
 
         me = createTheFirstIntent(me);
+        if(me.hasExtra("activeSong"))
+            activeSong = (Song) me.getSerializableExtra("activeSong");
 
         implementSettingsData();
         initiateMediaPlayer();

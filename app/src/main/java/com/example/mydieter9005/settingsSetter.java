@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -34,6 +35,7 @@ public class settingsSetter extends AppCompatActivity {
     boolean wantToSave = false, chooseIfWantToSave = false, needSave = true;
     boolean playMusicAtStart, useVideosAtStart, useManuallySaveAtStart;
     Song activeSong = Song.getSongs().get(0);
+    TextView tvCurrentSongName;
 
     FileOutputStream fos;
     OutputStreamWriter osw;
@@ -60,6 +62,8 @@ public class settingsSetter extends AppCompatActivity {
         rgPlayMusic = (RadioGroup) findViewById(R.id.rgPlayMusic);
         rgUseVideos = (RadioGroup) findViewById(R.id.rgUseVideos);
         rgUseManuallySave = (RadioGroup) findViewById(R.id.rgUseManuallySave);
+
+        tvCurrentSongName = (TextView) findViewById(R.id.tvCurrentSongName);
 
         implementSettingsData();
     }
@@ -127,6 +131,7 @@ public class settingsSetter extends AppCompatActivity {
             playMusicAtStart = playMusic;
             useVideosAtStart = useVideos;
             useManuallySaveAtStart = useManuallySave;
+            tvCurrentSongName.setText("Current song: " + activeSong.getName().replaceAll("_", " "));
         }
     }
 
