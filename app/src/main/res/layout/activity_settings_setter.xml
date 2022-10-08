@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center|top"
+    android:background="@drawable/settings_background"
     tools:context=".settingsSetter">
 
     <TextView
@@ -90,13 +91,6 @@
         android:layout_height="wrap_content"
         android:onClick="goToMusicMaster"
         android:text="Change music" />
-
-    <Button
-        android:id="@+id/btSaveSettingsChanges"
-        android:layout_width="125pt"
-        android:layout_height="wrap_content"
-        android:onClick="saveSettings"
-        android:text="Save changes" />
 
     <Button
         android:id="@+id/btReturnToRecentActivity"

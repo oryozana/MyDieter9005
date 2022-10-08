@@ -156,7 +156,7 @@ public class musicMaster extends AppCompatActivity {
     }
 
     public void initiateVideoPlayer(){
-        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.morning_background_video);
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.music_master_video_background);
         videoView.setVideoURI(uri);
 
         if(me.getBooleanExtra("useVideos", true))
@@ -173,9 +173,7 @@ public class musicMaster extends AppCompatActivity {
     public void initiateMediaPlayer(){
         mediaPlayer = MediaPlayer.create(musicMaster.this, activeSong.getId());
         mediaPlayer.setLooping(true);
-        if(me.getBooleanExtra("playMusic", true)){
-            mediaPlayer.start();
-        }
+        mediaPlayer.start();
     }
 
     public void changeMediaPlayerSong(){
@@ -204,7 +202,7 @@ public class musicMaster extends AppCompatActivity {
         super.onPostResume();
         videoView.resume();
         if(!me.getBooleanExtra("useVideos", true)){
-            findViewById(R.id.breakfastSelectionLinearLayout).setBackground(getDrawable(R.drawable.morning_background));
+            musicMasterLinearLayout.setBackground(getDrawable(R.drawable.music_master_background));
             videoView.stopPlayback();
         }
         else
@@ -221,9 +219,6 @@ public class musicMaster extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mediaPlayer.start();
-        if(!me.getBooleanExtra("playMusic", true)){
-            mediaPlayer.stop();
-        }
     }
 
     @Override

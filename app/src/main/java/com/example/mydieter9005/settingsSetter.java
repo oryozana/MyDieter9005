@@ -30,7 +30,7 @@ import java.io.OutputStreamWriter;
 public class settingsSetter extends AppCompatActivity {
 
     RadioGroup rgPlayMusic, rgUseVideos, rgUseManuallySave;
-    Button btReturnToRecentActivity, btSaveSettingsChanges;
+    Button btReturnToRecentActivity;
     boolean playMusic, useVideos, useManuallySave;
     boolean wantToSave = false, chooseIfWantToSave = false, needSave = true;
     boolean playMusicAtStart, useVideosAtStart, useManuallySaveAtStart;
@@ -57,7 +57,6 @@ public class settingsSetter extends AppCompatActivity {
             activeSong = (Song) me.getSerializableExtra("activeSong");
 
         btReturnToRecentActivity = (Button) findViewById(R.id.btReturnToRecentActivity);
-        btSaveSettingsChanges = (Button) findViewById(R.id.btSaveSettingsChanges);
 
         rgPlayMusic = (RadioGroup) findViewById(R.id.rgPlayMusic);
         rgUseVideos = (RadioGroup) findViewById(R.id.rgUseVideos);
@@ -65,10 +64,15 @@ public class settingsSetter extends AppCompatActivity {
 
         tvCurrentSongName = (TextView) findViewById(R.id.tvCurrentSongName);
 
+        if(me.getBooleanExtra("goToChangeMusic", false)) {
+            saveSettings();
+            me.putExtra("goToChangeMusic", false); // Reset it.
+        }
+
         implementSettingsData();
     }
 
-    public void saveSettings(View v){
+    public void saveSettings(){
         getRadioGroupsOptionsSelected();
 
         try {
@@ -150,6 +154,7 @@ public class settingsSetter extends AppCompatActivity {
 
     public void goToMusicMaster(View v){
         me.setClass(settingsSetter.this, musicMaster.class);
+        me.putExtra("goToChangeMusic", true);
         startActivity(me);
     }
 
@@ -165,9 +170,9 @@ public class settingsSetter extends AppCompatActivity {
             }
         }
         else{
-            if(wantToSave){
-                saveSettings(null);
-            }
+            if(wantToSave)
+                saveSettings();
+
             String cameToSettingsFrom = me.getStringExtra("cameToSettingsFrom");
             if(cameToSettingsFrom.equals("MainActivity"))
                 me.setClass(settingsSetter.this, MainActivity.class);
