@@ -243,6 +243,10 @@ public class MainActivity extends AppCompatActivity {
         catch (FileNotFoundException e) {
             if(fileName.equals(me.getStringExtra("todayDate")))
                 Toast.makeText(this, "Today saved data not exists yet.", Toast.LENGTH_SHORT).show();
+            if(fileName.equals("settings")) {
+                firstInitiateSettingsFile();
+                implementSettingsData();
+            }
             e.printStackTrace();
         }
         catch (IOException e) {
@@ -328,5 +332,26 @@ public class MainActivity extends AppCompatActivity {
             startActivity(me);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void firstInitiateSettingsFile(){
+        try {
+            fos = openFileOutput("settings", Context.MODE_PRIVATE);
+            osw = new OutputStreamWriter(fos);
+            bw = new BufferedWriter(osw);
+
+            bw.write("Play music ?: " + true + "\n");
+            bw.write("Use Videos ?: " + true + "\n");
+            bw.write("Use manually Save ?: " + true + "\n");
+            bw.write("Active song name: " + activeSong.getName());
+
+            bw.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

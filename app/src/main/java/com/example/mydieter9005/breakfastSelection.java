@@ -302,7 +302,7 @@ public class breakfastSelection extends AppCompatActivity {
     }
 
     public void initiateVideoPlayer(){
-        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + activeSong.getId());
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.morning_background_video);
         videoView.setVideoURI(uri);
 
         if(me.getBooleanExtra("useVideos", true))
@@ -317,7 +317,7 @@ public class breakfastSelection extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(breakfastSelection.this, R.raw.happy_clappy_ukulele);
+        mediaPlayer = MediaPlayer.create(breakfastSelection.this, activeSong.getId());
         mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
             mediaPlayer.start();
