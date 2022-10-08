@@ -1,8 +1,10 @@
 package com.example.mydieter9005;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -11,8 +13,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,17 +86,63 @@ public class finishMeals extends AppCompatActivity {
         if(selectedMeals[0] != null){  // Breakfast.
             breakfastIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, breakfastFields);
             lvBreakfastIngredients.setAdapter(breakfastIngredientsAdapter);
+            lvBreakfastIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Ingredient selectedItem = breakfastIngredientsList.get(position);
+
+                    showIngredientImage(selectedItem);
+                }
+            });
         }
 
         if(selectedMeals[1] != null){  // Lunch.
             lunchIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lunchFields);
             lvLunchIngredients.setAdapter(lunchIngredientsAdapter);
+            lvLunchIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Ingredient selectedItem = lunchIngredientsList.get(position);
+
+                    showIngredientImage(selectedItem);
+                }
+            });
         }
 
         if(selectedMeals[2] != null){  // Dinner.
             dinnerIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dinnerFields);
             lvDinnerIngredients.setAdapter(dinnerIngredientsAdapter);
+            lvDinnerIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Ingredient selectedItem = dinnerIngredientsList.get(position);
+
+                    showIngredientImage(selectedItem);
+                }
+            });
         }
+    }
+
+    public void showIngredientImage(Ingredient ingredient){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Your ingredient: " + ingredient.getName());
+        adb.setIcon(R.drawable.ic_food_icon);
+
+        final ImageView ivIngredientImage = new ImageView(finishMeals.this);
+        ivIngredientImage.setImageResource(ingredient.getImgId());
+        adb.setView(ivIngredientImage);
+
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
     }
 
     public void initiateListViewsFields(){

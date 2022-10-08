@@ -31,11 +31,9 @@ public class Meal extends Food {
     }
 
     public Meal(Meal meal1, Meal meal2){
-        super(meal1.name);
-        this.grams = meal1.grams + meal2.grams;
-        this.proteins = meal1.proteins + meal2.proteins;
-        this.fats = meal1.fats + meal2.fats;
-        this.calories = meal1.calories + meal2.calories;
+        super(meal1.name + " and " + meal2.name);
+        addNeededIngredientsForMeal(meal1.neededIngredientsForMeal);
+        addNeededIngredientsForMeal(meal2.neededIngredientsForMeal);
     }
 
     public void initiateNeededIngredientsForMeal(String name, int grams){
@@ -93,6 +91,12 @@ public class Meal extends Food {
 
     public ArrayList<Ingredient> getNeededIngredientsForMeal() {
         return this.neededIngredientsForMeal;
+    }
+
+    public void addNeededIngredientsForMeal(ArrayList<Ingredient> neededIngredientsForMeal) {
+        for(int i = 0; i < neededIngredientsForMeal.size(); i++)
+            this.neededIngredientsForMeal.add(neededIngredientsForMeal.get(i));
+        updateMealInfo();
     }
 
     public void setNeededIngredientsForMeal(ArrayList<Ingredient> neededIngredientsForMeal) {

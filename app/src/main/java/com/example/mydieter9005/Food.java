@@ -100,6 +100,6 @@ public class Food implements Serializable {
 
     @Override
     public String toString() {
-        return name + ": " + this.grams + " grams, " + this.calories + " calories.";
+        return name + ": " + this.grams + " grams.";
     }
 }
