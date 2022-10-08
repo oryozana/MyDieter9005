@@ -269,7 +269,7 @@ public class mealModifier extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer() {
-        mediaPlayer = MediaPlayer.create(mealModifier.this, R.raw.my_song);
+        mediaPlayer = MediaPlayer.create(mealModifier.this, R.raw.happy_clappy_ukulele);
         mediaPlayer.setLooping(true);
         if (me.getBooleanExtra("playMusic", true)) {
             mediaPlayer.start();

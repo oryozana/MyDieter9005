@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.my_song);
+        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.happy_clappy_ukulele);
         mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
             mediaPlayer.start();

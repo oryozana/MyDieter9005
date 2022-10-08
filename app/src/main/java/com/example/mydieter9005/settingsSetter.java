@@ -139,6 +139,11 @@ public class settingsSetter extends AppCompatActivity {
         useManuallySave = radioID == R.id.rbManuallySave;
     }
 
+    public void goToMusicMaster(View v){
+        me.setClass(settingsSetter.this, musicMaster.class);
+        startActivity(me);
+    }
+
     public void returnToRecentActivity(View v){
         getRadioGroupsOptionsSelected();
         if(!chooseIfWantToSave || needSave){
@@ -173,6 +178,8 @@ public class settingsSetter extends AppCompatActivity {
                 me.setClass(settingsSetter.this, customMeals.class);
             if(cameToSettingsFrom.equals("customSelection"))
                 me.setClass(settingsSetter.this, customSelection.class);
+            if(cameToSettingsFrom.equals("mealModifier"))
+                me.setClass(settingsSetter.this, mealModifier.class);
 
             startActivity(me);
         }

@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,7 +25,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class breakfastSelection extends AppCompatActivity {
@@ -314,7 +312,7 @@ public class breakfastSelection extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(breakfastSelection.this, R.raw.my_song);
+        mediaPlayer = MediaPlayer.create(breakfastSelection.this, R.raw.happy_clappy_ukulele);
         mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
             mediaPlayer.start();

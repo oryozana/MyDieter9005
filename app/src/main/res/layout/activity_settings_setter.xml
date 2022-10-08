@@ -77,10 +77,17 @@
     </RadioGroup>
 
     <Button
-        android:id="@+id/btSaveSettingsChanges"
+        android:id="@+id/btChangeMusic"
         android:layout_width="125pt"
         android:layout_height="wrap_content"
         android:layout_marginTop="10pt"
+        android:onClick="goToMusicMaster"
+        android:text="Change music" />
+
+    <Button
+        android:id="@+id/btSaveSettingsChanges"
+        android:layout_width="125pt"
+        android:layout_height="wrap_content"
         android:onClick="saveSettings"
         android:text="Save changes" />
 

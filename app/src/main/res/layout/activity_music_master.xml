@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".musicMaster">
+
+    <VideoView
+        android:id="@+id/musicMasterVideoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"/>
+
+    <LinearLayout
+        android:id="@+id/musicMasterLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="You can choose the music you want from here: "
+            android:textSize="10pt"/>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10pt"
+            android:layout_marginTop="10pt">
+
+            <RadioButton
+                android:id="@+id/rbMusicTrack1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Happy clappy ukulele" />
+
+            <RadioButton
+                android:id="@+id/rbMusicTrack2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Best time" />
+
+            <RadioButton
+                android:id="@+id/rbMusicTrack3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Energetic hip hop" />
+
+            <RadioButton
+                android:id="@+id/rbMusicTrack4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Jazzy abstract beat" />
+
+            <RadioButton
+                android:id="@+id/rbMusicTrack5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Soft lofi beat" />
+
+            <RadioButton
+                android:id="@+id/rbMusicTrack5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Soft lofi beat" />
+
+            <RadioButton
+                android:id="@+id/rbMusicTrack5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Soft lofi beat" />
+
+            <RadioButton
+                android:id="@+id/rbMusicTrack5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Soft lofi beat" />
+
+            <RadioButton
+                android:id="@+id/rbMusicTrack5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Soft lofi beat" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Button" />
+    </LinearLayout>
+</RelativeLayout>

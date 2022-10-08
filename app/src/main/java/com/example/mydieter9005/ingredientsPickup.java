@@ -184,7 +184,7 @@ public class ingredientsPickup extends AppCompatActivity {
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(ingredientsPickup.this, R.raw.my_song);
+        mediaPlayer = MediaPlayer.create(ingredientsPickup.this, R.raw.happy_clappy_ukulele);
         mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
             mediaPlayer.start();
