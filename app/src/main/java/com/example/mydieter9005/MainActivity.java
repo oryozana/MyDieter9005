@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     Button btMealsMenu, btWriteMealsToExternalFile;
     double totalProteins, totalFats, totalCalories;
     Meal[] selectedMeals = new Meal[3];
+    Song activeSong;  // In this activity he get a initial value at "createTheFirstIntent".
 
     FileOutputStream fos;
     OutputStreamWriter osw;
@@ -53,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         me = getIntent();
-        initiateMediaPlayer();
+        if(me.hasExtra("activeSong"))
+            activeSong = (Song) me.getSerializableExtra("activeSong");
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd_MM_yyyy");
         LocalDateTime today = LocalDateTime.now();
@@ -74,12 +76,13 @@ public class MainActivity extends AppCompatActivity {
         btWriteMealsToExternalFile = (Button) findViewById(R.id.btWriteMealsToExternalFile);
 
         me = createTheFirstIntent(me);
+
         implementSettingsData();
+        initiateMediaPlayer();
         updateMealsIfNeeded();
     }
 
     public void updateMealsIfNeeded(){
-        Toast.makeText(this, "Make it 1.", Toast.LENGTH_SHORT).show();
         if(me.hasExtra("selectedBreakfast") || me.hasExtra("selectedLunch") || me.hasExtra("selectedDinner")) {
             Toast.makeText(this, "Make it 2.", Toast.LENGTH_SHORT).show();
 
@@ -114,6 +117,10 @@ public class MainActivity extends AppCompatActivity {
             me.putExtra("useVideos", true);
             me.putExtra("useManuallySave", true);
             me.putExtra("todayDate", todayDate);
+
+            Song.initiateSongs();
+            activeSong = Song.getActiveSong();
+            me.putExtra("activeSong", activeSong);
 
             Ingredient.initiateIngredientsList();
             initiateIngredientsPictures();
@@ -252,15 +259,17 @@ public class MainActivity extends AppCompatActivity {
             playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
             useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
             useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
+            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
 
             me.putExtra("playMusic", playMusic);
             me.putExtra("useVideos", useVideos);
             me.putExtra("useManuallySave", useManuallySave);
+            me.putExtra("activeSong", activeSong);
         }
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.happy_clappy_ukulele);
+        mediaPlayer = MediaPlayer.create(MainActivity.this, activeSong.getId());
         mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
             mediaPlayer.start();

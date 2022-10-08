@@ -33,6 +33,7 @@ public class settingsSetter extends AppCompatActivity {
     boolean playMusic, useVideos, useManuallySave;
     boolean wantToSave = false, chooseIfWantToSave = false, needSave = true;
     boolean playMusicAtStart, useVideosAtStart, useManuallySaveAtStart;
+    Song activeSong = Song.getSongs().get(0);
 
     FileOutputStream fos;
     OutputStreamWriter osw;
@@ -50,6 +51,8 @@ public class settingsSetter extends AppCompatActivity {
         setContentView(R.layout.activity_settings_setter);
 
         me = getIntent();
+        if(me.hasExtra("activeSong"))
+            activeSong = (Song) me.getSerializableExtra("activeSong");
 
         btReturnToRecentActivity = (Button) findViewById(R.id.btReturnToRecentActivity);
         btSaveSettingsChanges = (Button) findViewById(R.id.btSaveSettingsChanges);
@@ -71,7 +74,8 @@ public class settingsSetter extends AppCompatActivity {
 
             bw.write("Play music ?: " + playMusic + "\n");
             bw.write("Use Videos ?: " + useVideos + "\n");
-            bw.write("Use manually Save ?: " + useManuallySave);
+            bw.write("Use manually Save ?: " + useManuallySave + "\n");
+            bw.write("Active song name: " + activeSong.getName());
 
             bw.close();
         }
