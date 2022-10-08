@@ -106,8 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layoutDirection="ltr"
-                app:srcCompat="@drawable/ic_volume_down_icon"
-                android:onClick="adjustVolumeChange"/>
+                app:srcCompat="@drawable/ic_volume_down_icon" />
 
             <ImageButton
                 android:id="@+id/ibtPauseOrPlayMusic"
@@ -123,8 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layoutDirection="ltr"
-                app:srcCompat="@drawable/ic_volume_up_icon"
-                android:onClick="adjustVolumeChange"/>
+                app:srcCompat="@drawable/ic_volume_up_icon" />
         </androidx.gridlayout.widget.GridLayout>
 
         <Button
