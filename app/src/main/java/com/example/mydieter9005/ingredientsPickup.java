@@ -33,7 +33,6 @@ public class ingredientsPickup extends AppCompatActivity {
     Button btFinishIngredientsPickup;
     Meal[] selectedMeals = new Meal[3];
     ArrayList<Ingredient> ingredients, finalIngredients;
-    ArrayList<String> foodCompanies;
     int ingredientsCounter = 0, ingredientsAmount = 0;
     ArrayList<Ingredient> ingredientsToShow;
     String lastClicked = "next";
@@ -53,12 +52,8 @@ public class ingredientsPickup extends AppCompatActivity {
         selectedMeals[1] = (Meal) me.getSerializableExtra("selectedLunch");
         selectedMeals[2] = (Meal) me.getSerializableExtra("selectedDinner");
 
-        foodCompanies = new ArrayList<String>();  // Food common companies names list.
         ingredients = Ingredient.getIngredientsList();  // All the ingredients that inside the app.
         finalIngredients = new ArrayList<Ingredient>();  // The needed ingredients to make the meals.
-
-        // Food companies:
-        foodCompanies.add("nestle");
 
         tvCounterShow = (TextView) findViewById(R.id.tvCounterShow);
         tvFoodName = (TextView) findViewById(R.id.tvFoodName);
@@ -145,7 +140,6 @@ public class ingredientsPickup extends AppCompatActivity {
 
     public void finish(View v){
         me.setClass(this, finishMeals.class);
-        me.putExtra("foodCompanies", foodCompanies);
         startActivity(me);
     }
 

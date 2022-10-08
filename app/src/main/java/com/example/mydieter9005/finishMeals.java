@@ -36,7 +36,6 @@ public class finishMeals extends AppCompatActivity {
     TextView tvBreakfastInfo, tvLunchInfo, tvDinnerInfo;
     ListView lvBreakfastIngredients, lvLunchIngredients, lvDinnerIngredients;
     Meal[] selectedMeals = new Meal[3];
-//    ArrayList<String> foodCompanies;
 
     ArrayList<Ingredient> breakfastIngredientsList, lunchIngredientsList, dinnerIngredientsList;
 
@@ -57,8 +56,6 @@ public class finishMeals extends AppCompatActivity {
         selectedMeals[0] = (Meal) me.getSerializableExtra("selectedBreakfast");
         selectedMeals[1] = (Meal) me.getSerializableExtra("selectedLunch");
         selectedMeals[2] = (Meal) me.getSerializableExtra("selectedDinner");
-
-//        foodCompanies = me.getStringArrayListExtra("foodCompanies");
 
         tvBreakfastInfo = (TextView) findViewById(R.id.tvBreakfastInfo);
         tvBreakfastInfo.setMovementMethod(new ScrollingMovementMethod());
