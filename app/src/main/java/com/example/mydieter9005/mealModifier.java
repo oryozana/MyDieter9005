@@ -292,20 +292,13 @@ public class mealModifier extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemID = item.getItemId();
-        if (itemID == R.id.musicController) {
-            if (mediaPlayer.isPlaying()) {
-                me.putExtra("playMusic", false);
-                item.setIcon(R.drawable.ic_music_off_icon);
-                mediaPlayer.pause();
-            } else {
-                me.putExtra("playMusic", true);
-                item.setIcon(R.drawable.ic_music_on_icon);
-                initiateMediaPlayer();
-                mediaPlayer.start();
-            }
+        if(itemID == R.id.sendToMusicMaster){
+            me.setClass(mealModifier.this, musicMaster.class);
+            me.putExtra("cameToMusicMasterFrom", getLocalClassName());
+            startActivity(me);
         }
 
-        if (itemID == R.id.sendToSettings) {
+        if(itemID == R.id.sendToSettings){
             me.setClass(mealModifier.this, settingsSetter.class);
             me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);

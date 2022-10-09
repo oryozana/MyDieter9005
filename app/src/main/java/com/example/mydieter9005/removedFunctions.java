@@ -1,8 +1,10 @@
 package com.example.mydieter9005;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
 public class removedFunctions extends AppCompatActivity {
 
@@ -270,5 +272,33 @@ public class removedFunctions extends AppCompatActivity {
 //            addIfNeeded(Ingredient.getIngredientByName("cucumber"));
 //            addIfNeeded(Ingredient.getIngredientByName("lettuce"));
 //        }
+//    }
+
+
+        // From app-wild:
+
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        int itemID = item.getItemId();
+//        if(itemID == R.id.musicController){
+//            if(mediaPlayer.isPlaying()){
+//                me.putExtra("playMusic", false);
+//                item.setIcon(R.drawable.ic_music_off_icon);
+//                mediaPlayer.pause();
+//            }
+//            else{
+//                me.putExtra("playMusic", true);
+//                item.setIcon(R.drawable.ic_music_on_icon);
+//                initiateMediaPlayer();
+//                mediaPlayer.start();
+//            }
+//        }
+//
+//        if(itemID == R.id.sendToSettings){
+//            me.setClass(MainActivity.this, settingsSetter.class);
+//            me.putExtra("cameToSettingsFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//        return super.onOptionsItemSelected(item);
 //    }
 }

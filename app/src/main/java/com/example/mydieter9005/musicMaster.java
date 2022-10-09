@@ -3,6 +3,7 @@ package com.example.mydieter9005;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -20,10 +21,13 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class musicMaster extends AppCompatActivity {
@@ -39,6 +43,11 @@ public class musicMaster extends AppCompatActivity {
     ArrayList<Song> songs = Song.getSongs();
     boolean isPlaying = true;
     Song activeSong;
+
+    FileOutputStream fos;
+    OutputStreamWriter osw;
+    BufferedWriter bw;
+    String fileName = "settings";
 
     FileInputStream is;
     InputStreamReader isr;
@@ -103,14 +112,67 @@ public class musicMaster extends AppCompatActivity {
             rbCurrent.setText(songs.get(i).getName().replaceAll("_", " "));
         }
 
+        // Not working because of some reason:
         RadioButton rbSelected = (RadioButton) rgMusicChose.getChildAt(Song.getActiveSongIndex());
-        rbSelected.setChecked(true);
+        rgMusicChose.check(rbSelected.getId());
     }
 
     public void finish(View v){
-        me.setClass(musicMaster.this, settingsSetter.class);
+        String cameToMusicMasterFrom = me.getStringExtra("cameToMusicMasterFrom");
+        if(cameToMusicMasterFrom.equals("MainActivity"))
+            me.setClass(musicMaster.this, MainActivity.class);
+        if(cameToMusicMasterFrom.equals("mealsMenu"))
+            me.setClass(musicMaster.this, mealsMenu.class);
+        if(cameToMusicMasterFrom.equals("breakfastSelection"))
+            me.setClass(musicMaster.this, breakfastSelection.class);
+        if(cameToMusicMasterFrom.equals("lunchSelection"))
+            me.setClass(musicMaster.this, lunchSelection.class);
+        if(cameToMusicMasterFrom.equals("dinnerSelection"))
+            me.setClass(musicMaster.this, dinnerSelection.class);
+        if(cameToMusicMasterFrom.equals("ingredientsPickup"))
+            me.setClass(musicMaster.this, ingredientsPickup.class);
+        if(cameToMusicMasterFrom.equals("finishMeals"))
+            me.setClass(musicMaster.this, finishMeals.class);
+        if(cameToMusicMasterFrom.equals("customMeals"))
+            me.setClass(musicMaster.this, customMeals.class);
+        if(cameToMusicMasterFrom.equals("customSelection"))
+            me.setClass(musicMaster.this, customSelection.class);
+        if(cameToMusicMasterFrom.equals("mealModifier"))
+            me.setClass(musicMaster.this, mealModifier.class);
+        if(cameToMusicMasterFrom.equals("settingsSetter"))
+            me.setClass(musicMaster.this, settingsSetter.class);
+
         me.putExtra("activeSong", activeSong);
+        saveSong();
         startActivity(me);
+    }
+
+    public void saveSong(){  // Because saved inside the "settings" file, the current settings are needed.
+        Boolean playMusic, useVideos, useManuallySave;
+        String[] settingsParts = getFileData("settings").split("\n");
+
+        playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
+        useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
+        useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
+
+        try {
+            fos = openFileOutput(fileName, Context.MODE_PRIVATE);
+            osw = new OutputStreamWriter(fos);
+            bw = new BufferedWriter(osw);
+
+            bw.write("Play music ?: " + playMusic + "\n");
+            bw.write("Use Videos ?: " + useVideos + "\n");
+            bw.write("Use manually Save ?: " + useManuallySave + "\n");
+            bw.write("Active song name: " + activeSong.getName());
+
+            bw.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getFileData(String fileName){
@@ -188,14 +250,21 @@ public class musicMaster extends AppCompatActivity {
         return true;
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        int itemID = item.getItemId();
-//        if (itemID == R.id.resetToPreviousSettings) {
-//            resetToPreviousMusic();
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemID = item.getItemId();
+        if (itemID == R.id.resetToPreviousSettings) {
+            resetToPreviousMusic();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void resetToPreviousMusic() {
+        if(Song.getActiveSongIndex() != 0)
+            songs.get(0).playSong();
+        activeSong = Song.getActiveSong();
+        rgMusicChose.check(R.id.rbMusicTrack1);
+    }
 
     @Override
     protected void onPostResume() {

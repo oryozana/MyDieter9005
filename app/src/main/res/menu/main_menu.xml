@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/musicController"
+        android:id="@+id/sendToMusicMaster"
         android:icon="@drawable/ic_music_on_icon"
-        android:title="Music controller"
+        android:title="Music master"
         app:showAsAction="ifRoom" />
 
     <item

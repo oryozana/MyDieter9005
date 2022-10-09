@@ -64,11 +64,6 @@ public class settingsSetter extends AppCompatActivity {
 
         tvCurrentSongName = (TextView) findViewById(R.id.tvCurrentSongName);
 
-        if(me.getBooleanExtra("goToChangeMusic", false)) {
-            saveSettings();
-            me.putExtra("goToChangeMusic", false); // Reset it.
-        }
-
         implementSettingsData();
     }
 
@@ -154,7 +149,7 @@ public class settingsSetter extends AppCompatActivity {
 
     public void goToMusicMaster(View v){
         me.setClass(settingsSetter.this, musicMaster.class);
-        me.putExtra("goToChangeMusic", true);
+        me.putExtra("cameToMusicMasterFrom", getLocalClassName());
         startActivity(me);
     }
 
@@ -194,6 +189,8 @@ public class settingsSetter extends AppCompatActivity {
                 me.setClass(settingsSetter.this, customSelection.class);
             if(cameToSettingsFrom.equals("mealModifier"))
                 me.setClass(settingsSetter.this, mealModifier.class);
+            if(cameToSettingsFrom.equals("musicMaster"))
+                me.setClass(settingsSetter.this, musicMaster.class);
 
             startActivity(me);
         }
