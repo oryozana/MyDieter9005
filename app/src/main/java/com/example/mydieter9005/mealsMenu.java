@@ -123,7 +123,7 @@ public class mealsMenu extends AppCompatActivity {
         if(me.hasExtra("breakfast")){
             breakfast = (Meal) me.getSerializableExtra("breakfast");
             tvBreakfast.setText("Your breakfast is: " + breakfast.getName() + ".");
-            btBreakfast.setText("Change breakfast");
+            btBreakfast.setText("Reselect");
             totalProteins += breakfast.getProteins();
             totalFats += breakfast.getFats();
             totalCalories += breakfast.getCalories();
@@ -133,7 +133,7 @@ public class mealsMenu extends AppCompatActivity {
         if(me.hasExtra("lunch")){
             lunch = (Meal) me.getSerializableExtra("lunch");
             tvLunch.setText("Your lunch is: " + lunch.getName() + ".");
-            btLunch.setText("Change lunch");
+            btLunch.setText("Reselect");
             totalProteins += lunch.getProteins();
             totalFats += lunch.getFats();
             totalCalories += lunch.getCalories();
@@ -143,7 +143,7 @@ public class mealsMenu extends AppCompatActivity {
         if(me.hasExtra("dinner")){
             dinner = (Meal) me.getSerializableExtra("dinner");
             tvDinner.setText("Your dinner is: " + dinner.getName() + ".");
-            btDinner.setText("Change dinner");
+            btDinner.setText("Reselect");
             totalProteins += dinner.getProteins();
             totalFats += dinner.getFats();
             totalCalories += dinner.getCalories();

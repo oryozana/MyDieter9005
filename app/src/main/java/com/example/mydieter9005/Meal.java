@@ -31,9 +31,13 @@ public class Meal extends Food {
     }
 
     public Meal(Meal meal1, Meal meal2){
-        super(meal1.name + " and " + meal2.name);
-        addNeededIngredientsForMeal(meal1.neededIngredientsForMeal);
-        addNeededIngredientsForMeal(meal2.neededIngredientsForMeal);
+        super(meal2.name);
+        if(meal1 != null) {
+            this.name = meal1.name + " and " + this.name;
+            addNeededIngredientsForMeal(meal1.neededIngredientsForMeal, meal2.neededIngredientsForMeal);
+        }
+        else
+            setNeededIngredientsForMeal(meal2.neededIngredientsForMeal);
     }
 
     public void initiateNeededIngredientsForMeal(String name, int grams){
@@ -44,20 +48,6 @@ public class Meal extends Food {
                 addIfNeeded(new Ingredient(Ingredient.getIngredientByName(mealPart), grams));
         }
     }
-
-//    public void addIfMiniMealInside(String mealPart){
-//        if (mealPart.equals("toast")) {
-//            addIfNeeded(Ingredient.getIngredientByName("bread"));
-//            addIfNeeded(Ingredient.getIngredientByName("yellow cheese"));
-//            addIfNeeded(Ingredient.getIngredientByName("ketchup"));
-//            addIfNeeded(Ingredient.getIngredientByName("thousand island dressing"));
-//        }
-//        if (mealPart.equals("salad")) {
-//            addIfNeeded(Ingredient.getIngredientByName("tomato"));
-//            addIfNeeded(Ingredient.getIngredientByName("cucumber"));
-//            addIfNeeded(Ingredient.getIngredientByName("lettuce"));
-//        }
-//    }
 
     private void addIfNeeded(Ingredient ingredient) {
         if(this.neededIngredientsForMeal.contains(ingredient)){
@@ -79,6 +69,7 @@ public class Meal extends Food {
                 this.calories += ingredient.calories;
             }
         }
+        roundValues();
     }
 
     public int getIngredientIndexInMealIngredients(Ingredient ingredient){
@@ -96,6 +87,14 @@ public class Meal extends Food {
     public void addNeededIngredientsForMeal(ArrayList<Ingredient> neededIngredientsForMeal) {
         for(int i = 0; i < neededIngredientsForMeal.size(); i++)
             this.neededIngredientsForMeal.add(neededIngredientsForMeal.get(i));
+        updateMealInfo();
+    }
+
+    public void addNeededIngredientsForMeal(ArrayList<Ingredient> neededIngredientsForMeal1, ArrayList<Ingredient> neededIngredientsForMeal2) {
+        for(int i = 0; i < neededIngredientsForMeal1.size(); i++)
+            this.neededIngredientsForMeal.add(neededIngredientsForMeal1.get(i));
+        for(int i = 0; i < neededIngredientsForMeal2.size(); i++)
+            this.neededIngredientsForMeal.add(neededIngredientsForMeal2.get(i));
         updateMealInfo();
     }
 

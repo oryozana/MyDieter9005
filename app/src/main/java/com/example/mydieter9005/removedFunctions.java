@@ -254,4 +254,21 @@ public class removedFunctions extends AppCompatActivity {
 //            }
 //        }
 //    }
+
+
+        // From Meal:
+
+//    public void addIfMiniMealInside(String mealPart){
+//        if (mealPart.equals("toast")) {
+//            addIfNeeded(Ingredient.getIngredientByName("bread"));
+//            addIfNeeded(Ingredient.getIngredientByName("yellow cheese"));
+//            addIfNeeded(Ingredient.getIngredientByName("ketchup"));
+//            addIfNeeded(Ingredient.getIngredientByName("thousand island dressing"));
+//        }
+//        if (mealPart.equals("salad")) {
+//            addIfNeeded(Ingredient.getIngredientByName("tomato"));
+//            addIfNeeded(Ingredient.getIngredientByName("cucumber"));
+//            addIfNeeded(Ingredient.getIngredientByName("lettuce"));
+//        }
+//    }
 }

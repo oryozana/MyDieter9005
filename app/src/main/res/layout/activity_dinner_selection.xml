@@ -61,7 +61,7 @@
             android:id="@+id/btClearDinnerSelection"
             android:layout_width="125pt"
             android:layout_height="wrap_content"
-            android:onClick="clearDinnerSelection"
+            android:onClick="clearDinnerSelectionOrFinishMultiSelect"
             android:text="Clear selection" />
     </LinearLayout>
 

@@ -36,8 +36,8 @@ public class dinnerSelection extends AppCompatActivity {
     ArrayList<Meal> mealsList;
     ArrayAdapter<Meal> adapter;
     boolean multiSelect = false;
-    String chosenDinnerName = "";
-    int chosenDinnerCalories = 0, chosenDinnerMinutes = 0, multiSelectCounter = 0;
+    Meal chosenMultiSelectDinner = null;
+    int multiSelectCounter = 0;
     Song activeSong = Song.getSongs().get(0);
     ListView listView;
 
@@ -144,13 +144,10 @@ public class dinnerSelection extends AppCompatActivity {
                     me.putExtra("dinner", selectedItem);
                     startActivity(me);
                 }
-                else{
-                    String[] mealInfo = multiUsageFunctions.organizeMeal(selectedItem.toString());
-                    Toast.makeText(dinnerSelection.this, mealInfo[0] + " has added.", Toast.LENGTH_SHORT).show();
-                    chosenDinnerName += mealInfo[0].toLowerCase() + " and ";
-                    chosenDinnerCalories += multiUsageFunctions.getCaloriesOrMinutesOutOfString(mealInfo[1]);
-                    chosenDinnerMinutes += multiUsageFunctions.getCaloriesOrMinutesOutOfString(mealInfo[2]);
-                    multiSelectCounter += 1;
+                else {
+                    chosenMultiSelectDinner = new Meal(chosenMultiSelectDinner, selectedItem);
+                    Toast.makeText(dinnerSelection.this, selectedItem.getName() + " has added.", Toast.LENGTH_SHORT).show();
+                    multiSelectCounter++;
                 }
             }
         });
@@ -265,6 +262,7 @@ public class dinnerSelection extends AppCompatActivity {
             Toast.makeText(this, "Multi select has disabled.", Toast.LENGTH_SHORT).show();
             btMultiDinnerSelect.setText("Enable multi select");
             btClearDinnerSelection.setText("Clear selection");
+            chosenMultiSelectDinner = null;
             multiSelectCounter = 0;
             multiSelect = false;
         }
@@ -277,16 +275,14 @@ public class dinnerSelection extends AppCompatActivity {
         startActivity(me);
     }
 
-    public void clearDinnerSelection(View v){
+    public void clearDinnerSelectionOrFinishMultiSelect(View v){
         if(multiSelect){
             if(multiSelectCounter == 0){
                 Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
             }
             else{
-                chosenDinnerName = chosenDinnerName.substring(0, chosenDinnerName.length() - 5);  // 5 = " and "
-                String chosenDinner = chosenDinnerName + ": " + chosenDinnerCalories + " calories, " + chosenDinnerMinutes + " minutes.";
                 me.setClass(dinnerSelection.this, mealsMenu.class);
-                me.putExtra("dinner", chosenDinner);
+                me.putExtra("dinner", chosenMultiSelectDinner);
                 startActivity(me);
             }
         }
