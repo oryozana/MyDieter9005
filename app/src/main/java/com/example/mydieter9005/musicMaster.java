@@ -30,7 +30,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-public class musicMaster extends AppCompatActivity {
+public class musicMaster extends AppCompatActivity implements View.OnClickListener {
 
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
@@ -67,23 +67,9 @@ public class musicMaster extends AppCompatActivity {
         musicMasterLinearLayout = (LinearLayout) findViewById(R.id.musicMasterLinearLayout);
 
         ibtPauseOrPlayMusic = (ImageButton) findViewById(R.id.ibtPauseOrPlayMusic);
-        ibtPauseOrPlayMusic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!isPlaying) {
-                    ibtPauseOrPlayMusic.setImageResource(R.drawable.ic_pause_music_icon);
-                    mediaPlayer.start();
-                    isPlaying = true;
-                }
-                else{
-                    ibtPauseOrPlayMusic.setImageResource(R.drawable.ic_play_music_icon);
-                    mediaPlayer.pause();
-                    isPlaying = false;
-                }
-            }
-        });
-
+        ibtPauseOrPlayMusic.setOnClickListener(this);
         btFinishMusicMaster = (Button) findViewById(R.id.btFinishMusicMaster);
+        btFinishMusicMaster.setOnClickListener(this);
 
         rgMusicChose = (RadioGroup) findViewById(R.id.rgMusicChose);
         rgMusicChose.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -117,7 +103,20 @@ public class musicMaster extends AppCompatActivity {
         rgMusicChose.check(rbSelected.getId());
     }
 
-    public void finish(View v){
+    public void startOrPauseMusic(){
+        if(!isPlaying) {
+            ibtPauseOrPlayMusic.setImageResource(R.drawable.ic_pause_music_icon);
+            mediaPlayer.start();
+            isPlaying = true;
+        }
+        else{
+            ibtPauseOrPlayMusic.setImageResource(R.drawable.ic_play_music_icon);
+            mediaPlayer.pause();
+            isPlaying = false;
+        }
+    }
+
+    public void finishMusicMaster(){
         String cameToMusicMasterFrom = me.getStringExtra("cameToMusicMasterFrom");
         if(cameToMusicMasterFrom.equals("MainActivity"))
             me.setClass(musicMaster.this, MainActivity.class);
@@ -303,5 +302,16 @@ public class musicMaster extends AppCompatActivity {
         mediaPlayer.stop();
         mediaPlayer.release();
         super.onDestroy();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+
+        if(viewId == ibtPauseOrPlayMusic.getId())
+            startOrPauseMusic();
+
+        if(viewId == btFinishMusicMaster.getId())
+            finishMusicMaster();
     }
 }

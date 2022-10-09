@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class finishMeals extends AppCompatActivity {
+public class finishMeals extends AppCompatActivity implements View.OnClickListener {
 
     private MediaPlayer mediaPlayer;
 
@@ -72,7 +72,9 @@ public class finishMeals extends AppCompatActivity {
         lvDinnerIngredients = (ListView) findViewById(R.id.lvDinnerIngredients);
 
         btSendToIngredientsPickup = (Button) findViewById(R.id.btSendToIngredientsPickup);
+        btSendToIngredientsPickup.setOnClickListener(this);
         btFinishMeals = (Button) findViewById(R.id.btFinishMeals);
+        btFinishMeals.setOnClickListener(this);
 
         implementSettingsData();
         initiateMediaPlayer();
@@ -189,12 +191,12 @@ public class finishMeals extends AppCompatActivity {
         }
     }
 
-    public void sendToSeeAllIngredients(View v){
+    public void sendToSeeAllIngredients(){
         me.setClass(this, ingredientsPickup.class);
         startActivity(me);
     }
 
-    public void finish(View v){
+    public void finishFinishMeals(){
         me.setClass(this, MainActivity.class);
         startActivity(me);
     }
@@ -293,5 +295,16 @@ public class finishMeals extends AppCompatActivity {
         super.onDestroy();
         mediaPlayer.stop();
         mediaPlayer.release();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+
+        if(viewId == btSendToIngredientsPickup.getId())
+            sendToSeeAllIngredients();
+
+        if(viewId == btFinishMeals.getId())
+            finishFinishMeals();
     }
 }

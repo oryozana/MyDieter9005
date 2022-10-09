@@ -89,13 +89,11 @@
         android:id="@+id/btChangeMusic"
         android:layout_width="125pt"
         android:layout_height="wrap_content"
-        android:onClick="goToMusicMaster"
         android:text="Change music" />
 
     <Button
         android:id="@+id/btReturnToRecentActivity"
         android:layout_width="125pt"
         android:layout_height="wrap_content"
-        android:onClick="returnToRecentActivity"
         android:text="Finish" />
 </LinearLayout>

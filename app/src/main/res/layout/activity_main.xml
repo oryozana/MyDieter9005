@@ -86,21 +86,18 @@
         android:layout_width="125pt"
         android:layout_height="wrap_content"
         app:layout_gravity="center"
-        android:onClick="sendToSelected"
         android:text="Meals selector" />
 
     <Button
         android:id="@+id/btWriteMealsToExternalFile"
         android:layout_width="125pt"
         android:layout_height="wrap_content"
-        android:text="Save meals on external file"
-        android:onClick="write"/>
+        android:text="Save meals on external file" />
 
     <Button
         android:id="@+id/btReadMealsFromExternalFile"
         android:layout_width="125pt"
         android:layout_height="wrap_content"
-        android:text="Load saved meals"
-        android:onClick="showFileData"/>
+        android:text="Load saved meals" />
 
 </LinearLayout>

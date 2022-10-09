@@ -20,7 +20,6 @@
         android:id="@+id/btBreakfast"
         android:layout_width="100pt"
         android:layout_height="wrap_content"
-        android:onClick="sendToMealSelection"
         android:text="Select" />
 
     <TextView
@@ -34,7 +33,6 @@
         android:id="@+id/btLunch"
         android:layout_width="100pt"
         android:layout_height="wrap_content"
-        android:onClick="sendToMealSelection"
         android:text="Select" />
 
     <TextView
@@ -48,7 +46,6 @@
         android:id="@+id/btDinner"
         android:layout_width="100pt"
         android:layout_height="wrap_content"
-        android:onClick="sendToMealSelection"
         android:text="Select" />
 
     <TextView
@@ -81,7 +78,6 @@
         android:id="@+id/btFinish"
         android:layout_width="100pt"
         android:layout_height="wrap_content"
-        android:text="Finish"
-        android:onClick="sendToMealSelection"/>
+        android:text="Finish" />
 
 </LinearLayout>

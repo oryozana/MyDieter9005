@@ -27,10 +27,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-public class settingsSetter extends AppCompatActivity {
+public class settingsSetter extends AppCompatActivity implements View.OnClickListener {
 
     RadioGroup rgPlayMusic, rgUseVideos, rgUseManuallySave;
-    Button btReturnToRecentActivity;
+    Button btReturnToRecentActivity, btChangeMusic;
     boolean playMusic, useVideos, useManuallySave;
     boolean wantToSave = false, chooseIfWantToSave = false, needSave = true;
     boolean playMusicAtStart, useVideosAtStart, useManuallySaveAtStart;
@@ -57,6 +57,9 @@ public class settingsSetter extends AppCompatActivity {
             activeSong = (Song) me.getSerializableExtra("activeSong");
 
         btReturnToRecentActivity = (Button) findViewById(R.id.btReturnToRecentActivity);
+        btReturnToRecentActivity.setOnClickListener(this);
+        btChangeMusic = (Button) findViewById(R.id.btChangeMusic);
+        btChangeMusic.setOnClickListener(this);
 
         rgPlayMusic = (RadioGroup) findViewById(R.id.rgPlayMusic);
         rgUseVideos = (RadioGroup) findViewById(R.id.rgUseVideos);
@@ -147,13 +150,13 @@ public class settingsSetter extends AppCompatActivity {
         useManuallySave = radioID == R.id.rbManuallySave;
     }
 
-    public void goToMusicMaster(View v){
+    public void goToMusicMaster(){
         me.setClass(settingsSetter.this, musicMaster.class);
         me.putExtra("cameToMusicMasterFrom", getLocalClassName());
         startActivity(me);
     }
 
-    public void returnToRecentActivity(View v){
+    public void returnToRecentActivity(){
         getRadioGroupsOptionsSelected();
         if(!chooseIfWantToSave || needSave){
             if(((playMusicAtStart != playMusic) || (useVideosAtStart != useVideos) || (useManuallySaveAtStart != useManuallySave)) && !chooseIfWantToSave)
@@ -161,7 +164,7 @@ public class settingsSetter extends AppCompatActivity {
             else {
                 needSave = false;
                 chooseIfWantToSave = true; // Don't need to save because nothing changed.
-                returnToRecentActivity(null);
+                returnToRecentActivity();
             }
         }
         else{
@@ -214,7 +217,7 @@ public class settingsSetter extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 chooseIfWantToSave = true;
                 wantToSave = false;
-                returnToRecentActivity(null);
+                returnToRecentActivity();
             }
         });
 
@@ -223,7 +226,7 @@ public class settingsSetter extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 chooseIfWantToSave = true;
                 wantToSave = true;
-                returnToRecentActivity(null);
+                returnToRecentActivity();
             }
         });
 
@@ -259,5 +262,16 @@ public class settingsSetter extends AppCompatActivity {
             resetToPreviousSettings();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+
+        if(viewId == btChangeMusic.getId())
+            goToMusicMaster();
+
+        if(viewId == btReturnToRecentActivity.getId())
+            returnToRecentActivity();
     }
 }

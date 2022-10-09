@@ -20,7 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class mealsMenu extends AppCompatActivity {
+public class mealsMenu extends AppCompatActivity implements View.OnClickListener {
 
     private MediaPlayer mediaPlayer;
     TextView tvBreakfast, tvLunch, tvDinner;
@@ -51,9 +51,13 @@ public class mealsMenu extends AppCompatActivity {
         tvDinner = (TextView) findViewById(R.id.tvDinner);
 
         btBreakfast = (Button) findViewById(R.id.btBreakfast);
+        btBreakfast.setOnClickListener(this);
         btLunch = (Button) findViewById(R.id.btLunch);
+        btLunch.setOnClickListener(this);
         btDinner = (Button) findViewById(R.id.btDinner);
+        btDinner.setOnClickListener(this);
         btFinish = (Button) findViewById(R.id.btFinish);
+        btFinish.setOnClickListener(this);
 
         tvTotalProteins = (TextView) findViewById(R.id.tvTotalProteins);
         tvTotalFats = (TextView) findViewById(R.id.tvTotalFats);
@@ -62,43 +66,6 @@ public class mealsMenu extends AppCompatActivity {
         implementSettingsData();
         initiateMediaPlayer();
         updateMeals();
-    }
-
-    public void sendToMealSelection(View v){
-        int id = v.getId();
-        if(id == btBreakfast.getId()) {
-            me.setClass(this, breakfastSelection.class);
-            startActivity(me);
-        }
-        if(id == btLunch.getId()) {
-            me.setClass(this, lunchSelection.class);
-            startActivity(me);
-        }
-        if(id == btDinner.getId()) {
-            me.setClass(this, dinnerSelection.class);
-            startActivity(me);
-        }
-        if(id == btFinish.getId()) {
-            if(me.hasExtra("breakfast") || me.hasExtra("lunch") || me.hasExtra("dinner")){
-                me.setClass(mealsMenu.this, finishMeals.class);
-                updateIngredientsAmount();
-
-                if(selectedMeals[0] != null)
-                    me.putExtra("selectedBreakfast", selectedMeals[0]);
-                if(selectedMeals[1] != null)
-                    me.putExtra("selectedLunch", selectedMeals[1]);
-                if(selectedMeals[2] != null)
-                    me.putExtra("selectedDinner", selectedMeals[2]);
-
-                me.putExtra("totalProteins", totalProteins);
-                me.putExtra("totalFats", totalFats);
-                me.putExtra("totalCalories", totalCalories);
-                startActivity(me);
-            }
-            else{
-                Toast.makeText(this, "Please pick at least one meal !", Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
     public void updateIngredientsAmount(){
@@ -249,5 +216,44 @@ public class mealsMenu extends AppCompatActivity {
             startActivity(me);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+
+        if(viewId == btBreakfast.getId()) {
+            me.setClass(this, breakfastSelection.class);
+            startActivity(me);
+        }
+        if(viewId == btLunch.getId()) {
+            me.setClass(this, lunchSelection.class);
+            startActivity(me);
+        }
+        if(viewId == btDinner.getId()) {
+            me.setClass(this, dinnerSelection.class);
+            startActivity(me);
+        }
+        if(viewId == btFinish.getId()) {
+            if(me.hasExtra("breakfast") || me.hasExtra("lunch") || me.hasExtra("dinner")){
+                me.setClass(mealsMenu.this, finishMeals.class);
+                updateIngredientsAmount();
+
+                if(selectedMeals[0] != null)
+                    me.putExtra("selectedBreakfast", selectedMeals[0]);
+                if(selectedMeals[1] != null)
+                    me.putExtra("selectedLunch", selectedMeals[1]);
+                if(selectedMeals[2] != null)
+                    me.putExtra("selectedDinner", selectedMeals[2]);
+
+                me.putExtra("totalProteins", totalProteins);
+                me.putExtra("totalFats", totalFats);
+                me.putExtra("totalCalories", totalCalories);
+                startActivity(me);
+            }
+            else{
+                Toast.makeText(this, "Please pick at least one meal !", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

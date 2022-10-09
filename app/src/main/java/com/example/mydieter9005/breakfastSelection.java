@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class breakfastSelection extends AppCompatActivity {
+public class breakfastSelection extends AppCompatActivity implements View.OnClickListener {
 
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
@@ -78,8 +78,11 @@ public class breakfastSelection extends AppCompatActivity {
         videoView = (VideoView) findViewById(R.id.breakfastVideoView);
 
         btSendBreakfastToCustomize = (Button) findViewById(R.id.btSendBreakfastToCustomize);
+        btSendBreakfastToCustomize.setOnClickListener(this);
         btClearBreakfastSelection = (Button) findViewById(R.id.btClearBreakfastSelection);
+        btClearBreakfastSelection.setOnClickListener(this);
         btMultiBreakfastSelect = (Button) findViewById(R.id.btMultiBreakfastSelect);
+        btMultiBreakfastSelect.setOnClickListener(this);
 
         updateIfMealModified();
         setListViewAdapter();
@@ -208,13 +211,13 @@ public class breakfastSelection extends AppCompatActivity {
         return -1;
     }
 
-    public void sendToCustomize(View v){
+    public void sendToCustomize(){
         me.setClass(breakfastSelection.this, customMeals.class);
         me.putExtra("cameFrom", "breakfast");
         startActivity(me);
     }
 
-    public void multiOrSingleSelectUpdate(View v){
+    public void multiOrSingleSelectUpdate(){
         if(!multiSelect){
             Toast.makeText(this, "Multi select has enabled.", Toast.LENGTH_SHORT).show();
             btMultiBreakfastSelect.setText("Disable multi select");
@@ -232,7 +235,7 @@ public class breakfastSelection extends AppCompatActivity {
         }
     }
 
-    public void clearBreakfastSelectionOrFinishMultiSelect(View v){
+    public void clearBreakfastSelectionOrFinishMultiSelect(){
         if(multiSelect){
             if(multiSelectCounter == 0){
                 Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
@@ -384,5 +387,19 @@ public class breakfastSelection extends AppCompatActivity {
         mediaPlayer.stop();
         mediaPlayer.release();
         super.onDestroy();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+
+        if(viewId == btSendBreakfastToCustomize.getId())
+            sendToCustomize();
+
+        if(viewId == btMultiBreakfastSelect.getId())
+            multiOrSingleSelectUpdate();
+
+        if(viewId == btClearBreakfastSelection.getId())
+            clearBreakfastSelectionOrFinishMultiSelect();
     }
 }

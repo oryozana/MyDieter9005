@@ -29,13 +29,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-public class customMeals extends AppCompatActivity {
+public class customMeals extends AppCompatActivity implements View.OnClickListener {
 
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
+    Button btFinishCustomize, btSendToCustomSelection;
     Song activeSong = Song.getSongs().get(0);
-    Button btFinishCustomize;
     TextView tvInstructions;
     EditText customMeal;
     String[] mealInfo;
@@ -63,10 +63,15 @@ public class customMeals extends AppCompatActivity {
         cameFrom = me.getStringExtra("cameFrom");
         Toast.makeText(this, "selected meal: " + cameFrom, Toast.LENGTH_SHORT).show();
 
-        btFinishCustomize = (Button) findViewById(R.id.btFinishCustomize);
         videoView = (VideoView) findViewById(R.id.customVideoView);
-        tvInstructions = (TextView) findViewById(R.id.tvInstructions);
         customMeal = (EditText) findViewById(R.id.customMeal);
+
+        tvInstructions = (TextView) findViewById(R.id.tvInstructions);
+
+        btSendToCustomSelection = (Button) findViewById(R.id.btSendToCustomSelection);
+        btSendToCustomSelection.setOnClickListener(this);
+        btFinishCustomize = (Button) findViewById(R.id.btFinishCustomize);
+        btFinishCustomize.setOnClickListener(this);
 
         writeTheInstructions();
         initiateVideoPlayer();
@@ -84,7 +89,7 @@ public class customMeals extends AppCompatActivity {
         );
     }
 
-    public void setCustomFood(View v){
+    public void setCustomFood(){
         String meal = customMeal.getText().toString();
         String testMeal;
         if(meal.contains(":") && meal.contains(",") && meal.contains(".") && meal.contains(" ")){
@@ -150,7 +155,7 @@ public class customMeals extends AppCompatActivity {
         ad.show();
     }
 
-    public void sendToCustomSelection(View v){
+    public void sendToCustomSelection(){
         me.setClass(customMeals.this, customSelection.class);
         startActivity(me);
     }
@@ -310,5 +315,16 @@ public class customMeals extends AppCompatActivity {
         mediaPlayer.stop();
         mediaPlayer.release();
         super.onDestroy();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+
+        if(viewId == btSendToCustomSelection.getId())
+            sendToCustomSelection();
+
+        if(viewId == btFinishCustomize.getId())
+            setCustomFood();
     }
 }

@@ -39,14 +39,12 @@
             android:layout_width="125pt"
             android:layout_height="wrap_content"
             android:layout_marginTop="10pt"
-            android:text="Don't save and finish"
-            android:onClick="finish"/>
+            android:text="Don't save and finish" />
 
         <Button
             android:id="@+id/btSaveMealAndFinish"
             android:layout_width="125pt"
             android:layout_height="wrap_content"
-            android:text="Save and finish"
-            android:onClick="finish"/>
+            android:text="Save and finish" />
     </LinearLayout>
 </RelativeLayout>

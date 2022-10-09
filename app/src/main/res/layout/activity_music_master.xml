@@ -98,8 +98,7 @@
             android:id="@+id/btFinishMusicMaster"
             android:layout_width="125pt"
             android:layout_height="wrap_content"
-            android:text="Finish"
-            android:onClick="finish"/>
+            android:text="Finish" />
     </LinearLayout>
 
 </RelativeLayout>

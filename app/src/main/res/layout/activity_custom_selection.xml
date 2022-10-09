@@ -46,14 +46,12 @@
             android:layout_marginLeft="15pt"
             android:layout_marginRight="15pt"
             android:layout_marginBottom="2pt"
-            android:onClick="multiOrSingleSelectUpdate"
             android:text="Enable multi select" />
 
         <Button
             android:id="@+id/btFinishCustomSelection"
             android:layout_width="125pt"
             android:layout_height="wrap_content"
-            android:onClick="finishSelectionOrReturnToCustomize"
             android:text="Return to customize" />
     </LinearLayout>
 

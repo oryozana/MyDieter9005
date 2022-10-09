@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class ingredientsPickup extends AppCompatActivity {
+public class ingredientsPickup extends AppCompatActivity implements View.OnClickListener {
 
     private MediaPlayer mediaPlayer;
 
@@ -67,8 +67,11 @@ public class ingredientsPickup extends AppCompatActivity {
         ivFoodImg = (ImageView) findViewById(R.id.ivFoodImg);
 
         btFinishIngredientsPickup = (Button) findViewById(R.id.btFinishIngredientsPickup);
+        btFinishIngredientsPickup.setOnClickListener(this);
         ibtPrevious = (ImageButton) findViewById(R.id.ibtPrevious);
+        ibtPrevious.setOnClickListener(this);
         ibtNext = (ImageButton) findViewById(R.id.ibtNext);
+        ibtNext.setOnClickListener(this);
 
         implementSettingsData();
         initiateIngredientsToShow();
@@ -104,7 +107,7 @@ public class ingredientsPickup extends AppCompatActivity {
             ibtNext.setVisibility(View.INVISIBLE);
     }
 
-    public void nextItem(View v){
+    public void nextItem(){
         if(ingredientsCounter + 1 == ingredientsAmount)
             ibtNext.setVisibility(View.INVISIBLE);
         if(ibtPrevious.getVisibility() == View.INVISIBLE && ingredientsCounter != 0)
@@ -117,7 +120,7 @@ public class ingredientsPickup extends AppCompatActivity {
         tvCounterShow.setText("Item: " + ingredientsCounter + " out of " + ingredientsAmount);
     }
 
-    public void previousItem(View v){
+    public void previousItem(){
         if(ingredientsCounter == 2)
             ibtPrevious.setVisibility(View.INVISIBLE);
         if(ibtNext.getVisibility() == View.INVISIBLE)
@@ -142,7 +145,7 @@ public class ingredientsPickup extends AppCompatActivity {
             ivFoodImg.setImageResource(R.drawable.image_not_available);
     }
 
-    public void finish(View v){
+    public void finishIngredientsPickup(){
         me.setClass(this, finishMeals.class);
         startActivity(me);
     }
@@ -241,5 +244,19 @@ public class ingredientsPickup extends AppCompatActivity {
         super.onDestroy();
         mediaPlayer.stop();
         mediaPlayer.release();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+
+        if(viewId == ibtNext.getId())
+            nextItem();
+
+        if(viewId == ibtPrevious.getId())
+            previousItem();
+
+        if(viewId == btFinishIngredientsPickup.getId())
+            finishIngredientsPickup();
     }
 }

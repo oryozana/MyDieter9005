@@ -34,7 +34,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-public class mealModifier extends AppCompatActivity {
+public class mealModifier extends AppCompatActivity implements View.OnClickListener {
 
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
@@ -71,12 +71,15 @@ public class mealModifier extends AppCompatActivity {
         meal = (Meal)(me.getSerializableExtra("mealToModify"));
         cameFrom = me.getStringExtra("cameToMealModifierFrom");
 
-        videoView = (VideoView) findViewById(R.id.mealModifierVideoView);
         mealModifierLinearLayout = (LinearLayout) findViewById(R.id.mealModifierLinearLayout);
+        videoView = (VideoView) findViewById(R.id.mealModifierVideoView);
 
         listView = (ListView) findViewById(R.id.listViewMealIngredientsModifier);
+
         btDoNotSaveMealAndFinish = (Button) findViewById(R.id.btDoNotSaveMealAndFinish);
+        btDoNotSaveMealAndFinish.setOnClickListener(this);
         btSaveMealAndFinish = (Button) findViewById(R.id.btSaveMealAndFinish);
+        btSaveMealAndFinish.setOnClickListener(this);
 
         initiateListViewFields();
         setListViewAdapter();
@@ -157,7 +160,7 @@ public class mealModifier extends AppCompatActivity {
         ad.show();
     }
 
-    public void finish(View v){
+    public void finishMealModifier(View v){
         if(v.getId() == btSaveMealAndFinish.getId()) {
             meal.setNeededIngredientsForMeal(ingredientsForMeal);
             saveModifiedMeal(meal);
@@ -345,5 +348,13 @@ public class mealModifier extends AppCompatActivity {
         mediaPlayer.stop();
         mediaPlayer.release();
         super.onDestroy();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+
+        if(viewId == btDoNotSaveMealAndFinish.getId() || viewId == btSaveMealAndFinish.getId())
+            finishMealModifier(v);
     }
 }

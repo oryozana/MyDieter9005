@@ -45,7 +45,6 @@
             android:layout_marginTop="10pt"
             android:layout_marginRight="15pt"
             android:layout_marginBottom="2pt"
-            android:onClick="sendToCustomize"
             android:text="Customize meal" />
 
         <Button
@@ -55,14 +54,12 @@
             android:layout_marginLeft="15pt"
             android:layout_marginRight="15pt"
             android:layout_marginBottom="2pt"
-            android:onClick="multiOrSingleSelectUpdate"
             android:text="Enable multi select" />
 
         <Button
             android:id="@+id/btClearBreakfastSelection"
             android:layout_width="125pt"
             android:layout_height="wrap_content"
-            android:onClick="clearBreakfastSelectionOrFinishMultiSelect"
             android:text="Clear selection" />
     </LinearLayout>
 

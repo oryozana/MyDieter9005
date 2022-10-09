@@ -59,7 +59,6 @@
             android:layout_width="48pt"
             android:layout_height="wrap_content"
             android:layout_margin="1pt"
-            android:onClick="previousItem"
             android:visibility="invisible"
             app:srcCompat="@drawable/ic_previous_arrow_icon"
             android:layoutDirection="ltr"/>
@@ -69,7 +68,6 @@
             android:layout_width="48pt"
             android:layout_height="wrap_content"
             android:layout_margin="1pt"
-            android:onClick="nextItem"
             app:srcCompat="@drawable/ic_next_arrow_icon"
             android:layoutDirection="ltr"/>
     </androidx.gridlayout.widget.GridLayout>
@@ -78,7 +76,6 @@
         android:id="@+id/btFinishIngredientsPickup"
         android:layout_width="100pt"
         android:layout_height="wrap_content"
-        android:text="Finish"
-        android:onClick="finish"/>
+        android:text="Finish" />
 
 </LinearLayout>

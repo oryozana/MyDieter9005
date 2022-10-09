@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class customSelection extends AppCompatActivity {
+public class customSelection extends AppCompatActivity implements View.OnClickListener {
 
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
@@ -60,8 +60,10 @@ public class customSelection extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.listViewCustom);
         videoView = (VideoView) findViewById(R.id.customSelectionVideoView);
 
-        btMultiCustomSelect = (Button) findViewById(R.id.btMultiCustomSelect);
         btFinishCustomSelection = (Button) findViewById(R.id.btFinishCustomSelection);
+        btFinishCustomSelection.setOnClickListener(this);
+        btMultiCustomSelect = (Button) findViewById(R.id.btMultiCustomSelect);
+        btMultiCustomSelect.setOnClickListener(this);
 
         setListViewFields();
         implementSettingsData();
@@ -104,7 +106,7 @@ public class customSelection extends AppCompatActivity {
         });
     }
 
-    public void multiOrSingleSelectUpdate(View v){
+    public void multiOrSingleSelectUpdate(){
         if(!multiSelect){
             Toast.makeText(this, "Multi select has enabled.", Toast.LENGTH_SHORT).show();
             btMultiCustomSelect.setText("Disable multi select");
@@ -121,7 +123,7 @@ public class customSelection extends AppCompatActivity {
         }
     }
 
-    public void finishSelectionOrReturnToCustomize(View v){
+    public void finishSelectionOrReturnToCustomize(){
         if(multiSelect){
             if(multiSelectCounter == 0){
                 Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
@@ -282,5 +284,16 @@ public class customSelection extends AppCompatActivity {
         mediaPlayer.stop();
         mediaPlayer.release();
         super.onDestroy();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+
+        if(viewId == btMultiCustomSelect.getId())
+            multiOrSingleSelectUpdate();
+
+        if(viewId == btFinishCustomSelection.getId())
+            finishSelectionOrReturnToCustomize();
     }
 }

@@ -27,13 +27,13 @@ import java.io.OutputStreamWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private MediaPlayer mediaPlayer;
 
     TextView tvBreakfastMain, tvLunchMain, tvDinnerMain;
     TextView tvTotalProteinsMain, tvTotalFatsMain, tvTotalCaloriesMain;
-    Button btMealsMenu, btWriteMealsToExternalFile;
+    Button btMealsMenu, btWriteMealsToExternalFile, btReadMealsFromExternalFile;
     double totalProteins, totalFats, totalCalories;
     Meal[] selectedMeals = new Meal[3];
     Song activeSong;  // In this activity he get a initial value at "createTheFirstIntent".
@@ -70,8 +70,12 @@ public class MainActivity extends AppCompatActivity {
         tvTotalProteinsMain = (TextView) findViewById(R.id.tvTotalProteinsMain);
         tvTotalFatsMain = (TextView) findViewById(R.id.tvTotalFatsMain);
 
-        btMealsMenu = (Button) findViewById(R.id.btMealsMenu);
+        btReadMealsFromExternalFile = (Button) findViewById(R.id.btReadMealsFromExternalFile);
+        btReadMealsFromExternalFile.setOnClickListener(this);
         btWriteMealsToExternalFile = (Button) findViewById(R.id.btWriteMealsToExternalFile);
+        btWriteMealsToExternalFile.setOnClickListener(this);
+        btMealsMenu = (Button) findViewById(R.id.btMealsMenu);
+        btMealsMenu.setOnClickListener(this);
 
         me = createTheFirstIntent(me);
         if(me.hasExtra("activeSong"))
@@ -84,8 +88,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateMealsIfNeeded(){
         if(me.hasExtra("selectedBreakfast") || me.hasExtra("selectedLunch") || me.hasExtra("selectedDinner")) {
-            Toast.makeText(this, "Make it 2.", Toast.LENGTH_SHORT).show();
-
             selectedMeals[0] = (Meal) me.getSerializableExtra("selectedBreakfast");
             selectedMeals[1] = (Meal) me.getSerializableExtra("selectedLunch");
             selectedMeals[2] = (Meal) me.getSerializableExtra("selectedDinner");
@@ -151,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void write(View v){
+    public void write(){
         if(me.hasExtra("meals")){
             try {
                 fos = openFileOutput(todayDate, Context.MODE_PRIVATE);
@@ -191,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showFileData(View v){
+    public void showFileData(){
         String[] dataParts = getFileData(todayDate).split("\n");
         String savedBreakfast="", savedLunch="", savedDinner="", savedTotalCalories="", savedCaloriesLeft="";
         String[] meals = new String[3];
@@ -345,5 +347,19 @@ public class MainActivity extends AppCompatActivity {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+
+        if(viewId == btMealsMenu.getId())
+            sendToSelected(v);
+
+        if(viewId == btWriteMealsToExternalFile.getId())
+            write();
+
+        if(viewId == btReadMealsFromExternalFile.getId())
+            showFileData();
     }
 }

@@ -100,14 +100,12 @@
         android:id="@+id/btSendToIngredientsPickup"
         android:layout_width="100pt"
         android:layout_height="wrap_content"
-        android:text="See all ingredients"
-        android:onClick="sendToSeeAllIngredients"/>
+        android:text="See all ingredients" />
 
     <Button
         android:id="@+id/btFinishMeals"
         android:layout_width="100pt"
         android:layout_height="wrap_content"
-        android:text="Finish"
-        android:onClick="finish"/>
+        android:text="Finish" />
 
 </LinearLayout>

@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class dinnerSelection extends AppCompatActivity {
+public class dinnerSelection extends AppCompatActivity implements View.OnClickListener {
 
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
@@ -120,8 +120,11 @@ public class dinnerSelection extends AppCompatActivity {
         videoView = (VideoView) findViewById(R.id.dinnerVideoView);
 
         btSendDinnerToCustomize = (Button) findViewById(R.id.btSendDinnerToCustomize);
+        btSendDinnerToCustomize.setOnClickListener(this);
         btClearDinnerSelection = (Button) findViewById(R.id.btClearDinnerSelection);
+        btClearDinnerSelection.setOnClickListener(this);
         btMultiDinnerSelect = (Button) findViewById(R.id.btMultiDinnerSelect);
+        btMultiDinnerSelect.setOnClickListener(this);
 
         updateIfMealModified();
         setListViewAdapter();
@@ -250,7 +253,7 @@ public class dinnerSelection extends AppCompatActivity {
         return -1;
     }
 
-    public void multiOrSingleSelectUpdate(View v){
+    public void multiOrSingleSelectUpdate(){
         if(!multiSelect){
             Toast.makeText(this, "Multi select has enabled.", Toast.LENGTH_SHORT).show();
             btMultiDinnerSelect.setText("Disable multi select");
@@ -269,13 +272,13 @@ public class dinnerSelection extends AppCompatActivity {
     }
 
 
-    public void sendToCustomize(View v){
+    public void sendToCustomize(){
         me.setClass(dinnerSelection.this, customMeals.class);
         me.putExtra("cameFrom", "dinner");
         startActivity(me);
     }
 
-    public void clearDinnerSelectionOrFinishMultiSelect(View v){
+    public void clearDinnerSelectionOrFinishMultiSelect(){
         if(multiSelect){
             if(multiSelectCounter == 0){
                 Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
@@ -427,5 +430,19 @@ public class dinnerSelection extends AppCompatActivity {
         mediaPlayer.stop();
         mediaPlayer.release();
         super.onDestroy();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+
+        if(viewId == btSendDinnerToCustomize.getId())
+            sendToCustomize();
+
+        if(viewId == btMultiDinnerSelect.getId())
+            multiOrSingleSelectUpdate();
+
+        if(viewId == btClearDinnerSelection.getId())
+            clearDinnerSelectionOrFinishMultiSelect();
     }
 }
