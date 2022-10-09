@@ -8,15 +8,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -29,11 +33,15 @@ import java.io.OutputStreamWriter;
 
 public class settingsSetter extends AppCompatActivity implements View.OnClickListener {
 
+    private VideoView videoView;
+    private MediaPlayer mediaPlayer;
+
     RadioGroup rgPlayMusic, rgUseVideos, rgUseManuallySave;
     Button btReturnToRecentActivity, btChangeMusic;
     boolean playMusic, useVideos, useManuallySave;
     boolean wantToSave = false, chooseIfWantToSave = false, needSave = true;
     boolean playMusicAtStart, useVideosAtStart, useManuallySaveAtStart;
+    LinearLayout settingsSetterLinearLayout;
     Song activeSong = Song.getSongs().get(0);
     TextView tvCurrentSongName;
 
@@ -65,9 +73,14 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
         rgUseVideos = (RadioGroup) findViewById(R.id.rgUseVideos);
         rgUseManuallySave = (RadioGroup) findViewById(R.id.rgUseManuallySave);
 
+        settingsSetterLinearLayout = (LinearLayout) findViewById(R.id.settingsSetterLinearLayout);
+        videoView = (VideoView) findViewById(R.id.settingsSetterVideoView);
+
         tvCurrentSongName = (TextView) findViewById(R.id.tvCurrentSongName);
 
         implementSettingsData();
+        initiateVideoPlayer();
+        initiateMediaPlayer();
     }
 
     public void saveSettings(){
@@ -262,6 +275,71 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
             resetToPreviousSettings();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void initiateVideoPlayer(){
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.settings_setter_video_background);
+        videoView.setVideoURI(uri);
+
+        if(me.getBooleanExtra("useVideos", true))
+            videoView.start();
+
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
+    }
+
+    public void initiateMediaPlayer(){
+        mediaPlayer = MediaPlayer.create(settingsSetter.this, activeSong.getId());
+        mediaPlayer.setLooping(true);
+        if(me.getBooleanExtra("playMusic", true)){
+            mediaPlayer.start();
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        videoView.resume();
+        if(!me.getBooleanExtra("useVideos", true)){
+            settingsSetterLinearLayout.setBackground(getDrawable(R.drawable.settings_background));
+            videoView.stopPlayback();
+        }
+        else
+            videoView.start();
+    }
+
+    @Override
+    protected void onRestart() {
+        videoView.start();
+        super.onRestart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mediaPlayer.start();
+        if(!me.getBooleanExtra("playMusic", true)){
+            mediaPlayer.stop();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        videoView.suspend();
+        mediaPlayer.pause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        videoView.stopPlayback();
+        mediaPlayer.stop();
+        mediaPlayer.release();
+        super.onDestroy();
     }
 
     @Override
