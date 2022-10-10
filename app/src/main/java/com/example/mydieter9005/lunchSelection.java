@@ -344,7 +344,7 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
     }
 
     public void initiateVideoPlayer(){
-        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.evening_background_video);
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.lunch_selection_background_video);
         videoView.setVideoURI(uri);
 
         if(me.getBooleanExtra("useVideos", true))

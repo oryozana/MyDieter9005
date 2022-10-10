@@ -344,7 +344,7 @@ public class dinnerSelection extends AppCompatActivity implements View.OnClickLi
     }
 
     public void initiateVideoPlayer(){
-        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.night_background_video);
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.dinner_selection_background_video);
         videoView.setVideoURI(uri);
 
         if(me.getBooleanExtra("useVideos", true))

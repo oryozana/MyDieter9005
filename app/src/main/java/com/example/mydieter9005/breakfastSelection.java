@@ -301,7 +301,7 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
     }
 
     public void initiateVideoPlayer(){
-        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.morning_background_video);
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.breakfast_selection_background_video);
         videoView.setVideoURI(uri);
 
         if(me.getBooleanExtra("useVideos", true))
