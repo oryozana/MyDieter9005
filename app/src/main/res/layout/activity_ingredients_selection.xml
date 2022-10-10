@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="You can search here: "
+            android:visibility="invisible"
             android:inputType="textPersonName" />
 
         <ListView
