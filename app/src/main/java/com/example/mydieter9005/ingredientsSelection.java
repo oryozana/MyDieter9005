@@ -72,23 +72,23 @@ public class ingredientsSelection extends AppCompatActivity implements View.OnCl
         btMultiIngredientsSelect = (Button) findViewById(R.id.btMultiIngredientsSelect);
         btMultiIngredientsSelect.setOnClickListener(this);
 
-//        etFilterIngredients = (EditText) findViewById(R.id.etFilterIngredients);
-//        etFilterIngredients.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                (ingredientsSelection.this).adapter.getFilter().filter(s);
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
+        etFilterIngredients = (EditText) findViewById(R.id.etFilterIngredients);
+        etFilterIngredients.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                (ingredientsSelection.this).adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         implementSettingsData();
         initiateMediaPlayer();
@@ -295,7 +295,7 @@ public class ingredientsSelection extends AppCompatActivity implements View.OnCl
         super.onPostResume();
         videoView.resume();
         if(!me.getBooleanExtra("useVideos", true)){
-            findViewById(R.id.ingredientsSelectionLinearLayout).setBackground(getDrawable(R.drawable.ingredients_selection_background));
+            ingredientsSelectionLinearLayout.setBackground(getDrawable(R.drawable.ingredients_selection_background));
             videoView.stopPlayback();
         }
         else
