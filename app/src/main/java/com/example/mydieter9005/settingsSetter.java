@@ -35,11 +35,11 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
     private VideoView videoView;
     private MediaPlayer mediaPlayer;
 
-    RadioGroup rgPlayMusic, rgUseVideos, rgUseManuallySave;
+    RadioGroup rgPlayMusic, rgUseVideos, rgUseManuallySave, rgChooseClock;
     Button btReturnToRecentActivity, btChangeMusic;
-    boolean playMusic, useVideos, useManuallySave;
+    boolean playMusic, useVideos, useManuallySave, useDigitalClock;
     boolean wantToSave = false, chooseIfWantToSave = false, needSave = true;
-    boolean playMusicAtStart, useVideosAtStart, useManuallySaveAtStart;
+    boolean playMusicAtStart, useVideosAtStart, useManuallySaveAtStart, useDigitalClockAtStart;
     LinearLayout settingsSetterLinearLayout;
     Song activeSong = Song.getSongs().get(0);
     TextView tvCurrentSongName;
@@ -71,6 +71,7 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
         rgPlayMusic = (RadioGroup) findViewById(R.id.rgPlayMusic);
         rgUseVideos = (RadioGroup) findViewById(R.id.rgUseVideos);
         rgUseManuallySave = (RadioGroup) findViewById(R.id.rgUseManuallySave);
+        rgChooseClock = (RadioGroup) findViewById(R.id.rgChooseClock);
 
         settingsSetterLinearLayout = (LinearLayout) findViewById(R.id.settingsSetterLinearLayout);
         videoView = (VideoView) findViewById(R.id.settingsSetterVideoView);
@@ -93,7 +94,8 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
             bw.write("Play music ?: " + playMusic + "\n");
             bw.write("Use Videos ?: " + useVideos + "\n");
             bw.write("Use manually Save ?: " + useManuallySave + "\n");
-            bw.write("Active song name: " + activeSong.getName());
+            bw.write("Active song name: " + activeSong.getName() + "\n");
+            bw.write("Use digital clock ?: " + useDigitalClock);
 
             bw.close();
         }
@@ -140,11 +142,14 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
                 rgUseVideos.check(R.id.rbUseImages);
             if(!Boolean.parseBoolean(settingsParts[2].split(": ")[1]))
                 rgUseManuallySave.check(R.id.rbAutoSave);
+            if(!Boolean.parseBoolean(settingsParts[4].split(": ")[1]))
+                rgChooseClock.check(R.id.rbAnalogClock);
 
             getRadioGroupsOptionsSelected();
             playMusicAtStart = playMusic;
             useVideosAtStart = useVideos;
             useManuallySaveAtStart = useManuallySave;
+            useDigitalClockAtStart = useDigitalClock;
             tvCurrentSongName.setText("Current song: " + activeSong.getName().replaceAll("_", " "));
         }
     }
@@ -160,6 +165,9 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
 
         radioID = rgUseManuallySave.getCheckedRadioButtonId();
         useManuallySave = radioID == R.id.rbManuallySave;
+
+        radioID = rgChooseClock.getCheckedRadioButtonId();
+        useDigitalClock = radioID == R.id.rbDigitalClock;
     }
 
     public void goToMusicMaster(){
@@ -171,8 +179,10 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
     public void returnToRecentActivity(){
         getRadioGroupsOptionsSelected();
         if(!chooseIfWantToSave || needSave){
-            if(((playMusicAtStart != playMusic) || (useVideosAtStart != useVideos) || (useManuallySaveAtStart != useManuallySave)) && !chooseIfWantToSave)
+            if(((playMusicAtStart != playMusic) || (useVideosAtStart != useVideos) || (useManuallySaveAtStart != useManuallySave) || (useDigitalClockAtStart != useDigitalClock)) && !chooseIfWantToSave) {
+                Toast.makeText(this, useDigitalClockAtStart + "" + useDigitalClock, Toast.LENGTH_SHORT).show();
                 checkIfWantToSave();
+            }
             else {
                 needSave = false;
                 chooseIfWantToSave = true; // Don't need to save because nothing changed.
@@ -218,7 +228,7 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
         AlertDialog.Builder adb;
         adb = new AlertDialog.Builder(this);
         adb.setTitle("Your settings are: ");
-        adb.setMessage("Play music ?: " + playMusic + "\n" + "Use videos ?: " + useVideos + "\n" + "Use manually save ?: " + useManuallySave);
+        adb.setMessage("Play music ?: " + playMusic + "\n" + "Use videos ?: " + useVideos + "\n" + "Use manually save ?: " + useManuallySave + "\n" + "Use digital clock ?: " + useDigitalClock);
         adb.setNegativeButton("Continue", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -260,6 +270,10 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
         rgUseManuallySave.check(R.id.rbManuallySave);
         if(!useManuallySaveAtStart)
             rgUseManuallySave.check(R.id.rbAutoSave);
+
+        rgChooseClock.check(R.id.rbDigitalClock);
+        if(!useDigitalClock)
+            rgChooseClock.check(R.id.rbAnalogClock);
     }
 
     @Override

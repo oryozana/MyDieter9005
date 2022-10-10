@@ -1,103 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/main_activity_background"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <HorizontalScrollView
-        android:layout_width="125pt"
-        android:layout_height="wrap_content">
+    <VideoView
+        android:id="@+id/mainActivityVideoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"/>
+
+    <AnalogClock
+        android:id="@+id/mainActivityAnalogClock"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="15pt"
+        android:layout_centerHorizontal="true" />
+
+    <TextClock
+        android:id="@+id/mainActivityTextClock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:format24Hour="hh:mm:ss a"
+        android:textSize="25pt"
+        android:layout_marginTop="30pt"
+        android:layout_centerHorizontal="true" />
+
+
+    <LinearLayout
+        android:id="@+id/mainActivityLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <HorizontalScrollView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvBreakfastMain"
+                android:layout_width="125pt"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4pt"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Your breakfast:                            "
+                android:textColor="@color/white"
+                app:layout_gravity="center" />
+        </HorizontalScrollView>
+
+        <HorizontalScrollView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvLunchMain"
+                android:layout_width="125pt"
+                android:layout_height="match_parent"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Your lunch:                                   "
+                android:textColor="@color/white"
+                app:layout_gravity="center" />
+        </HorizontalScrollView>
+
+        <HorizontalScrollView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvDinnerMain"
+                android:layout_width="125pt"
+                android:layout_height="match_parent"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Your dinner:                                  "
+                android:textColor="@color/white"
+                app:layout_gravity="center" />
+        </HorizontalScrollView>
 
         <TextView
-            android:id="@+id/tvBreakfastMain"
+            android:id="@+id/tvTotalProteinsMain"
             android:layout_width="125pt"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4pt"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="Your breakfast:                            "
-            android:textColor="@color/black"
-            app:layout_gravity="center" />
-    </HorizontalScrollView>
-
-    <HorizontalScrollView
-        android:layout_width="125pt"
-        android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8pt"
+            android:text="Total proteins: "
+            android:textColor="@color/white" />
 
         <TextView
-            android:id="@+id/tvLunchMain"
+            android:id="@+id/tvTotalFatsMain"
             android:layout_width="125pt"
-            android:layout_height="match_parent"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="Your lunch:                                   "
-            android:textColor="@color/black"
-            app:layout_gravity="center" />
-    </HorizontalScrollView>
-
-    <HorizontalScrollView
-        android:layout_width="125pt"
-        android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="Total fats: "
+            android:textColor="@color/white" />
 
         <TextView
-            android:id="@+id/tvDinnerMain"
+            android:id="@+id/tvTotalCaloriesMain"
             android:layout_width="125pt"
-            android:layout_height="match_parent"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="Your dinner:                                  "
-            android:textColor="@color/black"
-            app:layout_gravity="center" />
-    </HorizontalScrollView>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8pt"
+            android:text="Total calories: "
+            android:textColor="@color/white" />
 
-    <TextView
-        android:id="@+id/tvTotalProteinsMain"
-        android:layout_width="125pt"
-        android:layout_height="wrap_content"
-        app:layout_gravity="center"
-        android:layout_marginTop="8pt"
-        android:textColor="@color/black"
-        android:text="Total proteins: " />
+        <Button
+            android:id="@+id/btMealsMenu"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Meals selector" />
 
-    <TextView
-        android:id="@+id/tvTotalFatsMain"
-        android:layout_width="125pt"
-        android:layout_height="wrap_content"
-        app:layout_gravity="center"
-        android:textColor="@color/black"
-        android:text="Total fats: " />
+        <Button
+            android:id="@+id/btWriteMealsToExternalFile"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Save meals on external file" />
 
-    <TextView
-        android:id="@+id/tvTotalCaloriesMain"
-        android:layout_width="125pt"
-        android:layout_height="wrap_content"
-        app:layout_gravity="center"
-        android:layout_marginBottom="8pt"
-        android:textColor="@color/black"
-        android:text="Total calories: " />
-
-    <Button
-        android:id="@+id/btMealsMenu"
-        android:layout_width="125pt"
-        android:layout_height="wrap_content"
-        app:layout_gravity="center"
-        android:text="Meals selector" />
-
-    <Button
-        android:id="@+id/btWriteMealsToExternalFile"
-        android:layout_width="125pt"
-        android:layout_height="wrap_content"
-        android:text="Save meals on external file" />
-
-    <Button
-        android:id="@+id/btReadMealsFromExternalFile"
-        android:layout_width="125pt"
-        android:layout_height="wrap_content"
-        android:text="Load saved meals" />
-
-</LinearLayout>
+        <Button
+            android:id="@+id/btReadMealsFromExternalFile"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Load saved meals" />
+    </LinearLayout>
+</RelativeLayout>

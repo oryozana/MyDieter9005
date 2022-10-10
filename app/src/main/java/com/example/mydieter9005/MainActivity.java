@@ -6,15 +6,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Annotation;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AnalogClock;
 import android.widget.Button;
+import android.widget.DigitalClock;
+import android.widget.LinearLayout;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,15 +33,20 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private VideoView videoView;
     private MediaPlayer mediaPlayer;
+    private AnalogClock analogClock;
+    private TextClock textClock;
 
     TextView tvBreakfastMain, tvLunchMain, tvDinnerMain;
     TextView tvTotalProteinsMain, tvTotalFatsMain, tvTotalCaloriesMain;
     Button btMealsMenu, btWriteMealsToExternalFile, btReadMealsFromExternalFile;
     double totalProteins, totalFats, totalCalories;
+    LinearLayout mainActivityLinearLayout;
     Meal[] selectedMeals = new Meal[3];
     Song activeSong;  // In this activity he get a initial value at "createTheFirstIntent".
 
@@ -42,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     OutputStreamWriter osw;
     BufferedWriter bw;
     String todayDate;
+    int currentHour;
 
     FileInputStream is;
     InputStreamReader isr;
@@ -58,6 +71,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd_MM_yyyy");
         LocalDateTime today = LocalDateTime.now();
         todayDate = dtf.format(today) + " saved file.";
+
+        Calendar calendar = Calendar.getInstance();
+        currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+
+        videoView = (VideoView) findViewById(R.id.mainActivityVideoView);
+        analogClock = (AnalogClock) findViewById(R.id.mainActivityAnalogClock);
+        textClock = (TextClock) findViewById(R.id.mainActivityTextClock);
 
         tvBreakfastMain = (TextView) findViewById(R.id.tvBreakfastMain);
         tvBreakfastMain.setMovementMethod(new ScrollingMovementMethod());
@@ -77,12 +97,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btMealsMenu = (Button) findViewById(R.id.btMealsMenu);
         btMealsMenu.setOnClickListener(this);
 
+        mainActivityLinearLayout = (LinearLayout) findViewById(R.id.mainActivityLinearLayout);
+
         me = createTheFirstIntent(me);
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
 
         implementSettingsData();
         initiateMediaPlayer();
+        initiateVideoPlayer();
         updateMealsIfNeeded();
     }
 
@@ -260,12 +283,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void implementSettingsData(){
         if(getFileData("settings") != null){
             String[] settingsParts = getFileData("settings").split("\n");
-            Boolean playMusic, useVideos, useManuallySave;
+            Boolean playMusic, useVideos, useManuallySave, useDigitalClock;
 
             playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
             useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
             useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
             activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
+            useDigitalClock = Boolean.parseBoolean(settingsParts[4].split(": ")[1]);
+
+            if(useDigitalClock)
+                analogClock.setVisibility(View.INVISIBLE);
+            else
+                textClock.setVisibility(View.INVISIBLE);
 
             me.putExtra("playMusic", playMusic);
             me.putExtra("useVideos", useVideos);
@@ -274,12 +303,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void initiateVideoPlayer(){
+        Uri uri;
+
+        // 6 <= currentHour && currentHour < 12 for morning:
+        uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.main_activity_morning_background_video);
+        if(12 <= currentHour && currentHour < 18)
+            uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.main_activity_noon_background_video);
+        if((18 <= currentHour && currentHour <= 23) || (0 <= currentHour && currentHour < 6))
+            uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.main_activity_night_background_video);
+        videoView.setVideoURI(uri);
+
+        if(me.getBooleanExtra("useVideos", true))
+            videoView.start();
+
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true);
+            }
+        });
+    }
+
     public void initiateMediaPlayer(){
         mediaPlayer = MediaPlayer.create(MainActivity.this, activeSong.getId());
         mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
             mediaPlayer.start();
         }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        videoView.resume();
+        if(!me.getBooleanExtra("useVideos", true)) { // videoView background cause of the clock.
+            videoView.stopPlayback();
+            videoView.setBackground(getDrawable(R.drawable.main_activity_morning_background));
+            if(12 <= currentHour && currentHour < 18)
+                videoView.setBackground(getDrawable(R.drawable.main_activity_noon_background));
+            if((18 <= currentHour && currentHour <= 23) || (0 <= currentHour && currentHour < 6))
+                videoView.setBackground(getDrawable(R.drawable.main_activity_night_background));
+        }
+        else
+            videoView.start();
+    }
+
+    @Override
+    protected void onRestart() {
+        videoView.start();
+        super.onRestart();
     }
 
     @Override
@@ -293,15 +366,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onPause() {
-        super.onPause();
+        videoView.suspend();
         mediaPlayer.pause();
+        super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        videoView.stopPlayback();
         mediaPlayer.stop();
         mediaPlayer.release();
+        super.onDestroy();
     }
 
     @Override
@@ -337,7 +412,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bw.write("Play music ?: " + true + "\n");
             bw.write("Use Videos ?: " + true + "\n");
             bw.write("Use manually Save ?: " + true + "\n");
-            bw.write("Active song name: " + activeSong.getName());
+            bw.write("Active song name: " + activeSong.getName() + "\n");
+            bw.write("Use digital clock ?: " + true);
 
             bw.close();
         }

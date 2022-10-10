@@ -96,6 +96,29 @@
                 android:text="Use auto save" />
         </RadioGroup>
 
+        <RadioGroup
+            android:id="@+id/rgChooseClock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5pt"
+            android:layout_marginTop="5pt"
+            android:layout_marginEnd="5pt"
+            android:layout_marginBottom="5pt">
+
+            <RadioButton
+                android:id="@+id/rbDigitalClock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Use digital clock" />
+
+            <RadioButton
+                android:id="@+id/rbAnalogClock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Use analog clock" />
+        </RadioGroup>
+
         <TextView
             android:id="@+id/tvCurrentSongName"
             android:layout_width="125pt"
