@@ -254,13 +254,19 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.modify_and_custom_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemID = item.getItemId();
+        if(itemID == R.id.sendToIngredientsSelection){
+            me.setClass(customMeals.this, ingredientsSelection.class);
+            me.putExtra("cameToIngredientsSelectionFrom", getLocalClassName());
+            startActivity(me);
+        }
+
         if(itemID == R.id.sendToMusicMaster){
             me.setClass(customMeals.this, musicMaster.class);
             me.putExtra("cameToMusicMasterFrom", getLocalClassName());

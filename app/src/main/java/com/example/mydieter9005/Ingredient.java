@@ -54,7 +54,7 @@ public class Ingredient extends Food {
 
     @Override
     public String toString() {
-        return this.name + ": " + this.calories + " calories, " + this.proteins + " proteins and " + this.fats + " fats.";
+        return this.name + ": " + this.grams + " grams, " + this.calories + " calories, " + this.proteins + " proteins and " + this.fats + " fats.";
     }
 
     public static ArrayList<Ingredient> initiateIngredientsList(){
