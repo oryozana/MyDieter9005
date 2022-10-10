@@ -149,12 +149,13 @@ public class musicMaster extends AppCompatActivity implements View.OnClickListen
     }
 
     public void saveSong(){  // Because saved inside the "settings" file, the current settings are needed.
-        Boolean playMusic, useVideos, useManuallySave;
+        Boolean playMusic, useVideos, useManuallySave, useDigitalClock;
         String[] settingsParts = getFileData("settings").split("\n");
 
         playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
         useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
         useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
+        useDigitalClock = Boolean.parseBoolean(settingsParts[4].split(": ")[1]);
 
         try {
             fos = openFileOutput(fileName, Context.MODE_PRIVATE);
@@ -164,7 +165,8 @@ public class musicMaster extends AppCompatActivity implements View.OnClickListen
             bw.write("Play music ?: " + playMusic + "\n");
             bw.write("Use Videos ?: " + useVideos + "\n");
             bw.write("Use manually Save ?: " + useManuallySave + "\n");
-            bw.write("Active song name: " + activeSong.getName());
+            bw.write("Active song name: " + activeSong.getName() + "\n");
+            bw.write("Use digital clock ?: " + useDigitalClock);
 
             bw.close();
         }
