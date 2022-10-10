@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/kitchen_background"
+    android:background="@drawable/ingredients_pickup_background"
     tools:context=".ingredientsPickup">
 
     <TextView
@@ -38,7 +38,7 @@
         android:layout_width="100pt"
         android:layout_height="80pt"
         android:layout_margin="6pt"
-        app:srcCompat="@drawable/food_time_background" />
+        app:srcCompat="@drawable/food_time" />
 
     <TextView
         android:id="@+id/tvCounterShow"

@@ -395,7 +395,7 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
         super.onPostResume();
         videoView.resume();
         if(!me.getBooleanExtra("useVideos", true)){
-            findViewById(R.id.lunchSelectionLinearLayout).setBackground(getDrawable(R.drawable.noon_background));
+            findViewById(R.id.lunchSelectionLinearLayout).setBackground(getDrawable(R.drawable.lunch_selection_background));
             videoView.stopPlayback();
         }
         else

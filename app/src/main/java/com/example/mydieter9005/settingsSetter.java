@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -307,7 +306,7 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
         super.onPostResume();
         videoView.resume();
         if(!me.getBooleanExtra("useVideos", true)){
-            settingsSetterLinearLayout.setBackground(getDrawable(R.drawable.settings_background));
+            settingsSetterLinearLayout.setBackground(getDrawable(R.drawable.settings_setter_background));
             videoView.stopPlayback();
         }
         else

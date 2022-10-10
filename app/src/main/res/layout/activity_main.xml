@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/morning_city_background"
+    android:background="@drawable/main_activity_background"
     tools:context=".MainActivity">
 
     <HorizontalScrollView

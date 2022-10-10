@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/food_background"
+    android:background="@drawable/meals_menu_background"
     tools:context=".mealsMenu">
 
     <TextView

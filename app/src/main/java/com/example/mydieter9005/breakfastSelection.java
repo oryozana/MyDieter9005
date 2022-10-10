@@ -352,7 +352,7 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
         super.onPostResume();
         videoView.resume();
         if(!me.getBooleanExtra("useVideos", true)){
-            findViewById(R.id.breakfastSelectionLinearLayout).setBackground(getDrawable(R.drawable.morning_background));
+            findViewById(R.id.breakfastSelectionLinearLayout).setBackground(getDrawable(R.drawable.breakfast_selection_background));
             videoView.stopPlayback();
         }
         else

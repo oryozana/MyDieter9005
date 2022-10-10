@@ -395,7 +395,7 @@ public class dinnerSelection extends AppCompatActivity implements View.OnClickLi
         super.onPostResume();
         videoView.resume();
         if(!me.getBooleanExtra("useVideos", true)){
-            findViewById(R.id.dinnerSelectionLinearLayout).setBackground(getDrawable(R.drawable.night_background));
+            findViewById(R.id.dinnerSelectionLinearLayout).setBackground(getDrawable(R.drawable.dinner_selection_background));
             videoView.stopPlayback();
         }
         else
