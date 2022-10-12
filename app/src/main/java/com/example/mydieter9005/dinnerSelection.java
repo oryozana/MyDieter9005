@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -39,6 +42,7 @@ public class dinnerSelection extends AppCompatActivity implements View.OnClickLi
     Meal chosenMultiSelectDinner = null;
     int multiSelectCounter = 0;
     Song activeSong = Song.getSongs().get(0);
+    EditText etFilterDinner;
     ListView listView;
 
     FileInputStream is;
@@ -125,6 +129,20 @@ public class dinnerSelection extends AppCompatActivity implements View.OnClickLi
         btClearDinnerSelection.setOnClickListener(this);
         btMultiDinnerSelect = (Button) findViewById(R.id.btMultiDinnerSelect);
         btMultiDinnerSelect.setOnClickListener(this);
+
+        etFilterDinner = (EditText) findViewById(R.id.etFilterDinner);
+        etFilterDinner.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                (dinnerSelection.this).adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
         updateIfMealModified();
         setListViewAdapter();

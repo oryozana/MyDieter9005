@@ -24,7 +24,6 @@
         android:orientation="vertical"
         android:gravity="center">
 
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="100dp"
@@ -32,10 +31,19 @@
             android:text="Choose your breakfast, from the options below:"
             android:textSize="10pt" />
 
+        <EditText
+            android:id="@+id/etFilterBreakfast"
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="You can search here: "
+            android:inputType="textPersonName" />
+
         <ListView
             android:id="@+id/listViewBreakfast"
             android:layout_width="match_parent"
-            android:layout_height="425dp" >
+            android:layout_height="375dp"
+            android:layout_marginTop="2pt">
         </ListView>
 
         <Button
