@@ -16,16 +16,19 @@ public class Ingredient extends Food {
         this.fats *= grams;
         this.calories *= grams;
         this.imgId = ingredient.imgId;
+        roundValues();
     }
 
     public Ingredient(Ingredient ingredient){  // Copy other ingredient info.
         super(ingredient.name, ingredient.grams, ingredient.proteins, ingredient.fats, ingredient.calories);
         this.imgId = ingredient.imgId;
+        roundValues();
     }
 
     public Ingredient(String name, double proteins, double fats, double calories) {  // To initiate ingredients for the ingredients list.
         super(name, proteins, fats, calories);
         ingredients.add(this);
+        roundValues();
     }
 
     public static Ingredient getIngredientByName(String name){
@@ -52,9 +55,14 @@ public class Ingredient extends Food {
         this.grams += grams;
     }
 
+    public String getIngredientInfo(){
+        roundValues();
+        return this.name + ": " + this.grams + " grams, " + this.proteins + " proteins, " + this.fats + " fats and " + this.calories + " calories.";
+    }
+
     @Override
     public String toString() {
-        return this.name + ": " + this.grams + " grams, " + this.calories + " calories, " + this.proteins + " proteins and " + this.fats + " fats.";
+        return super.toString();
     }
 
     public static ArrayList<Ingredient> initiateIngredientsList(){

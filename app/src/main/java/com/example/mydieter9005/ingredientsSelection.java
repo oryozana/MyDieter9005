@@ -43,9 +43,9 @@ public class ingredientsSelection extends AppCompatActivity implements View.OnCl
     ArrayList<String> ingredientsListViewInfo;
     Song activeSong = Song.getSongs().get(0);
     ArrayList<Ingredient> ingredients;
+    ArrayAdapter<Ingredient> adapter;
     Ingredient ingredientSelected;
     EditText etFilterIngredients;
-    ArrayAdapter<String> adapter;
     ListView lvIngredients;
 
     FileInputStream is;
@@ -100,25 +100,24 @@ public class ingredientsSelection extends AppCompatActivity implements View.OnCl
             ingredients.add(new Ingredient(tempIngredients.get(i), 100));
     }
 
-    public void initiateListViewFields(){
-        ingredientsListViewInfo = new ArrayList<String>();
-        initiateIngredientsList();
-
-        for(int i = 0; i < ingredients.size(); i++){
-            Ingredient ingredient = ingredients.get(i);
-            ingredientsListViewInfo.add(ingredient.getName());  //  + ": " + ingredient.getProteins() * 100.0 + " proteins, " + ingredient.getFats() * 100.0 + " fats and " + ingredient.getCalories() + " calories."
-        }
-    }
+//    public void initiateListViewFields(){
+//        ingredientsListViewInfo = new ArrayList<String>();
+//
+//        for(int i = 0; i < ingredients.size(); i++){
+//            Ingredient ingredient = ingredients.get(i);
+//            ingredientsListViewInfo.add(ingredient.getName());  //  + ": " + ingredient.getProteins() * 100.0 + " proteins, " + ingredient.getFats() * 100.0 + " fats and " + ingredient.getCalories() + " calories."
+//        }
+//    }
 
     public void setAdapters() {
-        initiateListViewFields();
+        initiateIngredientsList();
 
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientsListViewInfo);
+        adapter = new ArrayAdapter<Ingredient>(this, android.R.layout.simple_list_item_1, ingredients);
         lvIngredients.setAdapter(adapter);
         lvIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Ingredient selectedItem = ingredients.get(position);
+                Ingredient selectedItem = (Ingredient) parent.getItemAtPosition(position);
 
                 showIngredientInfo(selectedItem);
             }
@@ -130,7 +129,7 @@ public class ingredientsSelection extends AppCompatActivity implements View.OnCl
         AlertDialog.Builder adb;
         adb = new AlertDialog.Builder(this);
         adb.setTitle("Your ingredient: ");
-        adb.setMessage(ingredient.toString());
+        adb.setMessage(ingredient.getIngredientInfo());
         adb.setIcon(ingredient.getImgId());
 
         adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
