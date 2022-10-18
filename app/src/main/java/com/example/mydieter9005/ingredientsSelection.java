@@ -100,15 +100,6 @@ public class ingredientsSelection extends AppCompatActivity implements View.OnCl
             ingredients.add(new Ingredient(tempIngredients.get(i), 100));
     }
 
-//    public void initiateListViewFields(){
-//        ingredientsListViewInfo = new ArrayList<String>();
-//
-//        for(int i = 0; i < ingredients.size(); i++){
-//            Ingredient ingredient = ingredients.get(i);
-//            ingredientsListViewInfo.add(ingredient.getName());  //  + ": " + ingredient.getProteins() * 100.0 + " proteins, " + ingredient.getFats() * 100.0 + " fats and " + ingredient.getCalories() + " calories."
-//        }
-//    }
-
     public void setAdapters() {
         initiateIngredientsList();
 
@@ -135,7 +126,12 @@ public class ingredientsSelection extends AppCompatActivity implements View.OnCl
         adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                adapter = new ArrayAdapter<Ingredient>(ingredientsSelection.this, android.R.layout.simple_list_item_1, ingredients);
+                lvIngredients.setAdapter(adapter);
 
+                String filter = etFilterIngredients.getText().toString();
+                if(!filter.equals(""))
+                    adapter.getFilter().filter(filter);
             }
         });
 

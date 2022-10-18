@@ -301,4 +301,16 @@ public class removedFunctions extends AppCompatActivity {
 //        }
 //        return super.onOptionsItemSelected(item);
 //    }
+
+
+        // From: ingredientsSelection:
+
+    //    public void initiateListViewFields(){
+//        ingredientsListViewInfo = new ArrayList<String>();
+//
+//        for(int i = 0; i < ingredients.size(); i++){
+//            Ingredient ingredient = ingredients.get(i);
+//            ingredientsListViewInfo.add(ingredient.getName());  //  + ": " + ingredient.getProteins() * 100.0 + " proteins, " + ingredient.getFats() * 100.0 + " fats and " + ingredient.getCalories() + " calories."
+//        }
+//    }
 }
