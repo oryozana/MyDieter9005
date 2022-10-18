@@ -1,8 +1,10 @@
 package com.example.mydieter9005;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -23,6 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -34,6 +43,7 @@ import java.io.OutputStreamWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -59,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
+
+    StorageReference storageReference;
+    ProgressDialog progressDialog;
     Intent me;
 
     @Override
@@ -108,6 +121,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initiateVideoPlayer();
         updateMealsIfNeeded();
     }
+
+//    private FirebaseStorage firebaseStorage;
+//    private StorageReference storageReference;
+//        firebaseStorage = FirebaseStorage.getInstance();
+//        storageReference = firebaseStorage.getReference();
+
+//    private void choosePicture(){
+//        Intent intent = new Intent();
+//        intent.setType("image/");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(intent, 1);
+//    }
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
+//            Uri imageUri = data.getData();
+//        }
+//    }
+//
+//    private void uploadPicture(Uri imageUri){
+//
+//        final String randomKey = UUID.randomUUID().toString();
+//        StorageReference mountainsRef = storageReference.child("mountains.jpg");
+//
+//        storageReference.putFile(imageUri)
+//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        Snackbar.make(findViewById(android.R.id.content), "Image uploaded.", Snackbar.LENGTH_SHORT).show();
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(MainActivity.this, "Failed to upload.", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
 
     public void updateMealsIfNeeded(){
         if(me.hasExtra("selectedBreakfast") || me.hasExtra("selectedLunch") || me.hasExtra("selectedDinner")) {
@@ -347,12 +400,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         else
             videoView.start();
-    }
-
-    @Override
-    protected void onRestart() {
-        videoView.start();
-        super.onRestart();
     }
 
     @Override
