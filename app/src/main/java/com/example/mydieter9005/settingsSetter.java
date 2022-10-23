@@ -367,4 +367,9 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
         if(viewId == btReturnToRecentActivity.getId())
             returnToRecentActivity();
     }
+
+    @Override
+    public void onBackPressed() {
+        returnToRecentActivity();
+    }
 }
