@@ -120,12 +120,14 @@
             android:id="@+id/btWriteMealsToExternalFile"
             android:layout_width="125pt"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="Save meals on external file" />
 
         <Button
             android:id="@+id/btReadMealsFromExternalFile"
             android:layout_width="125pt"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="Load saved meals" />
     </LinearLayout>
 </RelativeLayout>
