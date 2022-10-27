@@ -313,4 +313,51 @@ public class removedFunctions extends AppCompatActivity {
 //            ingredientsListViewInfo.add(ingredient.getName());  //  + ": " + ingredient.getProteins() * 100.0 + " proteins, " + ingredient.getFats() * 100.0 + " fats and " + ingredient.getCalories() + " calories."
 //        }
 //    }
+
+        // From: customMeals:
+
+
+//    public void writeTheInstructions(){
+//        tvInstructions.setText(
+//                "Make sure to use words like: 'with', 'and' and 'include' instead of using ','." + "\n" +
+//                "You need to use the special word 'flavored' to make something flavored, like this: " + "\n" +
+//                "chocolate flavored ice cream or chocolate flavored yogurt and so on..." + "\n" +
+//                "You can also use 'mini-meals' like: salad, toast and cereals in your text." + "\n" +
+//                "Not every ingredient have photo so it will just show you the name."
+//        );
+//    }
+
+//    public void setCustomFood(){
+//        String meal = customMeal.getText().toString();
+//        String testMeal;
+//        if(meal.contains(":") && meal.contains(",") && meal.contains(".") && meal.contains(" ")){
+//            testMeal = meal.replaceAll(":", "");
+//            if(meal.length() != testMeal.length() + 1){
+//                Toast.makeText(this, "There should be one ':' .", Toast.LENGTH_SHORT).show();
+//            }
+//            else{
+//                testMeal = meal.replaceAll(",", "");
+//                if(meal.length() != testMeal.length() + 1){
+//                    Toast.makeText(this, "There should be one ',' .", Toast.LENGTH_SHORT).show();
+//                }
+//                else{
+//                    testMeal = meal.replaceAll("\\.", "");
+//                    if(meal.length() != testMeal.length() + 1){
+//                        Toast.makeText(this, "There should be one '.' .", Toast.LENGTH_SHORT).show();
+//                    }
+//                    else{
+//                        if(meal.contains("_") || meal.contains("-")){
+//                            Toast.makeText(this, "Make sure to use only the format symbols.", Toast.LENGTH_SHORT).show();
+//                        }
+//                        else{
+//                            viewInfo();
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        else{
+//            Toast.makeText(this, "Make sure to follow the format instructions.", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 }

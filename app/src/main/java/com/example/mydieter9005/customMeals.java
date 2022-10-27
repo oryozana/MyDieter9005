@@ -10,12 +10,17 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -28,23 +33,26 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 public class customMeals extends AppCompatActivity implements View.OnClickListener {
 
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    Button btFinishCustomize, btSendToCustomSelection;
+    Button btSendToCustomSelection, btShowMealInfo, btFinishCustomize;
     Song activeSong = Song.getSongs().get(0);
-    TextView tvInstructions;
-    EditText customMeal;
-    String[] mealInfo;
+    Ingredient addedIngredient;
+    ListView lvCustomMealIngredients;
+    ArrayAdapter<Ingredient> adapter;
+    Meal customMeal;
+    EditText etCustomMeal;
     String cameFrom;
 
     FileOutputStream fos;
     OutputStreamWriter osw;
     BufferedWriter bw;
-    String fileName = "savedCustomMeals";
+    String fileName = "customMealsNames";
 
     FileInputStream is;
     InputStreamReader isr;
@@ -60,77 +68,264 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
 
+        etCustomMeal = (EditText) findViewById(R.id.etCustomMeal);
+
+        if(me.hasExtra("addedIngredient")){
+            addedIngredient = (Ingredient) me.getSerializableExtra("addedIngredient");
+            me.removeExtra("addedIngredient");
+        }
+
+        if(me.hasExtra("savedMeal")) {
+            customMeal = (Meal) me.getSerializableExtra("savedMeal");
+            customMeal.addNeededIngredientForMeal(addedIngredient);
+            etCustomMeal.setText(customMeal.getName());
+        }
+        else
+            customMeal = new Meal("");
+
         cameFrom = me.getStringExtra("cameFrom");
-        Toast.makeText(this, "selected meal: " + cameFrom, Toast.LENGTH_SHORT).show();
 
         videoView = (VideoView) findViewById(R.id.customVideoView);
-        customMeal = (EditText) findViewById(R.id.customMeal);
-
-        tvInstructions = (TextView) findViewById(R.id.tvInstructions);
 
         btSendToCustomSelection = (Button) findViewById(R.id.btSendToCustomSelection);
         btSendToCustomSelection.setOnClickListener(this);
+        btShowMealInfo = (Button) findViewById(R.id.btShowMealInfo);
+        btShowMealInfo.setOnClickListener(this);
         btFinishCustomize = (Button) findViewById(R.id.btFinishCustomize);
         btFinishCustomize.setOnClickListener(this);
 
-        writeTheInstructions();
+        lvCustomMealIngredients = (ListView) findViewById(R.id.lvCustomMealIngredients);
+
+        etCustomMeal.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                customMeal.setName(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        setAdapters();
         initiateVideoPlayer();
         initiateMediaPlayer();
         implementSettingsData();
     }
 
-    public void writeTheInstructions(){
-        tvInstructions.setText(
-                "Make sure to use words like: 'with', 'and' and 'include' instead of using ','." + "\n" +
-                "You need to use the special word 'flavored' to make something flavored, like this: " + "\n" +
-                "chocolate flavored ice cream or chocolate flavored yogurt and so on..." + "\n" +
-                "You can also use 'mini-meals' like: salad, toast and cereals in your text." + "\n" +
-                "Not every ingredient have photo so it will just show you the name."
-        );
+    public void setAdapters() {
+        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+        if(customMeal != null)
+            ingredients = customMeal.getNeededIngredientsForMeal();
+
+        adapter = new ArrayAdapter<Ingredient>(this, android.R.layout.simple_list_item_1, ingredients);
+        lvCustomMealIngredients.setAdapter(adapter);
+        lvCustomMealIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Ingredient selectedItem = (Ingredient) parent.getItemAtPosition(position);
+
+                showIngredientInfo(selectedItem);
+            }
+        });
     }
 
-    public void setCustomFood(){
-        String meal = customMeal.getText().toString();
-        String testMeal;
-        if(meal.contains(":") && meal.contains(",") && meal.contains(".") && meal.contains(" ")){
-            testMeal = meal.replaceAll(":", "");
-            if(meal.length() != testMeal.length() + 1){
-                Toast.makeText(this, "There should be one ':' .", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                testMeal = meal.replaceAll(",", "");
-                if(meal.length() != testMeal.length() + 1){
-                    Toast.makeText(this, "There should be one ',' .", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    testMeal = meal.replaceAll("\\.", "");
-                    if(meal.length() != testMeal.length() + 1){
-                        Toast.makeText(this, "There should be one '.' .", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        if(meal.contains("_") || meal.contains("-")){
-                            Toast.makeText(this, "Make sure to use only the format symbols.", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            viewInfo();
-                        }
-                    }
-                }
-            }
-        }
-        else{
-            Toast.makeText(this, "Make sure to follow the format instructions.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void viewInfo(){
+    public void showIngredientInfo(Ingredient ingredient){
         AlertDialog ad;
         AlertDialog.Builder adb;
         adb = new AlertDialog.Builder(this);
-        mealInfo = multiUsageFunctions.organizeMeal(customMeal.getText().toString());
+        adb.setTitle("Your ingredient: ");
+        adb.setMessage(ingredient.getIngredientInfo());
+        adb.setIcon(ingredient.getImgId());
+
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
+    }
+
+
+    public void showMealInfo(){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Your meal nutrition: ");
+        adb.setMessage(customMeal.getGrams() + " grams." + "\n" + customMeal.getProteins() + " proteins." + "\n" + customMeal.getFats() + " fats." + "\n" + customMeal.getCalories() + " calories.");
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        adb.setNegativeButton("Ingredients", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showMealIngredientsInfo();
+            }
+        });
+
+        adb.setNeutralButton("Edit meal", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                me.setClass(customMeals.this, mealModifier.class);
+                me.putExtra("mealToModify", customMeal);
+                me.putExtra("cameToMealModifierFrom", getLocalClassName());
+                startActivity(me);
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
+    }
+
+    public void showMealIngredientsInfo(){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Your meal ingredients: ");
+        String mealInfo = "";
+        for(Ingredient ingredient : customMeal.getNeededIngredientsForMeal())
+            mealInfo += ingredient.getName() + ": " + ingredient.getGrams() + " grams." + "\n";
+        adb.setMessage(mealInfo);
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        adb.setNegativeButton("Nutrition", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showMealInfo();
+            }
+        });
+
+        adb.setNeutralButton("Edit meal", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                me.setClass(customMeals.this, mealModifier.class);
+                me.putExtra("mealToModify", customMeal);
+                me.putExtra("cameToMealModifierFrom", getLocalClassName());
+                startActivity(me);
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
+    }
+
+    public void saveCustomMealInAFile(){
+        boolean passTheTests = true;
+
+        if(customMeal == null){
+            passTheTests = false;
+            Toast.makeText(this, "You didn't create any meal yet.", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            if(customMeal.getName().replaceAll(" ", "").equals("")){
+                passTheTests = false;
+                Toast.makeText(this, "You didn't give your meal a name.", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                if(customMeal.getNeededIngredientsForMeal().size() == 0){
+                    passTheTests = false;
+                    Toast.makeText(this, "You need to add at least one ingredient.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+        if(passTheTests){
+            try {
+                fos = openFileOutput("customMeal: " + customMeal.getName(), Context.MODE_PRIVATE);
+                osw = new OutputStreamWriter(fos);
+                bw = new BufferedWriter(osw);
+
+                bw.write(customMeal.getName() + "\n");
+
+                bw.write(customMeal.getNeededIngredientsForMeal().get(0).toString());
+                for(int i = 1; i < customMeal.getNeededIngredientsForMeal().size(); i++)
+                    bw.write("\n" + customMeal.getNeededIngredientsForMeal().get(i).toString());
+
+                bw.close();
+
+                saveCustomMealNameInsideFile();
+                Toast.makeText(this, customMeal.getName() + " added.", Toast.LENGTH_SHORT).show();
+            }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void saveCustomMealNameInsideFile(){
+        try {
+            fos = openFileOutput(fileName, Context.MODE_APPEND);
+            osw = new OutputStreamWriter(fos);
+            bw = new BufferedWriter(osw);
+
+            bw.write(customMeal.getName() + "\n");
+
+            bw.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String[] getSavedCustomMealsNames(){
+        String[] customMealsNames = getFileData(fileName).split("\n");
+
+        for(int i = 1; i < customMealsNames.length; i++)  // Get rid of first line.
+            customMealsNames[i - 1] = customMealsNames[i];
+
+        return customMealsNames;
+    }
+
+    public ArrayList<Ingredient> getIngredientsFromFile(String mealName){
+        String[] mealIngredients = getFileData("customMeal: " + mealName).split("\n");
+        ArrayList<Ingredient> ingredientsFound = new ArrayList<Ingredient>();
+
+        for(int i = 1; i < mealIngredients.length; i++){  // i = 1 to skip the custom meal name line.
+            String name = getName(mealIngredients[i]);
+            double grams = getGrams(mealIngredients[i]);
+
+            Ingredient ingredient = Ingredient.getIngredientByName(name);
+            ingredientsFound.add(new Ingredient(ingredient, grams));
+        }
+
+        return ingredientsFound;
+    }
+
+    public String getName(String nameAndGrams){  // Needed when get ingredient from file.
+        return nameAndGrams.split(": ")[0];
+    }
+
+    public double getGrams(String nameAndGrams){  // Needed when get ingredient from file.
+        return Double.parseDouble((nameAndGrams.split(": ")[1]).split(" ")[0]);
+    }
+
+    public void viewFinalMeal(){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
         adb.setTitle("Your meal is: ");
-        adb.setMessage("Name: " + mealInfo[0] + "\n" + "Calories: " + mealInfo[1] + "\n" + "Minutes: " + mealInfo[2]);
-        adb.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+        adb.setMessage(customMeal.getMealInfo());
+        adb.setNegativeButton("Change", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -147,7 +342,7 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
         adb.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                saveCustomMeal();
+                saveCustomMealInAFile();
             }
         });
 
@@ -162,28 +357,8 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
 
     public void finishCustomize(){
         me.setClass(customMeals.this, mealsMenu.class);
-        me.putExtra(cameFrom, customMeal.getText().toString());
+        me.putExtra(cameFrom, etCustomMeal.getText().toString());
         startActivity(me);
-    }
-
-    public void saveCustomMeal(){
-        try {
-            fos = openFileOutput(fileName, Context.MODE_APPEND);
-            osw = new OutputStreamWriter(fos);
-            bw = new BufferedWriter(osw);
-
-            bw.write(customMeal.getText().toString() + "\n");
-
-            bw.close();
-
-            Toast.makeText(this, "Your custom meal has saved.", Toast.LENGTH_SHORT).show();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public String getFileData(String fileName){
@@ -201,8 +376,6 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
             br.close();
         }
         catch (FileNotFoundException e) {
-            if(fileName.equals(me.getStringExtra("todayDate")))
-                Toast.makeText(this, "Today saved data not exists yet.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         catch (IOException e) {
@@ -264,6 +437,7 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
         if(itemID == R.id.sendToIngredientsSelection){
             me.setClass(customMeals.this, ingredientsSelection.class);
             me.putExtra("cameToIngredientsSelectionFrom", getLocalClassName());
+            me.putExtra("savedMeal", customMeal);
             startActivity(me);
         }
 
@@ -330,7 +504,10 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
         if(viewId == btSendToCustomSelection.getId())
             sendToCustomSelection();
 
+        if(viewId == btShowMealInfo.getId())
+            showMealInfo();
+
         if(viewId == btFinishCustomize.getId())
-            setCustomFood();
+            viewFinalMeal();
     }
 }

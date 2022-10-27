@@ -14,6 +14,10 @@ public class Meal extends Food {
     private final ArrayList<Ingredient> ingredients = Ingredient.getIngredientsList();
     private ArrayList<Ingredient> neededIngredientsForMeal = new ArrayList<Ingredient>();
 
+    public Meal(String name){
+        super(name);
+    }
+
     public Meal(String name, int grams) {  // Single ingredient meal.
         super(name);
         initiateNeededIngredientsForMeal(name, grams);
@@ -84,6 +88,11 @@ public class Meal extends Food {
         return this.neededIngredientsForMeal;
     }
 
+    public void addNeededIngredientForMeal(Ingredient ingredient){
+        this.neededIngredientsForMeal.add(ingredient);
+        updateMealInfo();
+    }
+
     public void addNeededIngredientsForMeal(ArrayList<Ingredient> neededIngredientsForMeal) {
         for(int i = 0; i < neededIngredientsForMeal.size(); i++)
             this.neededIngredientsForMeal.add(neededIngredientsForMeal.get(i));
@@ -111,6 +120,11 @@ public class Meal extends Food {
         this.proteins = 0;
         this.fats = 0;
         this.calories = 0;
+    }
+
+    public String getMealInfo(){
+        roundValues();
+        return "Name: " + this.name + "\n" + "Grams: " + this.grams + "\n" + "Protein: " + this.proteins + "\n" + "Fats: " + this.fats + "\n" + "Calories: " + this.calories + ".";
     }
 
     @Override
