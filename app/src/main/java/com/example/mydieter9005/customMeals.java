@@ -77,7 +77,10 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
 
         if(me.hasExtra("savedMeal")) {
             customMeal = (Meal) me.getSerializableExtra("savedMeal");
-            customMeal.addNeededIngredientForMeal(addedIngredient);
+            ArrayList<Ingredient> customMealSavedIngredients = new ArrayList<Ingredient>();
+            for(Ingredient ingredient : customMeal.getNeededIngredientsForMeal())
+                customMealSavedIngredients.add(new Ingredient(ingredient));
+            customMeal.setNeededIngredientsForMeal(customMealSavedIngredients, addedIngredient);
             etCustomMeal.setText(customMeal.getName());
         }
         else

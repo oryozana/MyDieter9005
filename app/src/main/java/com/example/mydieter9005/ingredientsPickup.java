@@ -27,7 +27,7 @@ public class ingredientsPickup extends AppCompatActivity implements View.OnClick
 
     private MediaPlayer mediaPlayer;
 
-    TextView tvFoodName, tvFoodGrams, tvFoodAmount, tvCounterShow;
+    TextView tvFoodName, tvFoodGrams, tvCounterShow;
     ImageView ivFoodImg;
     ImageButton ibtNext, ibtPrevious;
     Button btFinishIngredientsPickup;
@@ -62,7 +62,6 @@ public class ingredientsPickup extends AppCompatActivity implements View.OnClick
         tvCounterShow = (TextView) findViewById(R.id.tvCounterShow);
         tvFoodName = (TextView) findViewById(R.id.tvFoodName);
         tvFoodGrams = (TextView) findViewById(R.id.tvFoodGrams);
-        tvFoodAmount = (TextView) findViewById(R.id.tvFoodAmount);
 
         ivFoodImg = (ImageView) findViewById(R.id.ivFoodImg);
 
@@ -137,7 +136,6 @@ public class ingredientsPickup extends AppCompatActivity implements View.OnClick
         Ingredient ingredient = ingredientsToShow.get(ingredientsCounter - 1);
         tvFoodName.setText("Name: " + ingredient.getName());
         tvFoodGrams.setText("Grams: " + ingredient.getGrams());
-        tvFoodAmount.setText("Amount: " + ingredient.getAmount());
 
         if(getIngredientIndexInArrayList(ingredient, ingredients) != -1)
             ivFoodImg.setImageResource(ingredient.getImgId());

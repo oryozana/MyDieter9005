@@ -13,6 +13,7 @@ import java.util.Locale;
 public class Meal extends Food {
     private final ArrayList<Ingredient> ingredients = Ingredient.getIngredientsList();
     private ArrayList<Ingredient> neededIngredientsForMeal = new ArrayList<Ingredient>();
+    protected int amount = 0;
 
     public Meal(String name){
         super(name);
@@ -55,9 +56,7 @@ public class Meal extends Food {
 
     private void addIfNeeded(Ingredient ingredient) {
         if(this.neededIngredientsForMeal.contains(ingredient)){
-            this.neededIngredientsForMeal.get(this.neededIngredientsForMeal.indexOf(ingredient)).addAmount(1);
-            if(ingredient.getName().equals("olive"))
-                this.neededIngredientsForMeal.get(this.neededIngredientsForMeal.indexOf(ingredient)).addAmount(7);
+            this.neededIngredientsForMeal.get(this.neededIngredientsForMeal.indexOf(ingredient)).addGrams(ingredient.getGrams());
         }
         else
             this.neededIngredientsForMeal.add(ingredient);
@@ -115,6 +114,15 @@ public class Meal extends Food {
         updateMealInfo();
     }
 
+    public void setNeededIngredientsForMeal(ArrayList<Ingredient> neededIngredientsForMeal, Ingredient ingredient) {
+        this.neededIngredientsForMeal.clear();
+        for(int i = 0; i < neededIngredientsForMeal.size(); i++)
+            this.neededIngredientsForMeal.add(neededIngredientsForMeal.get(i));
+        this.neededIngredientsForMeal.add(ingredient);
+        resetMealInfo();
+        updateMealInfo();
+    }
+
     public void resetMealInfo(){
         this.grams = 0;
         this.proteins = 0;
@@ -125,6 +133,14 @@ public class Meal extends Food {
     public String getMealInfo(){
         roundValues();
         return "Name: " + this.name + "\n" + "Grams: " + this.grams + "\n" + "Protein: " + this.proteins + "\n" + "Fats: " + this.fats + "\n" + "Calories: " + this.calories + ".";
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void addAmount(int amount) {
+        this.amount += amount;
     }
 
     @Override

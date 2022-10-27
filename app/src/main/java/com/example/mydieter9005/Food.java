@@ -9,7 +9,6 @@ public class Food implements Serializable {
     protected double proteins = 0;
     protected double fats = 0;
     protected double calories = 0; // Per gram.
-    protected int amount;
 
     public Food(String name, double grams, double proteins, double fats, double calories) {
         this.name = name;
@@ -17,7 +16,6 @@ public class Food implements Serializable {
         this.proteins = proteins;
         this.fats = fats;
         this.calories = calories;
-        this.amount = 0;
         roundValues();
     }
 
@@ -27,13 +25,11 @@ public class Food implements Serializable {
         this.proteins = proteins / grams;
         this.fats = fats / grams;
         this.calories = calories / grams;
-        this.amount = 0;
         roundValues();
     }
 
     public Food(String name){
         this.name = name;
-        this.amount = 0;
     }
 
     public String getName() {
@@ -88,14 +84,6 @@ public class Food implements Serializable {
 
     public void setCalories(double calories) {
         this.calories = calories;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void addAmount(int amount) {
-        this.amount += amount;
     }
 
     @Override

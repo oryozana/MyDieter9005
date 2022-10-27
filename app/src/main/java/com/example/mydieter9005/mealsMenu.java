@@ -68,20 +68,6 @@ public class mealsMenu extends AppCompatActivity implements View.OnClickListener
         updateMeals();
     }
 
-    public void updateIngredientsAmount(){
-        for(Meal meal : selectedMeals){
-            if(meal != null){
-                for(int i = 0; i < meal.getNeededIngredientsForMeal().size(); i++){
-                    Ingredient ingredient = meal.getNeededIngredientsForMeal().get(i);
-                    ingredient.addAmount(1);
-
-                    if(ingredient.getName().equals("olive"))
-                        ingredient.addAmount(7);
-                }
-            }
-        }
-    }
-
     public void updateMeals(){
         btBreakfast.setText("Select");
         btLunch.setText("Select");
@@ -237,7 +223,6 @@ public class mealsMenu extends AppCompatActivity implements View.OnClickListener
         if(viewId == btFinish.getId()) {
             if(me.hasExtra("breakfast") || me.hasExtra("lunch") || me.hasExtra("dinner")){
                 me.setClass(mealsMenu.this, finishMeals.class);
-                updateIngredientsAmount();
 
                 if(selectedMeals[0] != null)
                     me.putExtra("selectedBreakfast", selectedMeals[0]);

@@ -179,10 +179,8 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
     public void returnToRecentActivity(){
         getRadioGroupsOptionsSelected();
         if(!chooseIfWantToSave || needSave){
-            if(((playMusicAtStart != playMusic) || (useVideosAtStart != useVideos) || (useManuallySaveAtStart != useManuallySave) || (useDigitalClockAtStart != useDigitalClock)) && !chooseIfWantToSave) {
-                Toast.makeText(this, useDigitalClockAtStart + "" + useDigitalClock, Toast.LENGTH_SHORT).show();
+            if(((playMusicAtStart != playMusic) || (useVideosAtStart != useVideos) || (useManuallySaveAtStart != useManuallySave) || (useDigitalClockAtStart != useDigitalClock)) && !chooseIfWantToSave)
                 checkIfWantToSave();
-            }
             else {
                 needSave = false;
                 chooseIfWantToSave = true; // Don't need to save because nothing changed.
@@ -286,9 +284,8 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemID = item.getItemId();
-        if(itemID == R.id.resetToPreviousSettings){
+        if(itemID == R.id.resetToPreviousSettings)
             resetToPreviousSettings();
-        }
         return super.onOptionsItemSelected(item);
     }
 
