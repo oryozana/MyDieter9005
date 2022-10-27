@@ -208,65 +208,53 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
                 showMealInfo();
             }
         });
-
-        adb.setNeutralButton("Edit meal", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                me.setClass(customMeals.this, mealModifier.class);
-                me.putExtra("mealToModify", customMeal);
-                me.putExtra("cameToMealModifierFrom", getLocalClassName());
-                startActivity(me);
-            }
-        });
-
         ad = adb.create();
         ad.show();
     }
 
     public void saveCustomMealInAFile(){
-        boolean passTheTests = true;
+        try {
+            fos = openFileOutput("customMeal: " + customMeal.getName(), Context.MODE_PRIVATE);
+            osw = new OutputStreamWriter(fos);
+            bw = new BufferedWriter(osw);
 
+            bw.write(customMeal.getName() + "\n");
+
+            bw.write(customMeal.getNeededIngredientsForMeal().get(0).toString());
+            for(int i = 1; i < customMeal.getNeededIngredientsForMeal().size(); i++)
+                bw.write("\n" + customMeal.getNeededIngredientsForMeal().get(i).toString());
+
+            bw.close();
+
+            saveCustomMealNameInsideFile();
+            Toast.makeText(this, customMeal.getName() + " added.", Toast.LENGTH_SHORT).show();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean checkIfCustomMealIsOk(){
         if(customMeal == null){
-            passTheTests = false;
             Toast.makeText(this, "You didn't create any meal yet.", Toast.LENGTH_SHORT).show();
+            return false;
         }
         else{
             if(customMeal.getName().replaceAll(" ", "").equals("")){
-                passTheTests = false;
                 Toast.makeText(this, "You didn't give your meal a name.", Toast.LENGTH_SHORT).show();
+                return false;
             }
             else{
                 if(customMeal.getNeededIngredientsForMeal().size() == 0){
-                    passTheTests = false;
                     Toast.makeText(this, "You need to add at least one ingredient.", Toast.LENGTH_SHORT).show();
+                    return false;
                 }
             }
         }
-
-        if(passTheTests){
-            try {
-                fos = openFileOutput("customMeal: " + customMeal.getName(), Context.MODE_PRIVATE);
-                osw = new OutputStreamWriter(fos);
-                bw = new BufferedWriter(osw);
-
-                bw.write(customMeal.getName() + "\n");
-
-                bw.write(customMeal.getNeededIngredientsForMeal().get(0).toString());
-                for(int i = 1; i < customMeal.getNeededIngredientsForMeal().size(); i++)
-                    bw.write("\n" + customMeal.getNeededIngredientsForMeal().get(i).toString());
-
-                bw.close();
-
-                saveCustomMealNameInsideFile();
-                Toast.makeText(this, customMeal.getName() + " added.", Toast.LENGTH_SHORT).show();
-            }
-            catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        return true;
     }
 
     public void saveCustomMealNameInsideFile(){
@@ -285,38 +273,6 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
         catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public String[] getSavedCustomMealsNames(){
-        String[] customMealsNames = getFileData(fileName).split("\n");
-
-        for(int i = 1; i < customMealsNames.length; i++)  // Get rid of first line.
-            customMealsNames[i - 1] = customMealsNames[i];
-
-        return customMealsNames;
-    }
-
-    public ArrayList<Ingredient> getIngredientsFromFile(String mealName){
-        String[] mealIngredients = getFileData("customMeal: " + mealName).split("\n");
-        ArrayList<Ingredient> ingredientsFound = new ArrayList<Ingredient>();
-
-        for(int i = 1; i < mealIngredients.length; i++){  // i = 1 to skip the custom meal name line.
-            String name = getName(mealIngredients[i]);
-            double grams = getGrams(mealIngredients[i]);
-
-            Ingredient ingredient = Ingredient.getIngredientByName(name);
-            ingredientsFound.add(new Ingredient(ingredient, grams));
-        }
-
-        return ingredientsFound;
-    }
-
-    public String getName(String nameAndGrams){  // Needed when get ingredient from file.
-        return nameAndGrams.split(": ")[0];
-    }
-
-    public double getGrams(String nameAndGrams){  // Needed when get ingredient from file.
-        return Double.parseDouble((nameAndGrams.split(": ")[1]).split(" ")[0]);
     }
 
     public void viewFinalMeal(){
@@ -504,10 +460,14 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
         if(viewId == btSendToCustomSelection.getId())
             sendToCustomSelection();
 
-        if(viewId == btShowMealInfo.getId())
-            showMealInfo();
+        if(viewId == btShowMealInfo.getId()) {
+            if(checkIfCustomMealIsOk())
+                showMealInfo();
+        }
 
-        if(viewId == btFinishCustomize.getId())
-            viewFinalMeal();
+        if(viewId == btFinishCustomize.getId()) {
+            if(checkIfCustomMealIsOk())
+                viewFinalMeal();
+        }
     }
 }

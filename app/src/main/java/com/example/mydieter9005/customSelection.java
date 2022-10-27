@@ -1,8 +1,10 @@
 package com.example.mydieter9005;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -31,18 +34,20 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     private VideoView videoView;
 
     Button btMultiCustomSelect, btFinishCustomSelection;
-    ArrayList<String> mealsList;
-    ArrayAdapter<String> adapter;
+    ArrayList<Meal> customMealsList;
+    String[] customMealsNames;
+    ArrayAdapter<Meal> adapter;
     boolean multiSelect = false;
-    String chosenCustomName = "", cameFrom;
-    int chosenCustomCalories = 0, chosenCustomMinutes = 0, multiSelectCounter = 0;
+    Meal chosenMultiSelectCustom = null;
+    int multiSelectCounter = 0;
     Song activeSong = Song.getSongs().get(0);
+    String cameFrom;
     ListView listView;
 
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
-    String fileName = "savedCustomMeals";
+    String fileName = "customMealsNames";
     Intent me;
 
     @Override
@@ -55,8 +60,6 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
             activeSong = (Song) me.getSerializableExtra("activeSong");
         cameFrom = me.getStringExtra("cameFrom");
 
-        showFileData();
-
         listView = (ListView) findViewById(R.id.listViewCustom);
         videoView = (VideoView) findViewById(R.id.customSelectionVideoView);
 
@@ -65,45 +68,169 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
         btMultiCustomSelect = (Button) findViewById(R.id.btMultiCustomSelect);
         btMultiCustomSelect.setOnClickListener(this);
 
-        setListViewFields();
+        initiateCustomMealsList();
         implementSettingsData();
         initiateVideoPlayer();
         initiateMediaPlayer();
+
+        checkIfAtLeastOneCustomMealAdded();
     }
 
-    public void setListViewFields(){
-        String[] fields = new String[mealsList.size() / 3];
-        for(int i = 0; i < mealsList.size(); i += 3){
-            String field = mealsList.get(i) + ": " + mealsList.get(i + 1) + " calories, " + mealsList.get(i + 2) + " minutes.";
-            fields[i / 3] = field;
+    public void initiateCustomMealsList(){
+        customMealsList = new ArrayList<Meal>();
+        customMealsNames = getSavedCustomMealsNames();
+
+        for(int i = 0; i < customMealsNames.length - 1; i++)  // - 1 to get rid of the empty last element in this array.
+            customMealsList.add(new Meal(customMealsNames[i], getIngredientsFromFileByCustomMealName(customMealsNames[i])));
+
+        setListViewAdapter();
+    }
+
+    public String[] getSavedCustomMealsNames(){
+        String[] customMealsNames = getFileData(fileName).split("\n");
+
+        for(int i = 1; i < customMealsNames.length; i++)  // Get rid of first line.
+            customMealsNames[i - 1] = customMealsNames[i];
+
+        customMealsNames[customMealsNames.length - 1] = "";
+        return customMealsNames;
+    }
+
+    public ArrayList<Ingredient> getIngredientsFromFileByCustomMealName(String mealName){
+        String[] mealIngredients = getFileData("customMeal: " + mealName).split("\n");
+        ArrayList<Ingredient> ingredientsFound = new ArrayList<Ingredient>();
+
+        for(int i = 1; i < mealIngredients.length; i++){  // i = 1 to skip the custom meal name line.
+            String name = getName(mealIngredients[i]);
+            double grams = getGrams(mealIngredients[i]);
+
+            Ingredient ingredient = Ingredient.getIngredientByName(name);
+            Toast.makeText(this, ingredient.getName() + "", Toast.LENGTH_SHORT).show();
+            ingredientsFound.add(new Ingredient(ingredient, grams));
         }
-        setListViewAdapter(fields);
+
+        return ingredientsFound;
     }
 
-    public void setListViewAdapter(String[] fields){
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fields);
+    public String getName(String nameAndGrams){  // Needed when get ingredient from file.
+        return nameAndGrams.split(": ")[0];
+    }
+
+    public double getGrams(String nameAndGrams){  // Needed when get ingredient from file.
+        return Double.parseDouble((nameAndGrams.split(": ")[1]).split(" ")[0]);
+    }
+
+    public void checkIfAtLeastOneCustomMealAdded(){
+        String[] savedCustomMealsNames = getSavedCustomMealsNames();
+
+        if(savedCustomMealsNames.length == 1){
+            notEvenOneCustomMealAdded();
+        }
+    }
+
+    public void notEvenOneCustomMealAdded(){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Custom meals not found!");
+        adb.setMessage("It's seems like you didn't saved any custom meal so far, give it a try and come back again.");
+        adb.setIcon(R.drawable.ic_food_icon);
+        adb.setCancelable(false);
+
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                me.setClass(customSelection.this, customMeals.class);
+                startActivity(me);
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
+    }
+
+    public void setListViewAdapter(){
+        adapter = new ArrayAdapter<Meal>(this, android.R.layout.simple_list_item_1, customMealsList);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedItem = (String) adapterView.getItemAtPosition(i);
+                Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
 
                 if(!multiSelect){
                     me.setClass(customSelection.this, mealsMenu.class);
                     me.putExtra(cameFrom, selectedItem);
                     startActivity(me);
                 }
-                else{
-                    String[] mealInfo = multiUsageFunctions.organizeMeal(selectedItem);
-                    Toast.makeText(customSelection.this, mealInfo[0] + " has added.", Toast.LENGTH_SHORT).show();
-                    chosenCustomName += mealInfo[0].toLowerCase() + " and ";
-                    chosenCustomCalories += multiUsageFunctions.getCaloriesOrMinutesOutOfString(mealInfo[1]);
-                    chosenCustomMinutes += multiUsageFunctions.getCaloriesOrMinutesOutOfString(mealInfo[2]);
-                    multiSelectCounter += 1;
+                else {
+                    chosenMultiSelectCustom = new Meal(chosenMultiSelectCustom, selectedItem);
+                    Toast.makeText(customSelection.this, selectedItem.getName() + " has added.", Toast.LENGTH_SHORT).show();
+                    multiSelectCounter++;
                 }
             }
         });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Meal selectedItem = (Meal) parent.getItemAtPosition(position);
+
+                showMealIngredientsInfo(selectedItem);
+                return true;
+            }
+        });
+    }
+
+    public void showMealInfo(Meal meal){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Your meal nutrition: ");
+        adb.setMessage(meal.getMealInfo());
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        adb.setNegativeButton("Ingredients", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showMealIngredientsInfo(meal);
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
+    }
+
+    public void showMealIngredientsInfo(Meal meal){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Your meal ingredients: ");
+        String mealInfo = "";
+        for(Ingredient ingredient : meal.getNeededIngredientsForMeal())
+            mealInfo += ingredient.getName() + ": " + ingredient.getGrams() + " grams." + "\n";
+        adb.setMessage(mealInfo);
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        adb.setNegativeButton("Nutrition", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showMealInfo(meal);
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
     }
 
     public void multiOrSingleSelectUpdate(){
@@ -118,6 +245,7 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
             Toast.makeText(this, "Multi select has disabled.", Toast.LENGTH_SHORT).show();
             btMultiCustomSelect.setText("Enable multi select");
             btFinishCustomSelection.setText("Return to customize");
+            chosenMultiSelectCustom = null;
             multiSelectCounter = 0;
             multiSelect = false;
         }
@@ -129,10 +257,8 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
             }
             else{
-                chosenCustomName = chosenCustomName.substring(0, chosenCustomName.length() - 5);  // 5 = " and "
-                String chosenCustom = chosenCustomName + ": " + chosenCustomCalories + " calories, " + chosenCustomMinutes + " minutes.";
                 me.setClass(customSelection.this, mealsMenu.class);
-                me.putExtra(cameFrom, chosenCustom);
+                me.putExtra(cameFrom, chosenMultiSelectCustom);
                 startActivity(me);
             }
         }
@@ -142,18 +268,18 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    public void showFileData(){
-        mealsList = new ArrayList<String>();
-        String[] dataParts = getFileData(fileName).split("\n"), organizedMeal;
-
-        for(String dataPart : dataParts){
-            organizedMeal = multiUsageFunctions.organizeMeal(dataPart);
-
-            mealsList.add(multiUsageFunctions.separateInfo(organizedMeal[0]));
-            mealsList.add(multiUsageFunctions.separateInfo(organizedMeal[1]));
-            mealsList.add(multiUsageFunctions.separateInfo(organizedMeal[2]));
-        }
-    }
+//    public void showFileData(){
+//        customMealsList = new ArrayList<String>();
+//        String[] dataParts = getFileData(fileName).split("\n"), organizedMeal;
+//
+//        for(String dataPart : dataParts){
+//            organizedMeal = multiUsageFunctions.organizeMeal(dataPart);
+//
+//            customMealsList.add(multiUsageFunctions.separateInfo(organizedMeal[0]));
+//            customMealsList.add(multiUsageFunctions.separateInfo(organizedMeal[1]));
+//            customMealsList.add(multiUsageFunctions.separateInfo(organizedMeal[2]));
+//        }
+//    }
 
     public String getFileData(String fileName){
         String currentLine = "", allData = "";
@@ -170,8 +296,6 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
             br.close();
         }
         catch (FileNotFoundException e) {
-            if(fileName.equals(me.getStringExtra("todayDate")))
-                Toast.makeText(this, "Today saved data not exists yet.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         catch (IOException e) {

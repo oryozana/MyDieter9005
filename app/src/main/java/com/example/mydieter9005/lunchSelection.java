@@ -147,9 +147,9 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
 
         updateIfMealModified();
         setListViewAdapter();
+        implementSettingsData();
         initiateVideoPlayer();
         initiateMediaPlayer();
-        implementSettingsData();
     }
 
     public void setListViewAdapter(){
@@ -334,8 +334,6 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
             br.close();
         }
         catch (FileNotFoundException e) {
-            if(fileName.equals(me.getStringExtra("todayDate")))
-                Toast.makeText(this, "Today saved data not exists yet.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         catch (IOException e) {
