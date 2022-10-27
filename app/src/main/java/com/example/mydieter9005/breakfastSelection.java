@@ -291,8 +291,6 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
             br.close();
         }
         catch (FileNotFoundException e) {
-            if(fileName.equals(me.getStringExtra("todayDate")))
-                Toast.makeText(this, "Today saved data not exists yet.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         catch (IOException e) {

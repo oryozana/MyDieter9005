@@ -193,8 +193,6 @@ public class musicMaster extends AppCompatActivity implements View.OnClickListen
             br.close();
         }
         catch (FileNotFoundException e) {
-            if(fileName.equals(me.getStringExtra("todayDate")))
-                Toast.makeText(this, "Today saved data not exists yet.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         catch (IOException e) {
