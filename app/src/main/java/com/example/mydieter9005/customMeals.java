@@ -346,7 +346,7 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
 
     public void finishCustomize(){
         me.setClass(customMeals.this, mealsMenu.class);
-        me.putExtra(cameFrom, etCustomMeal.getText().toString());
+        me.putExtra(cameFrom, customMeal);
         startActivity(me);
     }
 
