@@ -373,7 +373,7 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
     }
 
     public void initiateVideoPlayer(){
-        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.dinner_selection_background_video);
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.world_saved_custom_meals_background_video);
         videoView.setVideoURI(uri);
 
         if(me.getBooleanExtra("useVideos", true))
@@ -424,7 +424,7 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
         super.onPostResume();
         videoView.resume();
         if(!me.getBooleanExtra("useVideos", true)){
-            findViewById(R.id.dinnerSelectionLinearLayout).setBackground(getDrawable(R.drawable.dinner_selection_background));
+            linearLayout.setBackground(getDrawable(R.drawable.world_saved_custom_meals_background));
             videoView.stopPlayback();
         }
         else
