@@ -550,4 +550,44 @@ public class removedFunctions extends AppCompatActivity {
 //        firstSetAllVideosPathsFromFirebase();
 //        //  Video.initiateVideos(getFileData("videos"));
 //    }
+
+
+        // From customMeals:
+
+
+//    private void choosePicture(){
+//        Intent intent = new Intent();
+//        intent.setType("image/");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(intent, 1);
+//    }
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
+//            Uri imageUri = data.getData();
+//        }
+//    }
+//
+//    private void uploadPicture(Uri imageUri){
+//
+//        final String randomKey = UUID.randomUUID().toString();
+//        StorageReference mountainsRef = storageReference.child("mountains.jpg");
+//
+//        storageReference.putFile(imageUri)
+//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        Snackbar.make(findViewById(android.R.id.content), "Image uploaded.", Snackbar.LENGTH_SHORT).show();
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(customMeals.this, "Failed to upload.", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
+
 }
