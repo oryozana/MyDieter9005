@@ -3,8 +3,25 @@ package com.example.mydieter9005;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.example.mydieter9005.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 public class removedFunctions extends AppCompatActivity {
 
@@ -359,5 +376,178 @@ public class removedFunctions extends AppCompatActivity {
 //        else{
 //            Toast.makeText(this, "Make sure to follow the format instructions.", Toast.LENGTH_SHORT).show();
 //        }
+//    }
+
+
+        // From: Video:
+
+//    package com.example.mydieter9005;
+//
+//import java.util.ArrayList;
+//
+//    public class Video {
+//        private static ArrayList<com.example.mydieter9005.Video> videos = new ArrayList<com.example.mydieter9005.Video>();
+//        private final String videoName;
+//        private String videoPath;
+//
+//        public Video(String videoName){
+//            this.videoName = videoName;
+//            this.videoPath = "";
+//            videos.add(this);
+//        }
+//
+//        public Video(String videoName, String videoPath){
+//            this.videoName = videoName;
+//            this.videoPath = videoPath;
+//            videos.add(this);
+//        }
+//
+//        public static ArrayList<com.example.mydieter9005.Video> getVideos() {
+//            return videos;
+//        }
+//
+//        public String getVideoName() {
+//            return videoName;
+//        }
+//
+//        public String getVideoPath() {
+//            return videoPath;
+//        }
+//
+//        public void setVideoPath(String videoPath) {
+//            this.videoPath = videoPath;
+//        }
+//
+//        public static com.example.mydieter9005.Video getVideoByName(String name){
+//            name = name.replaceAll(" ", "_");
+//            for(int i = 0; i < videos.size(); i++){
+//                if(videos.get(i).videoName.equals(name))
+//                    return videos.get(i);
+//            }
+//            return null;
+//        }
+//
+//        public static void initiateVideos(String fileData){
+//            videos.clear();
+//            String[] savedVideos = fileData.split("\n");
+//            for(int i = 1; i < savedVideos.length; i++){
+//                String videoName = savedVideos[i].split(" path: ")[0];
+//                String videoPath = savedVideos[i].split(" path: ")[1];
+//
+//                new com.example.mydieter9005.Video(videoName, videoPath);
+//            }
+//        }
+//
+//        public static void firstInitiateVideos(){
+//            new com.example.mydieter9005.Video("main_activity_morning_background_video");
+//            new com.example.mydieter9005.Video("main_activity_noon_background_video");
+//            new com.example.mydieter9005.Video("main_activity_night_background_video");
+//            new com.example.mydieter9005.Video("breakfast_selection_background_video");
+//            new com.example.mydieter9005.Video("lunch_selection_background_video");
+//            new com.example.mydieter9005.Video("dinner_selection_background_video");
+//            new com.example.mydieter9005.Video("ingredients_selection_background_video");
+//            new com.example.mydieter9005.Video("meal_modifier_background_video");
+//            new com.example.mydieter9005.Video("custom_background_video");
+//            new com.example.mydieter9005.Video("custom_selection_background_video");
+//            new com.example.mydieter9005.Video("music_master_video_background");
+//            new com.example.mydieter9005.Video("settings_setter_video_background");
+//        }
+//
+//        @Override
+//        public String toString() {
+//            return videoName + " path: " + videoPath;
+//        }
+//    }
+
+
+        // From MainActivity:
+
+//    ActivityMainBinding binding;
+//    StorageReference storageReference;
+//    ProgressDialog progressDialog;
+
+    // onClick:
+//    binding = ActivityMainBinding.inflate(getLayoutInflater());
+//    setContentView(binding.getRoot());
+
+    // createTheFirstIntent:
+//    Video.initiateVideos(getFileData("videos"));
+
+    // idk:
+//    saveVideosPaths(Video.getVideos());
+
+//    public void saveVideosPaths(ArrayList<Video> videos){
+//        try {
+//            fos = openFileOutput("videos", Context.MODE_PRIVATE);
+//            osw = new OutputStreamWriter(fos);
+//            bw = new BufferedWriter(osw);
+//
+//            bw.write("Background videos from firebase cloud." + "\n");
+//
+//            bw.write(videos.get(0).toString());
+//            for(int i = 1; i < videos.size(); i++)
+//                bw.write("\n" + videos.get(i).toString());
+//
+//            bw.close();
+//
+//            Toast.makeText(this,  "All videos saved.", Toast.LENGTH_SHORT).show();
+//        }
+//        catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public void firstSetAllVideosPathsFromFirebase() {
+//        Video.firstInitiateVideos();
+//        ArrayList<Video> videos = Video.getVideos();
+//
+//        getAndSetBackgroundVideoPathFromFirebase(videos.get(1));
+////        for(int i = 0; i < videos.size(); i++) {
+////        }
+//
+//    }
+//
+//    public void getAndSetBackgroundVideoPathFromFirebase(Video video){
+//        progressDialog = new ProgressDialog(MainActivity.this);
+//        progressDialog.setMessage("Fetching videos...");
+//        progressDialog.setCancelable(false);
+//        progressDialog.show();
+//
+//        StorageReference storageReference = FirebaseStorage.getInstance().getReference("background_videos/" + video.getVideoName() + ".mp4");
+//
+//        try {
+//            File localFile = File.createTempFile(video.getVideoName() + " temp_file", ".mp4");
+//            storageReference.getFile(localFile)
+//                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+//
+//
+//                            if(progressDialog.isShowing())
+//                                progressDialog.dismiss();
+//
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            Toast.makeText(MainActivity.this, "Failed to retrieve.", Toast.LENGTH_SHORT).show();
+//
+//                            if(progressDialog.isShowing())
+//                                progressDialog.dismiss();
+//                        }
+//                    });
+//        }
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    // getFileData:
+//                if(fileName.equals("videos")) {
+//        firstSetAllVideosPathsFromFirebase();
+//        //  Video.initiateVideos(getFileData("videos"));
 //    }
 }

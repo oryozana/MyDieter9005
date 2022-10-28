@@ -1,6 +1,7 @@
 package com.example.mydieter9005;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,9 +22,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -34,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class customMeals extends AppCompatActivity implements View.OnClickListener {
 
@@ -57,6 +65,9 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
+
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
     Intent me;
 
     @Override
@@ -112,11 +123,85 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
             public void afterTextChanged(Editable s) {}
         });
 
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
+
         setAdapters();
         initiateVideoPlayer();
         initiateMediaPlayer();
         implementSettingsData();
     }
+
+
+
+
+
+
+
+//    private void choosePicture(){
+//        Intent intent = new Intent();
+//        intent.setType("image/");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(intent, 1);
+//    }
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
+//            Uri imageUri = data.getData();
+//        }
+//    }
+//
+//    private void uploadPicture(Uri imageUri){
+//
+//        final String randomKey = UUID.randomUUID().toString();
+//        StorageReference mountainsRef = storageReference.child("mountains.jpg");
+//
+//        storageReference.putFile(imageUri)
+//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        Snackbar.make(findViewById(android.R.id.content), "Image uploaded.", Snackbar.LENGTH_SHORT).show();
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(customMeals.this, "Failed to upload.", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void setAdapters() {
         ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();

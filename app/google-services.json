@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1023978341121",
+    "firebase_url": "https://thedieter9005-default-rtdb.firebaseio.com",
+    "project_id": "thedieter9005",
+    "storage_bucket": "thedieter9005.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023978341121:android:7edf4b28d05180fa51d100",
+        "android_client_info": {
+          "package_name": "com.example.mydieter9005"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023978341121-o1pl2trdqgf6q1usk5ram4aq15ahc85p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mydieter9005",
+            "certificate_hash": "94738382b03fe62020a1ab54f16ecd07c9a5a659"
+          }
+        },
+        {
+          "client_id": "1023978341121-aferhuuo4duk3skr19hl48la00tik6fa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUGEcO7ptB2Wrkz7plQVDtRMJ4IIx7S0c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1023978341121-aferhuuo4duk3skr19hl48la00tik6fa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

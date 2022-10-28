@@ -3,13 +3,18 @@ package com.example.mydieter9005;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Annotation;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
@@ -25,15 +30,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.example.mydieter9005.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -42,6 +50,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -69,9 +78,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
-
-    StorageReference storageReference;
-    ProgressDialog progressDialog;
     Intent me;
 
     @Override
@@ -121,46 +127,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initiateVideoPlayer();
         updateMealsIfNeeded();
     }
-
-//    private FirebaseStorage firebaseStorage;
-//    private StorageReference storageReference;
-//        firebaseStorage = FirebaseStorage.getInstance();
-//        storageReference = firebaseStorage.getReference();
-
-//    private void choosePicture(){
-//        Intent intent = new Intent();
-//        intent.setType("image/");
-//        intent.setAction(Intent.ACTION_GET_CONTENT);
-//        startActivityForResult(intent, 1);
-//    }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
-//            Uri imageUri = data.getData();
-//        }
-//    }
-//
-//    private void uploadPicture(Uri imageUri){
-//
-//        final String randomKey = UUID.randomUUID().toString();
-//        StorageReference mountainsRef = storageReference.child("mountains.jpg");
-//
-//        storageReference.putFile(imageUri)
-//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        Snackbar.make(findViewById(android.R.id.content), "Image uploaded.", Snackbar.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(MainActivity.this, "Failed to upload.", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
 
     public void updateMealsIfNeeded(){
         if(me.hasExtra("selectedBreakfast") || me.hasExtra("selectedLunch") || me.hasExtra("selectedDinner")) {
@@ -322,11 +288,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(fileName.equals(me.getStringExtra("todayDate")))
                 Toast.makeText(this, "Today saved data not exists yet.", Toast.LENGTH_SHORT).show();
             if(fileName.equals("settings")) {
-                firstInitiateCustomMealsNamesFile();  // If settings file didn't exist so do him.
+                firstInitiateCustomMealsNamesFile();  // If setting don't exist so do him.
                 firstInitiateSettingsFile();
                 implementSettingsData();
             }
-            e.printStackTrace();
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -358,15 +323,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void initiateVideoPlayer(){
-        Uri uri;
-
-        // 6 <= currentHour && currentHour < 12 for morning:
-        uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.main_activity_morning_background_video);
+        if(6 <= currentHour && currentHour < 12)
+            videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.main_activity_morning_background_video));
         if(12 <= currentHour && currentHour < 18)
-            uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.main_activity_noon_background_video);
+            videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.main_activity_noon_background_video));
         if((18 <= currentHour && currentHour <= 23) || (0 <= currentHour && currentHour < 6))
-            uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.main_activity_night_background_video);
-        videoView.setVideoURI(uri);
+            videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.main_activity_night_background_video));
 
         if(me.getBooleanExtra("useVideos", true))
             videoView.start();
