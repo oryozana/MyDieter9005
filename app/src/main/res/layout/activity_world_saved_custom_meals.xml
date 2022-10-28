@@ -4,35 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
-    tools:context=".dinnerSelection">
+    tools:context=".WorldSavedCustomMeals">
 
     <VideoView
-        android:id="@+id/dinnerVideoView"
+        android:id="@+id/worldSavedCustomMealsVideoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true" />
 
     <LinearLayout
-        android:id="@+id/dinnerSelectionLinearLayout"
+        android:id="@+id/worldSavedCustomMealsLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:padding="10pt"
-            android:text="Choose your dinner, from the options below:"
+            android:text="Here are world published recipes, chose from the options below:"
             android:textSize="10pt" />
 
         <EditText
-            android:id="@+id/etFilterDinner"
+            android:id="@+id/etFilterWorldSavedCustomMeals"
             android:layout_width="150pt"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -40,36 +39,28 @@
             android:inputType="textPersonName" />
 
         <ListView
-            android:id="@+id/listViewDinner"
+            android:id="@+id/lvWorldSavedCustomMeals"
             android:layout_width="match_parent"
-            android:layout_height="375dp"
-            android:layout_marginTop="2pt" >
-        </ListView>
+            android:layout_height="425dp"
+            android:layout_marginTop="2pt"></ListView>
 
         <Button
-            android:id="@+id/btSendDinnerToCustomize"
+            android:id="@+id/btMultiWorldSavedCustomMealsSelect"
             android:layout_width="125pt"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15pt"
             android:layout_marginTop="10pt"
-            android:layout_marginRight="15pt"
-            android:layout_marginBottom="2pt"
-            android:text="Customize meal" />
-
-        <Button
-            android:id="@+id/btMultiDinnerSelect"
-            android:layout_width="125pt"
-            android:layout_height="wrap_content"
             android:layout_marginLeft="15pt"
             android:layout_marginRight="15pt"
             android:layout_marginBottom="2pt"
             android:text="Enable multi select" />
 
         <Button
-            android:id="@+id/btClearDinnerSelection"
+            android:id="@+id/btFinishWorldSavedCustomMeals"
             android:layout_width="125pt"
             android:layout_height="wrap_content"
-            android:text="Clear selection" />
+            android:layout_marginLeft="15pt"
+            android:layout_marginRight="15pt"
+            android:layout_marginBottom="2pt"
+            android:text="Finish" />
     </LinearLayout>
-
 </RelativeLayout>

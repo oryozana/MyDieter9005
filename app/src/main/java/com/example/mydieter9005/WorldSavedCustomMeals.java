@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,15 +18,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.example.mydieter9005.databinding.ActivityCustomMealsBinding;
-import com.example.mydieter9005.databinding.ActivityCustomSelectionBinding;
+import com.example.mydieter9005.databinding.ActivityMainBinding;
+import com.example.mydieter9005.databinding.ActivityWorldSavedCustomMealsBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -35,94 +39,108 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class customSelection extends AppCompatActivity implements View.OnClickListener {
+public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnClickListener {
 
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    Button btMultiCustomSelect, btSentToWorldSavedCustomMeals, btFinishCustomSelection;
-    ArrayList<Meal> customMealsList;
-    String[] customMealsNames;
-    ArrayAdapter<Meal> adapter;
-    boolean multiSelect = false;
-    Meal chosenMultiSelectCustom = null;
-    int multiSelectCounter = 0;
-    Song activeSong = Song.getSongs().get(0);
-    String cameFrom;
+    Button btMultiDinnerSelect, btFinishWorldSavedCustomMeals;
+    EditText etFilterWorldSavedCustomMeals;
+    LinearLayout linearLayout;
     ListView listView;
 
-    FirebaseDatabase recipesDb;
+    ArrayList<Meal> mealsList = new ArrayList<Meal>();
+    ArrayAdapter<Meal> adapter;
+
+    Song activeSong = Song.getSongs().get(0);
+
+    boolean multiSelect = false;
+    Meal chosenMultiSelectDinner = null;
+    int multiSelectCounter = 0;
+
     DatabaseReference databaseReference;
-    String userName = "ori";
 
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
-    String fileName = "customMealsNames";
     Intent me;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_custom_selection);
+        setContentView(R.layout.activity_world_saved_custom_meals);
 
         me = getIntent();
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
-        cameFrom = me.getStringExtra("cameFrom");
 
-        listView = (ListView) findViewById(R.id.listViewCustom);
-        videoView = (VideoView) findViewById(R.id.customSelectionVideoView);
+        listView = (ListView) findViewById(R.id.lvWorldSavedCustomMeals);
+        videoView = (VideoView) findViewById(R.id.worldSavedCustomMealsVideoView);
+        linearLayout = (LinearLayout) findViewById(R.id.worldSavedCustomMealsLinearLayout);
 
-        btSentToWorldSavedCustomMeals = (Button) findViewById(R.id.btSentToWorldSavedCustomMeals);
-        btSentToWorldSavedCustomMeals.setOnClickListener(this);
-        btFinishCustomSelection = (Button) findViewById(R.id.btFinishCustomSelection);
-        btFinishCustomSelection.setOnClickListener(this);
-        btMultiCustomSelect = (Button) findViewById(R.id.btMultiCustomSelect);
-        btMultiCustomSelect.setOnClickListener(this);
+        btFinishWorldSavedCustomMeals = (Button) findViewById(R.id.btFinishWorldSavedCustomMeals);
+        btFinishWorldSavedCustomMeals.setOnClickListener(this);
+        btMultiDinnerSelect = (Button) findViewById(R.id.btMultiWorldSavedCustomMealsSelect);
+        btMultiDinnerSelect.setOnClickListener(this);
 
-        initiateCustomMealsList();
+        etFilterWorldSavedCustomMeals = (EditText) findViewById(R.id.etFilterWorldSavedCustomMeals);
+        etFilterWorldSavedCustomMeals.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                (WorldSavedCustomMeals.this).adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
         implementSettingsData();
+        setListViewAdapter();
         initiateVideoPlayer();
         initiateMediaPlayer();
-
-        checkIfAtLeastOneCustomMealAdded();
     }
 
-    public void initiateCustomMealsList(){
-        customMealsList = new ArrayList<Meal>();
-        customMealsNames = getSavedCustomMealsNames();
+    public void initiateListViewFields(){
+        databaseReference = FirebaseDatabase.getInstance().getReference("recipes");
+        databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                ArrayList<Ingredient> ingredientsNeededInfo = new ArrayList<Ingredient>();
+                Ingredient ingredient;
+                String mealName, ingredientName;
+                Double ingredientGrams;
 
-        for(int i = 0; i < customMealsNames.length - 1; i++)  // - 1 to get rid of the empty last element in this array.
-            customMealsList.add(new Meal(customMealsNames[i], getIngredientsFromFileByCustomMealName(customMealsNames[i])));
+                if(task.isSuccessful()){
+                    if(task.getResult().exists()){
+                        DataSnapshot dataSnapshot = task.getResult();
+                        for(DataSnapshot customMeal : dataSnapshot.getChildren()){
+                            ingredientsNeededInfo.clear();
+                            mealName = customMeal.getKey();
+                            for(int i = 0; i < customMeal.getChildrenCount(); i++) {
+                                ingredientName = getName(customMeal.child(i + "").getValue().toString());
+                                ingredientGrams = getGrams(customMeal.child(i + "").getValue().toString());
 
-        setListViewAdapter();
-    }
+                                ingredient = new Ingredient(Ingredient.getIngredientByName(ingredientName), ingredientGrams);
+                                ingredientsNeededInfo.add(ingredient);
+                            }
 
-    public String[] getSavedCustomMealsNames(){
-        String[] customMealsNames = getFileData(fileName).split("\n");
-
-        for(int i = 1; i < customMealsNames.length; i++)  // Get rid of first line.
-            customMealsNames[i - 1] = customMealsNames[i];
-
-        customMealsNames[customMealsNames.length - 1] = "";
-        return customMealsNames;
-    }
-
-    public ArrayList<Ingredient> getIngredientsFromFileByCustomMealName(String mealName){
-        String[] mealIngredients = getFileData("customMeal: " + mealName).split("\n");
-        ArrayList<Ingredient> ingredientsFound = new ArrayList<Ingredient>();
-
-        for(int i = 1; i < mealIngredients.length; i++){  // i = 1 to skip the custom meal name line.
-            String name = getName(mealIngredients[i]);
-            double grams = getGrams(mealIngredients[i]);
-
-            Ingredient ingredient = Ingredient.getIngredientByName(name);
-            Toast.makeText(this, ingredient.getName() + "", Toast.LENGTH_SHORT).show();
-            ingredientsFound.add(new Ingredient(ingredient, grams));
-        }
-
-        return ingredientsFound;
+                            mealsList.add(new Meal(mealName, ingredientsNeededInfo));
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                    else{
+                        notEvenOneCustomMealAdded();
+                    }
+                }
+                else{
+                    recipesDatabaseNotFound();
+                    Toast.makeText(WorldSavedCustomMeals.this, "Failed to load meals.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public String getName(String nameAndGrams){  // Needed when get ingredient from file.
@@ -133,12 +151,25 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
         return Double.parseDouble((nameAndGrams.split(": ")[1]).split(" ")[0]);
     }
 
-    public void checkIfAtLeastOneCustomMealAdded(){
-        String[] savedCustomMealsNames = getSavedCustomMealsNames();
+    public void recipesDatabaseNotFound(){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Custom meals not found!");
+        adb.setMessage("We have trouble connecting our database right now, please come back later");
+        adb.setIcon(R.drawable.ic_error_icon);
+        adb.setCancelable(false);
 
-        if(savedCustomMealsNames.length == 1){
-            notEvenOneCustomMealAdded();
-        }
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                me.setClass(WorldSavedCustomMeals.this, customSelection.class);
+                startActivity(me);
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
     }
 
     public void notEvenOneCustomMealAdded(){
@@ -146,22 +177,15 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
         AlertDialog.Builder adb;
         adb = new AlertDialog.Builder(this);
         adb.setTitle("Custom meals not found!");
-        adb.setMessage("It's seems like you didn't saved any custom meal so far, give it a try and come back again.");
+        adb.setMessage("It's seems like no one saved any custom meal so far, you can be the first!.");
         adb.setIcon(R.drawable.ic_food_icon);
         adb.setCancelable(false);
 
         adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                me.setClass(customSelection.this, customMeals.class);
+                me.setClass(WorldSavedCustomMeals.this, customSelection.class);
                 startActivity(me);
-            }
-        });
-
-        adb.setNegativeButton("World saved", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                sendToWorldSavedCustomSelection();
             }
         });
 
@@ -170,7 +194,9 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     }
 
     public void setListViewAdapter(){
-        adapter = new ArrayAdapter<Meal>(this, android.R.layout.simple_list_item_1, customMealsList);
+        initiateListViewFields();
+
+        adapter = new ArrayAdapter<Meal>(this, android.R.layout.simple_list_item_1, mealsList);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -179,13 +205,12 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
                 Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
 
                 if(!multiSelect){
-                    me.setClass(customSelection.this, mealsMenu.class);
-                    me.putExtra(cameFrom, selectedItem);
+                    me.setClass(WorldSavedCustomMeals.this, mealsMenu.class);
                     startActivity(me);
                 }
                 else {
-                    chosenMultiSelectCustom = new Meal(chosenMultiSelectCustom, selectedItem);
-                    Toast.makeText(customSelection.this, selectedItem.getName() + " has added.", Toast.LENGTH_SHORT).show();
+                    chosenMultiSelectDinner = new Meal(chosenMultiSelectDinner, selectedItem);
+                    Toast.makeText(WorldSavedCustomMeals.this, selectedItem.getName() + " has added.", Toast.LENGTH_SHORT).show();
                     multiSelectCounter++;
                 }
             }
@@ -207,7 +232,7 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
         AlertDialog.Builder adb;
         adb = new AlertDialog.Builder(this);
         adb.setTitle("Your meal nutrition: ");
-        adb.setMessage(meal.getMealInfo());
+        adb.setMessage(meal.getGrams() + " grams." + "\n" + meal.getProteins() + " proteins." + "\n" + meal.getFats() + " fats." + "\n" + meal.getCalories() + " calories.");
         adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -222,21 +247,12 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-        adb.setNegativeButton("Publish", new DialogInterface.OnClickListener() {
+        adb.setNeutralButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ArrayList<String> mealIngredientsInfo = new ArrayList<String>();
-                for(int i = 0; i < meal.getNeededIngredientsForMeal().size(); i++)
-                    mealIngredientsInfo.add(meal.getNeededIngredientsForMeal().get(i).toString());
-
-                recipesDb = FirebaseDatabase.getInstance();
-                databaseReference = recipesDb.getReference("recipes");
-                databaseReference.child(userName + " - " + meal.getName()).setValue(mealIngredientsInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(customSelection.this, "Successfully published.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                me.setClass(WorldSavedCustomMeals.this, customMeals.class);
+                me.putExtra("globalCustomMealToSave", meal);
+                startActivity(me);
             }
         });
 
@@ -249,10 +265,12 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
         AlertDialog.Builder adb;
         adb = new AlertDialog.Builder(this);
         adb.setTitle("Your meal ingredients: ");
+
         String mealInfo = "";
         for(Ingredient ingredient : meal.getNeededIngredientsForMeal())
             mealInfo += ingredient.getName() + ": " + ingredient.getGrams() + " grams." + "\n";
         adb.setMessage(mealInfo);
+
         adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -267,21 +285,12 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-        adb.setNegativeButton("Publish", new DialogInterface.OnClickListener() {
+        adb.setNeutralButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ArrayList<String> mealIngredientsInfo = new ArrayList<String>();
-                for(int i = 0; i < meal.getNeededIngredientsForMeal().size(); i++)
-                    mealIngredientsInfo.add(meal.getNeededIngredientsForMeal().get(i).toString());
-
-                recipesDb = FirebaseDatabase.getInstance();
-                databaseReference = recipesDb.getReference("recipes");
-                databaseReference.child(userName + " - " + meal.getName()).setValue(mealIngredientsInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(customSelection.this, "Successfully published.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                me.setClass(WorldSavedCustomMeals.this, customMeals.class);
+                me.putExtra("globalCustomMealToSave", meal);
+                startActivity(me);
             }
         });
 
@@ -292,41 +301,35 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     public void multiOrSingleSelectUpdate(){
         if(!multiSelect){
             Toast.makeText(this, "Multi select has enabled.", Toast.LENGTH_SHORT).show();
-            btMultiCustomSelect.setText("Disable multi select");
-            btFinishCustomSelection.setText("Finish selection");
+            btMultiDinnerSelect.setText("Disable multi select");
+            btFinishWorldSavedCustomMeals.setText("Finish choosing");
             multiSelectCounter = 0;
             multiSelect = true;
         }
         else{
             Toast.makeText(this, "Multi select has disabled.", Toast.LENGTH_SHORT).show();
-            btMultiCustomSelect.setText("Enable multi select");
-            btFinishCustomSelection.setText("Return to customize");
-            chosenMultiSelectCustom = null;
+            btMultiDinnerSelect.setText("Enable multi select");
+            btFinishWorldSavedCustomMeals.setText("Finish");
+            chosenMultiSelectDinner = null;
             multiSelectCounter = 0;
             multiSelect = false;
         }
     }
 
-    public void finishSelectionOrReturnToCustomize(){
+    public void finishMultiSelectOrExitWorldSavedCustomMeals(){
         if(multiSelect){
             if(multiSelectCounter == 0){
                 Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
             }
             else{
-                me.setClass(customSelection.this, mealsMenu.class);
-                me.putExtra(cameFrom, chosenMultiSelectCustom);
+                me.setClass(WorldSavedCustomMeals.this, mealsMenu.class);
                 startActivity(me);
             }
         }
         else{
-            me.setClass(customSelection.this, customMeals.class);
+            me.setClass(WorldSavedCustomMeals.this, customSelection.class);
             startActivity(me);
         }
-    }
-
-    public void sendToWorldSavedCustomSelection(){
-        me.setClass(customSelection.this, WorldSavedCustomMeals.class);
-        startActivity(me);
     }
 
     public String getFileData(String fileName){
@@ -370,7 +373,7 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     }
 
     public void initiateVideoPlayer(){
-        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.custom_selection_background_video);
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.dinner_selection_background_video);
         videoView.setVideoURI(uri);
 
         if(me.getBooleanExtra("useVideos", true))
@@ -385,7 +388,7 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(customSelection.this, activeSong.getId());
+        mediaPlayer = MediaPlayer.create(WorldSavedCustomMeals.this, activeSong.getId());
         mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
             mediaPlayer.start();
@@ -403,13 +406,13 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemID = item.getItemId();
         if(itemID == R.id.sendToMusicMaster){
-            me.setClass(customSelection.this, musicMaster.class);
+            me.setClass(WorldSavedCustomMeals.this, musicMaster.class);
             me.putExtra("cameToMusicMasterFrom", getLocalClassName());
             startActivity(me);
         }
 
         if(itemID == R.id.sendToSettings){
-            me.setClass(customSelection.this, settingsSetter.class);
+            me.setClass(WorldSavedCustomMeals.this, settingsSetter.class);
             me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
@@ -421,7 +424,7 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
         super.onPostResume();
         videoView.resume();
         if(!me.getBooleanExtra("useVideos", true)){
-            findViewById(R.id.customSelectionLinearLayout).setBackground(getDrawable(R.drawable.custom_selection_background));
+            findViewById(R.id.dinnerSelectionLinearLayout).setBackground(getDrawable(R.drawable.dinner_selection_background));
             videoView.stopPlayback();
         }
         else
@@ -458,17 +461,15 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
         super.onDestroy();
     }
 
+
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
 
-        if(viewId == btMultiCustomSelect.getId())
+        if(viewId == btMultiDinnerSelect.getId())
             multiOrSingleSelectUpdate();
 
-        if(viewId == btSentToWorldSavedCustomMeals.getId())
-            sendToWorldSavedCustomSelection();
-
-        if(viewId == btFinishCustomSelection.getId())
-            finishSelectionOrReturnToCustomize();
+        if(viewId == btFinishWorldSavedCustomMeals.getId())
+            finishMultiSelectOrExitWorldSavedCustomMeals();
     }
 }

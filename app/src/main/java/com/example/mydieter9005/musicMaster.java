@@ -142,6 +142,8 @@ public class musicMaster extends AppCompatActivity implements View.OnClickListen
             me.setClass(musicMaster.this, settingsSetter.class);
         if(cameToMusicMasterFrom.equals("ingredientsSelection"))
             me.setClass(musicMaster.this, ingredientsSelection.class);
+        if(cameToMusicMasterFrom.equals("WorldSavedCustomMeals"))
+            me.setClass(musicMaster.this, WorldSavedCustomMeals.class);
 
         me.putExtra("activeSong", activeSong);
         saveSong();

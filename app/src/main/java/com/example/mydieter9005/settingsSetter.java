@@ -216,6 +216,8 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
                 me.setClass(settingsSetter.this, musicMaster.class);
             if(cameToSettingsFrom.equals("ingredientsSelection"))
                 me.setClass(settingsSetter.this, ingredientsSelection.class);
+            if(cameToSettingsFrom.equals("WorldSavedCustomMeals"))
+                me.setClass(settingsSetter.this, WorldSavedCustomMeals.class);
 
             startActivity(me);
         }

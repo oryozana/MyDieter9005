@@ -590,4 +590,18 @@ public class removedFunctions extends AppCompatActivity {
 //                });
 //    }
 
+
+        // From customSelection:
+    //    public void showFileData(){
+//        customMealsList = new ArrayList<String>();
+//        String[] dataParts = getFileData(fileName).split("\n"), organizedMeal;
+//
+//        for(String dataPart : dataParts){
+//            organizedMeal = multiUsageFunctions.organizeMeal(dataPart);
+//
+//            customMealsList.add(multiUsageFunctions.separateInfo(organizedMeal[0]));
+//            customMealsList.add(multiUsageFunctions.separateInfo(organizedMeal[1]));
+//            customMealsList.add(multiUsageFunctions.separateInfo(organizedMeal[2]));
+//        }
+//    }
 }

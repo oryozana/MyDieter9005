@@ -25,9 +25,15 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.example.mydieter9005.databinding.ActivityCustomMealsBinding;
+import com.example.mydieter9005.databinding.ActivityWorldSavedCustomMealsBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -65,9 +71,6 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
-
-    private FirebaseStorage firebaseStorage;
-    private StorageReference storageReference;
     Intent me;
 
     @Override
@@ -97,6 +100,16 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
         else
             customMeal = new Meal("");
 
+        if(me.hasExtra("globalCustomMealToSave")){
+            customMeal = (Meal) me.getSerializableExtra("globalCustomMealToSave");
+            customMeal.setName(customMeal.getName().split(" - ")[1]);
+            ArrayList<Ingredient> customMealSavedIngredients = new ArrayList<Ingredient>();
+            for(Ingredient ingredient : customMeal.getNeededIngredientsForMeal())
+                customMealSavedIngredients.add(new Ingredient(ingredient));
+            etCustomMeal.setText(customMeal.getName());
+            me.removeExtra("globalCustomMealToSave");
+        }
+
         cameFrom = me.getStringExtra("cameFrom");
 
         videoView = (VideoView) findViewById(R.id.customVideoView);
@@ -122,9 +135,6 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
             @Override
             public void afterTextChanged(Editable s) {}
         });
-
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference();
 
         setAdapters();
         initiateVideoPlayer();
@@ -189,16 +199,6 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
             }
         });
 
-        adb.setNeutralButton("Edit meal", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                me.setClass(customMeals.this, mealModifier.class);
-                me.putExtra("mealToModify", customMeal);
-                me.putExtra("cameToMealModifierFrom", getLocalClassName());
-                startActivity(me);
-            }
-        });
-
         ad = adb.create();
         ad.show();
     }
@@ -243,7 +243,13 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
 
             bw.close();
 
-            saveCustomMealNameInsideFile();
+            boolean alreadyThere = false;
+            for(int i = 0; i < getSavedCustomMealsNames().length; i++){
+                if(customMeal.getName().equals(getSavedCustomMealsNames()[i]))
+                    alreadyThere = true;
+            }
+            if(!alreadyThere)
+                saveCustomMealNameInsideFile();
             Toast.makeText(this, customMeal.getName() + " added.", Toast.LENGTH_SHORT).show();
         }
         catch (FileNotFoundException e) {
@@ -252,6 +258,16 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String[] getSavedCustomMealsNames(){
+        String[] customMealsNames = getFileData(fileName).split("\n");
+
+        for(int i = 1; i < customMealsNames.length; i++)  // Get rid of first line.
+            customMealsNames[i - 1] = customMealsNames[i];
+
+        customMealsNames[customMealsNames.length - 1] = "";
+        return customMealsNames;
     }
 
     public boolean checkIfCustomMealIsOk(){
