@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Register">
+
+    <VideoView
+        android:id="@+id/registerVideoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true" />
+
+    <LinearLayout
+        android:id="@+id/registerLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:textSize="11pt"
+            android:layout_marginBottom="10pt"
+            android:text="Enter the needed information below to register: " />
+
+        <EditText
+            android:id="@+id/etGetUsername"
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Enter username: " />
+
+        <EditText
+            android:id="@+id/etGetPassword"
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:hint="Enter password: " />
+
+        <EditText
+            android:id="@+id/etGetEmail"
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Enter your email: " />
+
+        <EditText
+            android:id="@+id/etGetStartingWeight"
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:hint="Enter your weight: " />
+
+        <TextView
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:textSize="11pt"
+            android:layout_marginBottom="10pt"
+            android:layout_marginTop="20pt"
+            android:text="Enter your diet plan info: " />
+
+
+        <EditText
+            android:id="@+id/etGetTargetCalories"
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:hint="Enter your target calories: " />
+
+        <EditText
+            android:id="@+id/etGetTargetProteins"
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:hint="Enter your target proteins: " />
+
+        <EditText
+            android:id="@+id/etGetTargetFats"
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:hint="Enter your target fats: " />
+
+        <Button
+            android:id="@+id/btRegister"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10pt"
+            android:text="Register" />
+    </LinearLayout>
+
+</RelativeLayout>

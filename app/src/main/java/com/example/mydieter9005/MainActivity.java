@@ -86,6 +86,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         me = getIntent();
+        if(me.hasExtra("cameFromLogin")){
+            Toast.makeText(this, "Welcome back " + User.getCurrentUser().getUsername() + "!.", Toast.LENGTH_SHORT).show();
+            me.removeExtra("cameFromLogin");
+        }
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd_MM_yyyy");
         LocalDateTime today = LocalDateTime.now();
@@ -168,6 +172,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             Ingredient.initiateIngredientsList();
             initiateIngredientsPictures();
+
+            me.setClass(this, Login.class);
+            startActivity(me);
         }
         return me;
     }
