@@ -38,8 +38,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     EditText etGetUsername, etGetPassword, etGetEmail, etGetStartingWeight;
     EditText etGetTargetCalories, etGetTargetProteins, etGetTargetFats;
+    Button btRegister, btGoToLogin;
     LinearLayout linearLayout;
-    Button btRegister;
 
     Song activeSong = Song.getSongs().get(0);
     ArrayList<String> usernamesList = new ArrayList<String>();
@@ -73,6 +73,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         etGetTargetProteins = (EditText) findViewById(R.id.etGetTargetProteins);
         etGetTargetFats = (EditText) findViewById(R.id.etGetTargetFats);
 
+        btGoToLogin = (Button) findViewById(R.id.btGoToLogin);
+        btGoToLogin.setOnClickListener(this);
         btRegister = (Button) findViewById(R.id.btRegister);
         btRegister.setOnClickListener(this);
 
@@ -131,30 +133,66 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
             passTests = false;
         }
+        else{
+            if(etGetPassword.getText().toString().length() < 4 && passTests){
+                Toast.makeText(this, "Password should be at least 4 characters wide.", Toast.LENGTH_SHORT).show();
+                passTests = false;
+            }
+        }
 
         if(etGetEmail.getText().toString().replaceAll(" ", "").equals("") && passTests) {
             Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
             passTests = false;
+        }
+        else{
+            if(!etGetEmail.getText().toString().contains("@") && passTests){
+                Toast.makeText(this, "Email address should have @ in them.", Toast.LENGTH_SHORT).show();
+                passTests = false;
+            }
         }
 
         if(etGetStartingWeight.getText().toString().replaceAll(" ", "").equals("") && passTests) {
             Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
             passTests = false;
         }
+        else{
+            if(!(0 < Double.parseDouble(etGetStartingWeight.getText().toString()) && Double.parseDouble(etGetStartingWeight.getText().toString()) < 500) && passTests){
+                Toast.makeText(this, "Starting weight should be between 0 to 500 kg.", Toast.LENGTH_SHORT).show();
+                passTests = false;
+            }
+        }
 
         if(etGetTargetCalories.getText().toString().replaceAll(" ", "").equals("") && passTests){
             Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
             passTests = false;
+        }
+        else{
+            if(!(0 < Double.parseDouble(etGetTargetCalories.getText().toString()) && Double.parseDouble(etGetTargetCalories.getText().toString()) < 5000) && passTests){
+                Toast.makeText(this, "Target calories should be between 0 to 5000.", Toast.LENGTH_SHORT).show();
+                passTests = false;
+            }
         }
 
         if(etGetTargetProteins.getText().toString().replaceAll(" ", "").equals("") && passTests){
             Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
             passTests = false;
         }
+        else{
+            if(!(0 < Double.parseDouble(etGetTargetProteins.getText().toString()) && Double.parseDouble(etGetTargetProteins.getText().toString()) < 1000) && passTests){
+                Toast.makeText(this, "Target proteins should be between 0 to 1000.", Toast.LENGTH_SHORT).show();
+                passTests = false;
+            }
+        }
 
         if(etGetTargetFats.getText().toString().replaceAll(" ", "").equals("") && passTests){
             Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
             passTests = false;
+        }
+        else{
+            if(!(0 < Double.parseDouble(etGetTargetFats.getText().toString()) && Double.parseDouble(etGetTargetFats.getText().toString()) < 1000) && passTests){
+                Toast.makeText(this, "Target fats should be between 0 to 1000.", Toast.LENGTH_SHORT).show();
+                passTests = false;
+            }
         }
 
         return passTests;
@@ -185,6 +223,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 }
             }
         });
+    }
+
+    public void goToLogin(){
+        me.setClass(this, Login.class);
+        startActivity(me);
     }
 
     public String getFileData(String fileName){
@@ -322,5 +365,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
         if(viewId == btRegister.getId())
             createUserAndUserPlan();
+
+        if(viewId == btGoToLogin.getId())
+            goToLogin();
     }
 }

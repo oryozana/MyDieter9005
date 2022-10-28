@@ -39,7 +39,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     LinearLayout linearLayout;
     EditText etGetUsernameLoginInfo, etGetPasswordLoginInfo;
-    Button btLogin;
+    Button btLogin, btGoToRegister;
 
     Song activeSong = Song.getSongs().get(0);
 
@@ -66,6 +66,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         etGetUsernameLoginInfo = (EditText) findViewById(R.id.etGetUsernameLoginInfo);
         etGetPasswordLoginInfo = (EditText) findViewById(R.id.etGetPasswordLoginInfo);
 
+        btGoToRegister = (Button) findViewById(R.id.btGoToRegister);
+        btGoToRegister.setOnClickListener(this);
         btLogin = (Button) findViewById(R.id.btLogin);
         btLogin.setOnClickListener(this);
 
@@ -130,6 +132,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 //        ad = adb.create();
 //        ad.show();
 //    }
+
+    public void goToRegister(){
+        me.setClass(this, Register.class);
+        startActivity(me);
+    }
 
     public String getFileData(String fileName){
         String currentLine = "", allData = "";
@@ -266,5 +273,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         if(viewId == btLogin.getId())
             getUserFromFirebaseDatabase(etGetUsernameLoginInfo.getText().toString(), etGetPasswordLoginInfo.getText().toString());
+
+        if(viewId == btGoToRegister.getId())
+            goToRegister();
     }
 }

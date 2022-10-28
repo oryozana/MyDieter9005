@@ -53,6 +53,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10pt"
             android:text="Login" />
+
+        <Button
+            android:id="@+id/btGoToRegister"
+            android:layout_width="75pt"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4pt"
+            android:text="Register" />
     </LinearLayout>
 
 </RelativeLayout>
