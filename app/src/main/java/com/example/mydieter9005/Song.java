@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Song extends AppCompatActivity implements Serializable {
     private static ArrayList<Song> songs = new ArrayList<Song>(); // Contain every song basic info.
-    private String name;
+    private final String name;
     private boolean isPlaying;
     private final int id;
 
