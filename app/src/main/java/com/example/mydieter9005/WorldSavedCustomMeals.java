@@ -416,6 +416,12 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
             me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
+
+        if(itemID == R.id.sendToUserScreen){
+            me.setClass(WorldSavedCustomMeals.this, UserInfoScreen.class);
+            me.putExtra("cameToUserScreenFrom", getLocalClassName());
+            startActivity(me);
+        }
         return super.onOptionsItemSelected(item);
     }
 

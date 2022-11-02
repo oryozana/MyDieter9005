@@ -217,6 +217,12 @@ public class ingredientsPickup extends AppCompatActivity implements View.OnClick
             me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
+
+        if(itemID == R.id.sendToUserScreen){
+            me.setClass(ingredientsPickup.this, UserInfoScreen.class);
+            me.putExtra("cameToUserScreenFrom", getLocalClassName());
+            startActivity(me);
+        }
         return super.onOptionsItemSelected(item);
     }
 

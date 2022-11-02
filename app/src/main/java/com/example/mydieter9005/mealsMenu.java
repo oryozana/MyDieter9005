@@ -199,6 +199,12 @@ public class mealsMenu extends AppCompatActivity implements View.OnClickListener
             me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
+
+        if(itemID == R.id.sendToUserScreen){
+            me.setClass(mealsMenu.this, UserInfoScreen.class);
+            me.putExtra("cameToUserScreenFrom", getLocalClassName());
+            startActivity(me);
+        }
         return super.onOptionsItemSelected(item);
     }
 

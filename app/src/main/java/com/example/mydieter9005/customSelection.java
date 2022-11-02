@@ -118,7 +118,6 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
             double grams = getGrams(mealIngredients[i]);
 
             Ingredient ingredient = Ingredient.getIngredientByName(name);
-            Toast.makeText(this, ingredient.getName() + "", Toast.LENGTH_SHORT).show();
             ingredientsFound.add(new Ingredient(ingredient, grams));
         }
 
@@ -411,6 +410,12 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
         if(itemID == R.id.sendToSettings){
             me.setClass(customSelection.this, settingsSetter.class);
             me.putExtra("cameToSettingsFrom", getLocalClassName());
+            startActivity(me);
+        }
+
+        if(itemID == R.id.sendToUserScreen){
+            me.setClass(customSelection.this, UserInfoScreen.class);
+            me.putExtra("cameToUserScreenFrom", getLocalClassName());
             startActivity(me);
         }
         return super.onOptionsItemSelected(item);

@@ -275,6 +275,12 @@ public class ingredientsSelection extends AppCompatActivity implements View.OnCl
             me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
+
+        if(itemID == R.id.sendToUserScreen){
+            me.setClass(ingredientsSelection.this, UserInfoScreen.class);
+            me.putExtra("cameToUserScreenFrom", getLocalClassName());
+            startActivity(me);
+        }
         return super.onOptionsItemSelected(item);
     }
 

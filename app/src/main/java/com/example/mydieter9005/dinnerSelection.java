@@ -403,6 +403,12 @@ public class dinnerSelection extends AppCompatActivity implements View.OnClickLi
             me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
+
+        if(itemID == R.id.sendToUserScreen){
+            me.setClass(dinnerSelection.this, UserInfoScreen.class);
+            me.putExtra("cameToUserScreenFrom", getLocalClassName());
+            startActivity(me);
+        }
         return super.onOptionsItemSelected(item);
     }
 

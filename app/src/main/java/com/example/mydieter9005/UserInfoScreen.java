@@ -133,7 +133,7 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.user_menu, menu);
         return true;
     }
 
