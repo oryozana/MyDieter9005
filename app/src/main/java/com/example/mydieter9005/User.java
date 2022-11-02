@@ -10,14 +10,16 @@ public class User implements Serializable {
     private double startingWeight;
     private double weight;
     private Plan currentPlan;
+    private int profilePictureId;
 
-    public User(String username, String password, String Email, double startingWeight, Plan currentPlan){
+    public User(String username, String password, String Email, double startingWeight, Plan currentPlan, int profilePictureId){
         this.username = username;
         this.password = password;
         this.Email = Email;
         this.startingWeight = startingWeight;
         this.weight = startingWeight;
         this.currentPlan = currentPlan;
+        this.profilePictureId = profilePictureId;
     }
 
     public String getUsername() {
@@ -62,6 +64,14 @@ public class User implements Serializable {
 
     public void setCurrentPlan(Plan currentPlan) {
         this.currentPlan = currentPlan;
+    }
+
+    public int getProfilePictureId() {
+        return profilePictureId;
+    }
+
+    public void setProfilePictureId(int profilePictureId) {
+        this.profilePictureId = profilePictureId;
     }
 
     public static User getCurrentUser() {

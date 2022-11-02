@@ -13,4 +13,10 @@
         android:icon="@drawable/ic_settings_icon"
         android:title="Settings"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/sendToUserScreen"
+        android:icon="@drawable/ic_account_icon"
+        android:title="Settings"
+        app:showAsAction="ifRoom" />
 </menu>

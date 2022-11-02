@@ -53,7 +53,7 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
 
     FirebaseDatabase recipesDb;
     DatabaseReference databaseReference;
-    String userName = "ori";
+    String userName = User.getCurrentUser().getUsername();
 
     FileInputStream is;
     InputStreamReader isr;

@@ -44,7 +44,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     Song activeSong = Song.getSongs().get(0);
     ArrayList<String> usernamesList = new ArrayList<String>();
 
-    FirebaseDatabase recipesDb;
+    FirebaseDatabase usersDb;
     DatabaseReference databaseReference;
 
     FileInputStream is;
@@ -95,15 +95,17 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             String password = etGetPassword.getText().toString();
             String email = etGetEmail.getText().toString();
             double startingWeight = Double.parseDouble(etGetStartingWeight.getText().toString());
-            User user = new User(username, password, email, startingWeight, userPlan);
+
+            int profilePictureId = getResources().getIdentifier("user_picture_" + (((int)(Math.random() * 6)) + 1), "drawable", getPackageName());
+            User user = new User(username, password, email, startingWeight, userPlan, profilePictureId);
 
             saveUserInFirebase(user);
         }
     }
 
     public void saveUserInFirebase(User user){
-        recipesDb = FirebaseDatabase.getInstance();
-        databaseReference = recipesDb.getReference("users");
+        usersDb = FirebaseDatabase.getInstance();
+        databaseReference = usersDb.getReference("users");
         databaseReference.child(user.getUsername()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

@@ -222,6 +222,10 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
                 me.setClass(settingsSetter.this, Register.class);
             if(cameToSettingsFrom.equals("Login"))
                 me.setClass(settingsSetter.this, Login.class);
+            if(cameToSettingsFrom.equals("UserInfoScreen"))
+                me.setClass(settingsSetter.this, UserInfoScreen.class);
+            if(cameToSettingsFrom.equals("ProfilePictureSelection"))
+                me.setClass(settingsSetter.this, ProfilePictureSelection.class);
 
             startActivity(me);
         }

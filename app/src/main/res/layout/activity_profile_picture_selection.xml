@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ProfilePictureSelection">
+
+    <VideoView
+        android:id="@+id/profilePictureSelectionVideoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true" />
+
+    <LinearLayout
+        android:id="@+id/profilePictureSelectionLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:textSize="10pt"
+            android:text="You can choose a profile picture from the selection below: " />
+
+        <ImageView
+            android:id="@+id/ivProfilePictureSelector"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="20pt"
+            android:layout_marginBottom="20pt"/>
+
+        <androidx.gridlayout.widget.GridLayout
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            app:orientation="horizontal"
+            android:layoutDirection="ltr">
+
+            <ImageButton
+                android:id="@+id/ibtPreviousPicture"
+                android:layout_width="25pt"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_previous_arrow_icon"
+                android:visibility="invisible"
+                android:layoutDirection="ltr"/>
+
+            <TextView
+                android:id="@+id/tvPictureNumberOutOf"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="8pt"
+                android:gravity="center|bottom"
+                android:text="   Picture number 0 out of 6   " />
+
+            <ImageButton
+                android:id="@+id/ibtNextPicture"
+                android:layout_width="25pt"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_next_arrow_icon"
+                android:layoutDirection="ltr"/>
+
+        </androidx.gridlayout.widget.GridLayout>
+
+        <Button
+            android:id="@+id/btChoseProfilePicture"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15pt"
+            android:text="Choose this one" />
+    </LinearLayout>
+
+</RelativeLayout>

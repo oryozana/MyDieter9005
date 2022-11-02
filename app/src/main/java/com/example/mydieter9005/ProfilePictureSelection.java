@@ -1,10 +1,8 @@
 package com.example.mydieter9005;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -14,14 +12,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -30,20 +29,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
-public class Login extends AppCompatActivity implements View.OnClickListener {
+public class ProfilePictureSelection extends AppCompatActivity implements View.OnClickListener {
 
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
+    ImageButton ibtPreviousPicture, ibtNextPicture;
+    ImageView ivProfilePictureSelector;
+    Button btChoseProfilePicture;
+    TextView tvPictureNumberOutOf;
     LinearLayout linearLayout;
-    EditText etGetUsernameLoginInfo, etGetPasswordLoginInfo;
-    Button btLogin, btGoToRegister;
 
     Song activeSong = Song.getSongs().get(0);
+    int currentIndex = 0, maxAmount = 6;
 
-    FirebaseDatabase recipesDb;
+    FirebaseDatabase usersDb;
     DatabaseReference databaseReference;
 
     FileInputStream is;
@@ -54,89 +55,76 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_profile_picture_selection);
 
         me = getIntent();
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
 
-        linearLayout = (LinearLayout) findViewById(R.id.loginLinearLayout);
-        videoView = (VideoView) findViewById(R.id.loginVideoView);
+        linearLayout = (LinearLayout) findViewById(R.id.profilePictureSelectionLinearLayout);
+        videoView = (VideoView) findViewById(R.id.profilePictureSelectionVideoView);
 
-        etGetUsernameLoginInfo = (EditText) findViewById(R.id.etGetUsernameLoginInfo);
-        etGetPasswordLoginInfo = (EditText) findViewById(R.id.etGetPasswordLoginInfo);
+        ivProfilePictureSelector = (ImageView) findViewById(R.id.ivProfilePictureSelector);
+        tvPictureNumberOutOf = (TextView) findViewById(R.id.tvPictureNumberOutOf);
 
-        btGoToRegister = (Button) findViewById(R.id.btGoToRegister);
-        btGoToRegister.setOnClickListener(this);
-        btLogin = (Button) findViewById(R.id.btLogin);
-        btLogin.setOnClickListener(this);
+        btChoseProfilePicture = (Button) findViewById(R.id.btChoseProfilePicture);
+        btChoseProfilePicture.setOnClickListener(this);
+
+        ibtPreviousPicture = (ImageButton) findViewById(R.id.ibtPreviousPicture);
+        ibtPreviousPicture.setOnClickListener(this);
+        ibtNextPicture = (ImageButton) findViewById(R.id.ibtNextPicture);
+        ibtNextPicture.setOnClickListener(this);
 
         implementSettingsData();
         initiateVideoPlayer();
         initiateMediaPlayer();
     }
 
-    public void getUserFromFirebaseDatabase(String username, String entered_password){
-        databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        databaseReference.child(username).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    if(task.getResult().exists()){
-                        DataSnapshot dataSnapshot = task.getResult();
-                        String username = dataSnapshot.getKey();
-                        String password = String.valueOf(dataSnapshot.child("password").getValue());
-
-                        if(entered_password.equals(password)){
-                            double targetCalories = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetCalories").getValue()));
-                            double targetProteins = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetProteins").getValue()));
-                            double targetFats = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetFats").getValue()));
-                            Plan plan = new Plan(targetCalories, targetProteins, targetFats);
-
-                            String email = String.valueOf(dataSnapshot.child("email").getValue());
-                            double startingWeight = Double.parseDouble(String.valueOf(dataSnapshot.child("startingWeight").getValue()));
-                            int profilePictureId = Integer.parseInt(String.valueOf(dataSnapshot.child("profilePictureId").getValue()));
-                            User.setCurrentUser(new User(username, password, email, startingWeight, plan, profilePictureId));
-
-                            me.setClass(Login.this, MainActivity.class);
-                            me.putExtra("cameFromLogin", 0);
-                            startActivity(me);
-                        }
-                        else
-                            Toast.makeText(Login.this, "Username or password incorrect.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else{
-                    Toast.makeText(Login.this, "Username or password incorrect.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+    public void setImageBasedOnIndex(){
+        ivProfilePictureSelector.setImageResource(getResources().getIdentifier("user_picture_" + (currentIndex), "drawable", getPackageName()));
     }
 
-//    public void notEvenOneUserAdded(){
-//        AlertDialog ad;
-//        AlertDialog.Builder adb;
-//        adb = new AlertDialog.Builder(this);
-//        adb.setTitle("Users not found!");
-//        adb.setMessage("It's seems like no one sing up for now, you can be the first!.");
-//        adb.setIcon(R.drawable.ic_users_not_found_icon);
-//        adb.setCancelable(false);
-//
-//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                me.setClass(Login.this, Register.class);
-//                startActivity(me);
-//            }
-//        });
-//
-//        ad = adb.create();
-//        ad.show();
-//    }
+    public void previousPicture(){
+        if(0 < currentIndex && currentIndex <= maxAmount){
+            currentIndex--;
+            tvPictureNumberOutOf.setText("   Picture number " + currentIndex + " out of " + maxAmount + "   ");
+            setImageBasedOnIndex();
 
-    public void goToRegister(){
-        me.setClass(this, Register.class);
-        startActivity(me);
+            ibtNextPicture.setVisibility(View.VISIBLE);
+            if(currentIndex == 1)
+                ibtPreviousPicture.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void nextPicture(){
+        if(0 <= currentIndex && currentIndex < maxAmount){
+            currentIndex++;
+            tvPictureNumberOutOf.setText("   Picture number " + currentIndex + " out of " + maxAmount + "   ");
+            setImageBasedOnIndex();
+
+            if(1 < currentIndex)
+                ibtPreviousPicture.setVisibility(View.VISIBLE);
+            if(currentIndex == maxAmount)
+                ibtNextPicture.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void profilePictureSelected(){
+        User.getCurrentUser().setProfilePictureId(getResources().getIdentifier("user_picture_" + (currentIndex), "drawable", getPackageName()));
+        saveUserInFirebase(User.getCurrentUser());
+    }
+
+    public void saveUserInFirebase(User user){
+        usersDb = FirebaseDatabase.getInstance();
+        databaseReference = usersDb.getReference("users");
+        databaseReference.child(user.getUsername()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(ProfilePictureSelection.this, "User profile picture successfully changed.", Toast.LENGTH_SHORT).show();
+                me.setClass(ProfilePictureSelection.this, UserInfoScreen.class);
+                startActivity(me);
+            }
+        });
     }
 
     public String getFileData(String fileName){
@@ -195,7 +183,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void initiateMediaPlayer(){
-        mediaPlayer = MediaPlayer.create(Login.this, activeSong.getId());
+        mediaPlayer = MediaPlayer.create(ProfilePictureSelection.this, activeSong.getId());
         mediaPlayer.setLooping(true);
         if(me.getBooleanExtra("playMusic", true)){
             mediaPlayer.start();
@@ -213,13 +201,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemID = item.getItemId();
         if(itemID == R.id.sendToMusicMaster){
-            me.setClass(Login.this, musicMaster.class);
+            me.setClass(ProfilePictureSelection.this, musicMaster.class);
             me.putExtra("cameToMusicMasterFrom", getLocalClassName());
             startActivity(me);
         }
 
         if(itemID == R.id.sendToSettings){
-            me.setClass(Login.this, settingsSetter.class);
+            me.setClass(ProfilePictureSelection.this, settingsSetter.class);
             me.putExtra("cameToSettingsFrom", getLocalClassName());
             startActivity(me);
         }
@@ -272,15 +260,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         int viewId = v.getId();
 
-        if(viewId == btLogin.getId())
-            getUserFromFirebaseDatabase(etGetUsernameLoginInfo.getText().toString(), etGetPasswordLoginInfo.getText().toString());
+        if(viewId == ibtNextPicture.getId())
+            nextPicture();
 
-        if(viewId == btGoToRegister.getId())
-            goToRegister();
-    }
+        if(viewId == ibtPreviousPicture.getId())
+            previousPicture();
 
-    @Override
-    public void onBackPressed(){
-
+        if(viewId == btChoseProfilePicture.getId())
+            profilePictureSelected();
     }
 }
