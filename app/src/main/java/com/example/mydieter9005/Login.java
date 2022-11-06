@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,7 +44,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     Song activeSong = Song.getSongs().get(0);
 
-    FirebaseDatabase recipesDb;
+    FirebaseDatabase usersDb;
     DatabaseReference databaseReference;
 
     FileInputStream is;

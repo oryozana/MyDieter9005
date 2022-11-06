@@ -37,7 +37,7 @@
             android:layout_marginBottom="20pt"/>
 
         <androidx.gridlayout.widget.GridLayout
-            android:layout_width="150pt"
+            android:layout_width="160pt"
             android:layout_height="wrap_content"
             app:orientation="horizontal"
             android:layoutDirection="ltr">
@@ -55,8 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textSize="8pt"
-                android:gravity="center|bottom"
-                android:text="   Picture number 0 out of 6   " />
+                android:gravity="center|bottom" />
 
             <ImageButton
                 android:id="@+id/ibtNextPicture"

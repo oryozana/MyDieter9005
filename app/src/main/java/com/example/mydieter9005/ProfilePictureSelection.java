@@ -42,7 +42,7 @@ public class ProfilePictureSelection extends AppCompatActivity implements View.O
     LinearLayout linearLayout;
 
     Song activeSong = Song.getSongs().get(0);
-    int currentIndex = 0, maxAmount = 6;
+    int currentIndex = 0, maxAmount = 10;
 
     FirebaseDatabase usersDb;
     DatabaseReference databaseReference;
@@ -75,6 +75,7 @@ public class ProfilePictureSelection extends AppCompatActivity implements View.O
         ibtNextPicture = (ImageButton) findViewById(R.id.ibtNextPicture);
         ibtNextPicture.setOnClickListener(this);
 
+        nextPicture();
         implementSettingsData();
         initiateVideoPlayer();
         initiateMediaPlayer();
@@ -87,7 +88,7 @@ public class ProfilePictureSelection extends AppCompatActivity implements View.O
     public void previousPicture(){
         if(0 < currentIndex && currentIndex <= maxAmount){
             currentIndex--;
-            tvPictureNumberOutOf.setText("   Picture number " + currentIndex + " out of " + maxAmount + "   ");
+            tvPictureNumberOutOf.setText("  Picture number " + currentIndex + " out of " + maxAmount + "  ");
             setImageBasedOnIndex();
 
             ibtNextPicture.setVisibility(View.VISIBLE);

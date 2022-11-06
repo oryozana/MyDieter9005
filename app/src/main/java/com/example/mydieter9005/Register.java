@@ -43,6 +43,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     Song activeSong = Song.getSongs().get(0);
     ArrayList<String> usernamesList = new ArrayList<String>();
+    int userPicturesAmount = 10;
 
     FirebaseDatabase usersDb;
     DatabaseReference databaseReference;
@@ -96,7 +97,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             String email = etGetEmail.getText().toString();
             double startingWeight = Double.parseDouble(etGetStartingWeight.getText().toString());
 
-            int profilePictureId = getResources().getIdentifier("user_picture_" + (((int)(Math.random() * 6)) + 1), "drawable", getPackageName());
+            int profilePictureId = getResources().getIdentifier("user_picture_" + (((int)(Math.random() * userPicturesAmount)) + 1), "drawable", getPackageName());
             User user = new User(username, password, email, startingWeight, userPlan, profilePictureId);
 
             saveUserInFirebase(user);
