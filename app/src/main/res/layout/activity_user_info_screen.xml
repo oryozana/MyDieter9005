@@ -54,5 +54,37 @@
             android:layout_marginTop="10pt"
             android:text="Change picture" />
 
+        <TextView
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:textSize="8pt"
+            android:layout_marginTop="15pt"
+            android:layout_marginBottom="15pt"
+            android:gravity="center"
+            android:text="You can change your password here: " />
+
+        <EditText
+            android:id="@+id/etGetOldPassword"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Enter old password: " />
+
+        <EditText
+            android:id="@+id/etGetNewPassword"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Enter old password: " />
+
+        <Button
+            android:id="@+id/btChangePassword"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10pt"
+            android:text="Change password" />
+
     </LinearLayout>
 </RelativeLayout>
