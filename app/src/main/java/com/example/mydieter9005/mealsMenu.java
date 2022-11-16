@@ -1,9 +1,12 @@
 package com.example.mydieter9005;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,6 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +71,45 @@ public class mealsMenu extends AppCompatActivity implements View.OnClickListener
         implementSettingsData();
         initiateMediaPlayer();
         updateMeals();
+    }
+
+    public void chooseMealType(){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Choose meal type!");
+        adb.setIcon(R.drawable.ic_food_icon);
+
+        LinearLayout alertDialogLinearLayout = new LinearLayout(getApplicationContext());
+        alertDialogLinearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        Button chooseBreakfast = new Button(getApplicationContext());
+        chooseBreakfast.setOnClickListener(this);
+        alertDialogLinearLayout.addView(chooseBreakfast);
+
+        Button chooseLunch = new Button(getApplicationContext());
+        chooseLunch.setOnClickListener(this);
+        alertDialogLinearLayout.addView(chooseLunch);
+
+        Button chooseDinner = new Button(getApplicationContext());
+        chooseDinner.setOnClickListener(this);
+        alertDialogLinearLayout.addView(chooseDinner);
+
+        Button chooseCustom = new Button(getApplicationContext());
+        chooseCustom.setOnClickListener(this);
+        alertDialogLinearLayout.addView(chooseCustom);
+
+        adb.setView(alertDialogLinearLayout);
+
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
     }
 
     public void updateMeals(){

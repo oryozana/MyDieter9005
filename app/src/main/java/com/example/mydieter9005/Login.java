@@ -8,7 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,6 +37,8 @@ import java.util.ArrayList;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
 
+    private NetworkConnectionReceiver networkConnectionReceiver;
+
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
@@ -60,6 +64,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         me = getIntent();
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
+
+        networkConnectionReceiver = new NetworkConnectionReceiver();
 
         linearLayout = (LinearLayout) findViewById(R.id.loginLinearLayout);
         videoView = (VideoView) findViewById(R.id.loginVideoView);
@@ -224,6 +230,15 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+
+        IntentFilter networkConnectionFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            registerReceiver(networkConnectionReceiver, networkConnectionFilter);
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            registerReceiver(networkConnectionReceiver, networkConnectionFilter);
+        }
+
         mediaPlayer.start();
         if(!me.getBooleanExtra("playMusic", true)){
             mediaPlayer.stop();
@@ -232,6 +247,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onPause() {
+
+        try{
+            unregisterReceiver(networkConnectionReceiver);
+        }
+        catch (IllegalArgumentException e){
+            e.getStackTrace();
+        }
+
         videoView.suspend();
         mediaPlayer.pause();
         super.onPause();

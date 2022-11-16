@@ -6,8 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -41,6 +44,8 @@ import java.util.ArrayList;
 
 public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnClickListener {
 
+    private NetworkConnectionReceiver networkConnectionReceiver;
+
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
@@ -73,6 +78,8 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
         me = getIntent();
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
+
+        networkConnectionReceiver = new NetworkConnectionReceiver();
 
         listView = (ListView) findViewById(R.id.lvWorldSavedCustomMeals);
         videoView = (VideoView) findViewById(R.id.worldSavedCustomMealsVideoView);
@@ -446,6 +453,15 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
     @Override
     protected void onResume() {
         super.onResume();
+
+        IntentFilter networkConnectionFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            registerReceiver(networkConnectionReceiver, networkConnectionFilter);
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            registerReceiver(networkConnectionReceiver, networkConnectionFilter);
+        }
+
         mediaPlayer.start();
         if(!me.getBooleanExtra("playMusic", true)){
             mediaPlayer.stop();
@@ -454,6 +470,14 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
 
     @Override
     protected void onPause() {
+
+        try{
+            unregisterReceiver(networkConnectionReceiver);
+        }
+        catch (IllegalArgumentException e){
+            e.getStackTrace();
+        }
+
         videoView.suspend();
         mediaPlayer.pause();
         super.onPause();

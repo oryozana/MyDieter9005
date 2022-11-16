@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.mydieter9005">
 
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,6 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyDieter9005"
         tools:targetApi="31">
+        <receiver
+            android:name=".NetworkConnectionReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
+
         <activity
             android:name=".ProfilePictureSelection"
             android:exported="false">
