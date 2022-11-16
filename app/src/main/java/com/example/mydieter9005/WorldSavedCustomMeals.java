@@ -351,9 +351,6 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
         networkConnectionReceiver = new NetworkConnectionReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                // TODO: This method is called when the BroadcastReceiver is receiving
-                // an Intent broadcast.
-
                 try{
                     if(!isOnline(context))
                         noInternetAccess(context);
