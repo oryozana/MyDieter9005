@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 
 public class NetworkConnectionReceiver extends BroadcastReceiver {
 
@@ -46,9 +47,10 @@ public class NetworkConnectionReceiver extends BroadcastReceiver {
         adb = new AlertDialog.Builder(context);
         adb.setTitle("Internet connection not found!");
         adb.setMessage("Connect to the internet and try again.");
+        adb.setIcon(R.drawable.ic_network_not_found);
         adb.setCancelable(false);
 
-        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        adb.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(!isOnline(context))

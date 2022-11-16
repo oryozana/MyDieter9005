@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -79,8 +80,6 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
 
-        networkConnectionReceiver = new NetworkConnectionReceiver();
-
         listView = (ListView) findViewById(R.id.lvWorldSavedCustomMeals);
         videoView = (VideoView) findViewById(R.id.worldSavedCustomMealsVideoView);
         linearLayout = (LinearLayout) findViewById(R.id.worldSavedCustomMealsLinearLayout);
@@ -104,6 +103,7 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
             public void afterTextChanged(Editable s) {}
         });
 
+        setCustomNetworkConnectionReceiver();
         implementSettingsData();
         setListViewAdapter();
         initiateVideoPlayer();
@@ -111,6 +111,7 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
     }
 
     public void initiateListViewFields(){
+        mealsList.clear();
         databaseReference = FirebaseDatabase.getInstance().getReference("recipes");
         databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -136,6 +137,13 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
 
                             mealsList.add(new Meal(mealName, ingredientsNeededInfo));
                             adapter.notifyDataSetChanged();
+                        }
+
+                        try{
+                            unregisterReceiver(networkConnectionReceiver);
+                        }
+                        catch (IllegalArgumentException e){
+                            e.getStackTrace();
                         }
                     }
                     else{
@@ -337,6 +345,55 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
             me.setClass(WorldSavedCustomMeals.this, customSelection.class);
             startActivity(me);
         }
+    }
+
+    public void setCustomNetworkConnectionReceiver(){
+        networkConnectionReceiver = new NetworkConnectionReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // TODO: This method is called when the BroadcastReceiver is receiving
+                // an Intent broadcast.
+
+                try{
+                    if(!isOnline(context))
+                        noInternetAccess(context);
+                    else
+                        Toast.makeText(context, "Network connection available.", Toast.LENGTH_SHORT).show();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void noInternetAccess(Context context){
+                AlertDialog ad;
+                AlertDialog.Builder adb;
+                adb = new AlertDialog.Builder(context);
+                adb.setTitle("Internet connection not found!");
+                adb.setMessage("Connect to the internet and try again.");
+                adb.setIcon(R.drawable.ic_network_not_found);
+                adb.setCancelable(false);
+
+                adb.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(!isOnline(context))
+                            noInternetAccess(context);
+                    }
+                });
+
+                adb.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+
+                ad = adb.create();
+                ad.show();
+            }
+        };
     }
 
     public String getFileData(String fileName){

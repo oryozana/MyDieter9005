@@ -1,8 +1,11 @@
 package com.example.mydieter9005;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -67,8 +70,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
 
-        networkConnectionReceiver = new NetworkConnectionReceiver();
-
         linearLayout = (LinearLayout) findViewById(R.id.registerLinearLayout);
         videoView = (VideoView) findViewById(R.id.registerVideoView);
 
@@ -86,6 +87,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         btRegister = (Button) findViewById(R.id.btRegister);
         btRegister.setOnClickListener(this);
 
+        setCustomNetworkConnectionReceiver();
         getAllExistingUsernames();
         implementSettingsData();
         initiateVideoPlayer();
@@ -238,6 +240,39 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     public void goToLogin(){
         me.setClass(this, Login.class);
         startActivity(me);
+    }
+
+    public void setCustomNetworkConnectionReceiver(){
+        networkConnectionReceiver = new NetworkConnectionReceiver() {
+            @Override
+            public void noInternetAccess(Context context){
+                AlertDialog ad;
+                AlertDialog.Builder adb;
+                adb = new AlertDialog.Builder(context);
+                adb.setTitle("Internet connection not found!");
+                adb.setMessage("Connect to the internet and try again.");
+                adb.setIcon(R.drawable.ic_network_not_found);
+                adb.setCancelable(false);
+
+                adb.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(!isOnline(context))
+                            noInternetAccess(context);
+                    }
+                });
+
+                adb.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+
+                ad = adb.create();
+                ad.show();
+            }
+        };
     }
 
     public String getFileData(String fileName){
