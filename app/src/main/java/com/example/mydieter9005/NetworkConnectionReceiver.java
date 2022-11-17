@@ -18,8 +18,6 @@ public class NetworkConnectionReceiver extends BroadcastReceiver {
         try{
             if(!isOnline(context))
                 noInternetAccess(context);
-            else
-                Toast.makeText(context, "Network connection available.", Toast.LENGTH_SHORT).show();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -52,6 +50,8 @@ public class NetworkConnectionReceiver extends BroadcastReceiver {
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(!isOnline(context))
                     noInternetAccess(context);
+                else
+                    Toast.makeText(context, "Network connection available.", Toast.LENGTH_SHORT).show();
             }
         });
 

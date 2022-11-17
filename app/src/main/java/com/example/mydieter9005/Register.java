@@ -259,6 +259,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if(!isOnline(context))
                             noInternetAccess(context);
+                        else
+                            Toast.makeText(context, "Network connection available.", Toast.LENGTH_SHORT).show();
                     }
                 });
 

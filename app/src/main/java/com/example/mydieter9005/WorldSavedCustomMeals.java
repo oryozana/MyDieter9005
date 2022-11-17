@@ -354,8 +354,6 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
                 try{
                     if(!isOnline(context))
                         noInternetAccess(context);
-                    else
-                        Toast.makeText(context, "Network connection available.", Toast.LENGTH_SHORT).show();
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -377,6 +375,8 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if(!isOnline(context))
                             noInternetAccess(context);
+                        else
+                            Toast.makeText(context, "Network connection available.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
