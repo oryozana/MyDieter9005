@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -51,6 +54,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     FirebaseDatabase usersDb;
     DatabaseReference databaseReference;
 
+    SQLiteDatabase sqdb;
+    DBHelper my_db;
+
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
@@ -64,6 +70,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         me = getIntent();
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
+
+        my_db = new DBHelper(Login.this);
 
         networkConnectionReceiver = new NetworkConnectionReceiver();
 
@@ -105,6 +113,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             int profilePictureId = Integer.parseInt(String.valueOf(dataSnapshot.child("profilePictureId").getValue()));
                             User.setCurrentUser(new User(username, password, email, startingWeight, plan, profilePictureId));
 
+                            addLoggedUserIntoLocalDatabase(User.getCurrentUser());
+
                             me.setClass(Login.this, MainActivity.class);
                             me.putExtra("cameFromLogin", 0);
                             startActivity(me);
@@ -140,6 +150,78 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 //        ad = adb.create();
 //        ad.show();
 //    }
+
+    public void addLoggedUserIntoLocalDatabase(User user){
+        boolean added = false;
+
+        if(isDatabaseEmpty()) {
+            addUserToDatabase(user);
+            added = true;
+        }
+
+        if(!isUserAlreadyExists(user.getUsername()))
+            if(!added)
+                addUserToDatabase(user);
+    }
+
+
+    private void addUserToDatabase(User user) {
+        ContentValues cv = new ContentValues();
+
+        cv.put(my_db.USERNAME, user.getUsername());
+        cv.put(my_db.PASSWORD, user.getPassword());
+        cv.put(my_db.EMAIL, user.getEmail());
+        cv.put(my_db.STARTING_WEIGHT, user.getStartingWeight());
+        cv.put(my_db.WEIGHT, user.getWeight());
+        cv.put(my_db.TARGET_CALORIES, user.getCurrentPlan().getTargetCalories());
+        cv.put(my_db.TARGET_PROTEIN, user.getCurrentPlan().getTargetProteins());
+        cv.put(my_db.TARGET_FATS, user.getCurrentPlan().getTargetFats());
+        cv.put(my_db.PROFILE_PICTURE_ID, user.getProfilePictureId());
+
+        sqdb = my_db.getWritableDatabase();
+        sqdb.insert(my_db.TABLE_NAME, null, cv);
+        sqdb.close();
+    }
+
+    private boolean isUserAlreadyExists(String username) {
+        boolean flag = false;
+        sqdb = my_db.getWritableDatabase();
+
+        Cursor c = sqdb.query(DBHelper.TABLE_NAME,null, null, null, null, null, null);
+
+        int col1 = c.getColumnIndex(DBHelper.USERNAME);
+
+        c.moveToFirst();
+
+        while(!c.isAfterLast()) {
+            String t1 = c.getString(col1);
+
+            if(username.equals(t1))
+                flag = true;
+
+            c.moveToNext();
+        }
+
+        c.close();
+        sqdb.close();
+        return flag;
+    }
+
+    private boolean isDatabaseEmpty() {
+        sqdb = my_db.getWritableDatabase();
+        boolean flag = true;
+
+        Cursor c = sqdb.query(DBHelper.TABLE_NAME,null, null, null, null, null, null);
+        c.moveToFirst();
+
+        if(!c.isAfterLast())
+            flag = false;
+
+        c.close();
+        sqdb.close();
+
+        return flag;
+    }
 
     public void goToRegister(){
         me.setClass(this, Register.class);
@@ -277,10 +359,5 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         if(viewId == btGoToRegister.getId())
             goToRegister();
-    }
-
-    @Override
-    public void onBackPressed(){
-
     }
 }

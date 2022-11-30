@@ -4,11 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -56,6 +59,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     FirebaseDatabase usersDb;
     DatabaseReference databaseReference;
 
+    SQLiteDatabase sqdb;
+    DBHelper my_db;
+
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
@@ -69,6 +75,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         me = getIntent();
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
+
+        my_db = new DBHelper(Register.this);
 
         linearLayout = (LinearLayout) findViewById(R.id.registerLinearLayout);
         videoView = (VideoView) findViewById(R.id.registerVideoView);
@@ -109,11 +117,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             int profilePictureId = getResources().getIdentifier("user_picture_" + (((int)(Math.random() * userPicturesAmount)) + 1), "drawable", getPackageName());
             User user = new User(username, password, email, startingWeight, userPlan, profilePictureId);
 
-            saveUserInFirebase(user);
+            saveUserInFirebaseAndInDatabase(user);
         }
     }
 
-    public void saveUserInFirebase(User user){
+    public void saveUserInFirebaseAndInDatabase(User user){
         usersDb = FirebaseDatabase.getInstance();
         databaseReference = usersDb.getReference("users");
         databaseReference.child(user.getUsername()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -121,6 +129,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(Register.this, "User successfully created.", Toast.LENGTH_SHORT).show();
                 me.setClass(Register.this, MainActivity.class);
+                addRegisteredUserToDatabase(user);
                 User.setCurrentUser(user);
                 startActivity(me);
             }
@@ -135,7 +144,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             passTests = false;
         }
         else{
-            if(isUserAlreadyExists(etGetUsername.getText().toString()) && passTests){
+            if(isUserAlreadyExistsInFirebase(etGetUsername.getText().toString()) && passTests){
                 Toast.makeText(this, "Username already exists.", Toast.LENGTH_SHORT).show();
                 passTests = false;
             }
@@ -210,7 +219,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         return passTests;
     }
 
-    public boolean isUserAlreadyExists(String username){
+    public boolean isUserAlreadyExistsInFirebase(String username){
         for(int i = 0; i < usernamesList.size(); i++){
             if(usernamesList.get(i).equals(username))
                 return true;
@@ -275,6 +284,24 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 ad.show();
             }
         };
+    }
+
+    private void addRegisteredUserToDatabase(User user) {
+        ContentValues cv = new ContentValues();
+
+        cv.put(my_db.USERNAME, user.getUsername());
+        cv.put(my_db.PASSWORD, user.getPassword());
+        cv.put(my_db.EMAIL, user.getEmail());
+        cv.put(my_db.STARTING_WEIGHT, user.getStartingWeight());
+        cv.put(my_db.WEIGHT, user.getWeight());
+        cv.put(my_db.TARGET_CALORIES, user.getCurrentPlan().getTargetCalories());
+        cv.put(my_db.TARGET_PROTEIN, user.getCurrentPlan().getTargetProteins());
+        cv.put(my_db.TARGET_FATS, user.getCurrentPlan().getTargetFats());
+        cv.put(my_db.PROFILE_PICTURE_ID, user.getProfilePictureId());
+
+        sqdb = my_db.getWritableDatabase();
+        sqdb.insert(my_db.TABLE_NAME, null, cv);
+        sqdb.close();
     }
 
     public String getFileData(String fileName){

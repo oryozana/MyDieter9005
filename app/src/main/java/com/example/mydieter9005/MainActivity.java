@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -74,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     BufferedWriter bw;
     String todayDate;
     int currentHour;
+
+    SQLiteDatabase sqdb; //הכרזה על עצם ממחלקה זו שהיא מחלקה פנימית של גאווה המכילה את כל הדרוש לגישה ועבודה עם בסיסי נתונים
+    DBHelper my_db; //הכרזה על עצם ממחלקה זו שהיא מחלקת עזר לעבודה עם בסיס נתונים אותה בנינו
 
     FileInputStream is;
     InputStreamReader isr;
@@ -173,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Ingredient.initiateIngredientsList();
             initiateIngredientsPictures();
 
-            me.setClass(this, Login.class);
+            me.setClass(this, LocalUserSelection.class);
             startActivity(me);
         }
         return me;
@@ -294,9 +298,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         catch (FileNotFoundException e) {
             if(fileName.equals(me.getStringExtra("todayDate")))
                 Toast.makeText(this, "Today saved data not exists yet.", Toast.LENGTH_SHORT).show();
-            if(fileName.equals("settings")) {
-                firstInitiateCustomMealsNamesFile();  // If setting don't exist so do him.
+            if(fileName.equals("settings")) {  // If setting don't exist it's the first time opening the app.
                 firstInitiateSettingsFile();
+                firstInitiateCustomMealsNamesFile();
+                firstInitiateLocalUsersDatabase();
                 implementSettingsData();
             }
         }
@@ -464,6 +469,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void firstInitiateLocalUsersDatabase(){
+        my_db = new DBHelper(this); //הקמת העצם. העצם מכיר את הטבלה  את השדות ואת הקובץ בו נמצא בסיס הנתונים. הוא גם מוכן לביצוע פעולות.
+        sqdb = my_db.getWritableDatabase();//הכרזה כי בסיס הנתונים מאפשר כתיבת נתונים בטבלה שלו
+        sqdb.close();//סגירת ערוץ הגישה לבסיס הנתונים
     }
 
     @Override

@@ -13,6 +13,12 @@ public class Plan implements Serializable {
         this.targetFats = targetFats;
     }
 
+    public Plan(String targetCalories, String targetProteins, String targetFats) {
+        this.targetCalories = Double.parseDouble(targetCalories);
+        this.targetProteins = Double.parseDouble(targetProteins);
+        this.targetFats = Double.parseDouble(targetFats);
+    }
+
     public double getTargetCalories() {
         return targetCalories;
     }

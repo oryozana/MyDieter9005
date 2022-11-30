@@ -22,6 +22,16 @@ public class User implements Serializable {
         this.profilePictureId = profilePictureId;
     }
 
+    public User(String username, String password, String Email, String startingWeight, String targetCalories, String targetProteins, String targetFats, String profilePictureId){
+        this.username = username;
+        this.password = password;
+        this.Email = Email;
+        this.startingWeight = Double.parseDouble(startingWeight);
+        this.weight = Double.parseDouble(startingWeight);
+        this.currentPlan = new Plan(targetCalories, targetProteins, targetFats);
+        this.profilePictureId = Integer.parseInt(profilePictureId);
+    }
+
     public String getUsername() {
         return username;
     }

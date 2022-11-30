@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center|top"
+    android:orientation="vertical"
+    tools:context=".LocalUserSelection">
+
+    <VideoView
+        android:id="@+id/localUserSelectionVideoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true" />
+
+    <LinearLayout
+        android:id="@+id/localUserSelectionLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10pt"
+            android:gravity="center"
+            android:text="Pick your designed user from here:"
+            android:textSize="15pt" />
+
+        <LinearLayout
+            android:id="@+id/localUsersLinearLayout"
+            android:layout_width="160pt"
+            android:layout_height="160pt"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="160pt"
+                android:layout_height="80pt"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="70pt"
+                    android:layout_height="70pt"
+                    android:layout_margin="5pt"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ivUser1"
+                        android:layout_width="58pt"
+                        android:layout_height="58pt"
+                        android:visibility="invisible"
+                        tools:srcCompat="@tools:sample/avatars" />
+
+                    <TextView
+                        android:id="@+id/tvUser1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="8pt"
+                        android:layout_marginTop="2pt"
+                        android:visibility="invisible"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="70pt"
+                    android:layout_height="70pt"
+                    android:layout_margin="5pt"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ivUser2"
+                        android:layout_width="58pt"
+                        android:layout_height="58pt"
+                        android:visibility="invisible"
+                        tools:srcCompat="@tools:sample/avatars" />
+
+                    <TextView
+                        android:id="@+id/tvUser2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="8pt"
+                        android:layout_marginTop="2pt"
+                        android:visibility="invisible"
+                        android:gravity="center" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="160pt"
+                android:layout_height="80pt"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="70pt"
+                    android:layout_height="70pt"
+                    android:layout_margin="5pt"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ivUser3"
+                        android:layout_width="58pt"
+                        android:layout_height="58pt"
+                        android:visibility="invisible"
+                        tools:srcCompat="@tools:sample/avatars" />
+
+                    <TextView
+                        android:id="@+id/tvUser3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="8pt"
+                        android:layout_marginTop="2pt"
+                        android:visibility="invisible"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="70pt"
+                    android:layout_height="70pt"
+                    android:layout_margin="5pt"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ivUser4"
+                        android:layout_width="58pt"
+                        android:layout_height="58pt"
+                        android:visibility="invisible"
+                        tools:srcCompat="@tools:sample/avatars" />
+
+                    <TextView
+                        android:id="@+id/tvUser4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="8pt"
+                        android:layout_marginTop="2pt"
+                        android:visibility="invisible"
+                        android:gravity="center" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10pt"
+            android:gravity="center"
+            android:text="...or you can also:"
+            android:textSize="15pt" />
+
+        <Button
+            android:id="@+id/btLoginAnotherUser"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Login" />
+
+        <Button
+            android:id="@+id/btRegisterAnotherUser"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Register" />
+
+    </LinearLayout>
+</RelativeLayout>
