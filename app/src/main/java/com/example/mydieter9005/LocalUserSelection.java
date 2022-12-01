@@ -277,36 +277,6 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int itemID = item.getItemId();
-        if(itemID == R.id.sendToMusicMaster){
-            me.setClass(LocalUserSelection.this, musicMaster.class);
-            me.putExtra("cameToMusicMasterFrom", getLocalClassName());
-            startActivity(me);
-        }
-
-        if(itemID == R.id.sendToSettings){
-            me.setClass(LocalUserSelection.this, settingsSetter.class);
-            me.putExtra("cameToSettingsFrom", getLocalClassName());
-            startActivity(me);
-        }
-
-        if(itemID == R.id.sendToUserScreen){
-            me.setClass(LocalUserSelection.this, UserInfoScreen.class);
-            me.putExtra("cameToUserScreenFrom", getLocalClassName());
-            startActivity(me);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected void onPostResume() {
         super.onPostResume();
         videoView.resume();

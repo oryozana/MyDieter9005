@@ -72,6 +72,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15pt"
             android:text="Choose this one" />
+
+        <Button
+            android:id="@+id/btCancelProfilePictureSelection"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
     </LinearLayout>
 
 </RelativeLayout>

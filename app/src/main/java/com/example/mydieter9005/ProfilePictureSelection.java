@@ -1,11 +1,19 @@
 package com.example.mydieter9005;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,12 +40,14 @@ import java.io.InputStreamReader;
 
 public class ProfilePictureSelection extends AppCompatActivity implements View.OnClickListener {
 
+    private NetworkConnectionReceiver networkConnectionReceiver;
+
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
+    Button btChoseProfilePicture, btCancelProfilePictureSelection;
     ImageButton ibtPreviousPicture, ibtNextPicture;
     ImageView ivProfilePictureSelector;
-    Button btChoseProfilePicture;
     TextView tvPictureNumberOutOf;
     LinearLayout linearLayout;
 
@@ -46,6 +56,9 @@ public class ProfilePictureSelection extends AppCompatActivity implements View.O
 
     FirebaseDatabase usersDb;
     DatabaseReference databaseReference;
+
+    SQLiteDatabase sqdb;
+    DBHelper my_db;
 
     FileInputStream is;
     InputStreamReader isr;
@@ -61,12 +74,16 @@ public class ProfilePictureSelection extends AppCompatActivity implements View.O
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
 
+        my_db = new DBHelper(ProfilePictureSelection.this);
+
         linearLayout = (LinearLayout) findViewById(R.id.profilePictureSelectionLinearLayout);
         videoView = (VideoView) findViewById(R.id.profilePictureSelectionVideoView);
 
         ivProfilePictureSelector = (ImageView) findViewById(R.id.ivProfilePictureSelector);
         tvPictureNumberOutOf = (TextView) findViewById(R.id.tvPictureNumberOutOf);
 
+        btCancelProfilePictureSelection = (Button) findViewById(R.id.btCancelProfilePictureSelection);
+        btCancelProfilePictureSelection.setOnClickListener(this);
         btChoseProfilePicture = (Button) findViewById(R.id.btChoseProfilePicture);
         btChoseProfilePicture.setOnClickListener(this);
 
@@ -75,6 +92,7 @@ public class ProfilePictureSelection extends AppCompatActivity implements View.O
         ibtNextPicture = (ImageButton) findViewById(R.id.ibtNextPicture);
         ibtNextPicture.setOnClickListener(this);
 
+        setCustomNetworkConnectionReceiver();
         nextPicture();
         implementSettingsData();
         initiateVideoPlayer();
@@ -112,20 +130,83 @@ public class ProfilePictureSelection extends AppCompatActivity implements View.O
 
     public void profilePictureSelected(){
         User.getCurrentUser().setProfilePictureId(getResources().getIdentifier("user_picture_" + (currentIndex), "drawable", getPackageName()));
-        saveUserInFirebase(User.getCurrentUser());
+        updateUserProfilePictureIdInFirebaseAndDatabase(User.getCurrentUser());
     }
 
-    public void saveUserInFirebase(User user){
+    public void updateUserProfilePictureIdInFirebaseAndDatabase(User user){
         usersDb = FirebaseDatabase.getInstance();
         databaseReference = usersDb.getReference("users");
         databaseReference.child(user.getUsername()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                sqdb=my_db.getWritableDatabase();
+                ContentValues cv = new ContentValues();
+                cv.put(DBHelper.PROFILE_PICTURE_ID, user.getProfilePictureId());
+
+                sqdb.update(DBHelper.TABLE_NAME, cv,DBHelper.USERNAME+"=?", new String[]{User.getCurrentUser().getUsername()});
+                sqdb.close();
+
                 Toast.makeText(ProfilePictureSelection.this, "User profile picture successfully changed.", Toast.LENGTH_SHORT).show();
+
                 me.setClass(ProfilePictureSelection.this, UserInfoScreen.class);
                 startActivity(me);
             }
         });
+    }
+
+    public void setCustomNetworkConnectionReceiver(){
+        networkConnectionReceiver = new NetworkConnectionReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                try{
+                    if(!isOnline(context))
+                        noInternetAccess(context);
+                    else
+                        btChoseProfilePicture.setVisibility(View.VISIBLE);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void noInternetAccess(Context context){
+                AlertDialog ad;
+                AlertDialog.Builder adb;
+                adb = new AlertDialog.Builder(context);
+                adb.setTitle("Internet connection not found!");
+                adb.setMessage("Connect to the internet and try again.");
+                adb.setIcon(R.drawable.ic_network_not_found);
+                adb.setCancelable(false);
+
+                adb.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(!isOnline(context))
+                            noInternetAccess(context);
+                        else
+                            Toast.makeText(context, "Network connection available.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                adb.setNeutralButton("Just look", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        btChoseProfilePicture.setVisibility(View.INVISIBLE);
+                    }
+                });
+
+                adb.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+
+                ad = adb.create();
+                ad.show();
+            }
+        };
     }
 
     public String getFileData(String fileName){
@@ -242,6 +323,15 @@ public class ProfilePictureSelection extends AppCompatActivity implements View.O
     @Override
     protected void onResume() {
         super.onResume();
+
+        IntentFilter networkConnectionFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            registerReceiver(networkConnectionReceiver, networkConnectionFilter);
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            registerReceiver(networkConnectionReceiver, networkConnectionFilter);
+        }
+
         mediaPlayer.start();
         if(!me.getBooleanExtra("playMusic", true)){
             mediaPlayer.stop();
@@ -250,6 +340,14 @@ public class ProfilePictureSelection extends AppCompatActivity implements View.O
 
     @Override
     protected void onPause() {
+
+        try{
+            unregisterReceiver(networkConnectionReceiver);
+        }
+        catch (IllegalArgumentException e){
+            e.getStackTrace();
+        }
+
         videoView.suspend();
         mediaPlayer.pause();
         super.onPause();
@@ -275,5 +373,8 @@ public class ProfilePictureSelection extends AppCompatActivity implements View.O
 
         if(viewId == btChoseProfilePicture.getId())
             profilePictureSelected();
+
+        if(viewId == btCancelProfilePictureSelection.getId())
+            finish();
     }
 }

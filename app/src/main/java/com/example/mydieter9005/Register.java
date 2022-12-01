@@ -273,10 +273,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                     }
                 });
 
-                adb.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                adb.setNegativeButton("Offline user select", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        finish();
+                        me.setClass(Register.this, LocalUserSelection.class);
+                        startActivity(me);
                     }
                 });
 

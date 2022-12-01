@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -73,8 +74,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         my_db = new DBHelper(Login.this);
 
-        networkConnectionReceiver = new NetworkConnectionReceiver();
-
         linearLayout = (LinearLayout) findViewById(R.id.loginLinearLayout);
         videoView = (VideoView) findViewById(R.id.loginVideoView);
 
@@ -86,6 +85,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         btLogin = (Button) findViewById(R.id.btLogin);
         btLogin.setOnClickListener(this);
 
+        setCustomNetworkConnectionReceiver();
         implementSettingsData();
         initiateVideoPlayer();
         initiateMediaPlayer();
@@ -221,6 +221,42 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         sqdb.close();
 
         return flag;
+    }
+
+    public void setCustomNetworkConnectionReceiver(){
+        networkConnectionReceiver = new NetworkConnectionReceiver() {
+            @Override
+            public void noInternetAccess(Context context){
+                AlertDialog ad;
+                AlertDialog.Builder adb;
+                adb = new AlertDialog.Builder(context);
+                adb.setTitle("Internet connection not found!");
+                adb.setMessage("Connect to the internet and try again.");
+                adb.setIcon(R.drawable.ic_network_not_found);
+                adb.setCancelable(false);
+
+                adb.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(!isOnline(context))
+                            noInternetAccess(context);
+                        else
+                            Toast.makeText(context, "Network connection available.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                adb.setNegativeButton("Offline user select", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        me.setClass(Login.this, LocalUserSelection.class);
+                        startActivity(me);
+                    }
+                });
+
+                ad = adb.create();
+                ad.show();
+            }
+        };
     }
 
     public void goToRegister(){

@@ -1,11 +1,19 @@
 package com.example.mydieter9005;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +40,8 @@ import java.io.InputStreamReader;
 
 public class UserInfoScreen extends AppCompatActivity implements View.OnClickListener {
 
+    private NetworkConnectionReceiver networkConnectionReceiver;
+
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
@@ -42,9 +52,13 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
 
     Song activeSong = Song.getSongs().get(0);
     User user = User.getCurrentUser();
+    boolean internetConnection = true;
 
     FirebaseDatabase usersDb;
     DatabaseReference databaseReference;
+
+    SQLiteDatabase sqdb;
+    DBHelper my_db;
 
     FileInputStream is;
     InputStreamReader isr;
@@ -60,6 +74,8 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
 
+        my_db = new DBHelper(UserInfoScreen.this);
+
         videoView = (VideoView) findViewById(R.id.userInfoScreenVideoView);
         linearLayout = (LinearLayout) findViewById(R.id.userInfoScreenLinearLayout);
 
@@ -74,6 +90,7 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         etGetOldPassword = (EditText) findViewById(R.id.etGetOldPassword);
         etGetNewPassword = (EditText) findViewById(R.id.etGetNewPassword);
 
+        setCustomNetworkConnectionReceiver();
         implementSettingsData();
         initiateVideoPlayer();
         initiateMediaPlayer();
@@ -88,14 +105,17 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         boolean passTests = passChangePasswordTests();
 
         if(passTests){
-            String userPassword = User.getCurrentUser().getPassword();
-            if(userPassword.equals(etGetOldPassword.getText().toString())){
-                User.getCurrentUser().setPassword(etGetNewPassword.getText().toString());
-                saveUserInFirebase(User.getCurrentUser());
-                Toast.makeText(this, "Password successfully changed.", Toast.LENGTH_SHORT).show();
+            if(internetConnection){
+                String userPassword = User.getCurrentUser().getPassword();
+                if(userPassword.equals(etGetOldPassword.getText().toString())){
+                    User.getCurrentUser().setPassword(etGetNewPassword.getText().toString());
+                    updateUserPasswordInFirebaseAndInDatabase(User.getCurrentUser());
+                }
+                else
+                    Toast.makeText(this, "Wrong password.", Toast.LENGTH_SHORT).show();
             }
             else
-                Toast.makeText(this, "Wrong password.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No internet connection, can't change password.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -121,14 +141,25 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         return passTests;
     }
 
-    public void saveUserInFirebase(User user){
+    public void updateUserPasswordInFirebaseAndInDatabase(User user){
         usersDb = FirebaseDatabase.getInstance();
         databaseReference = usersDb.getReference("users");
         databaseReference.child(user.getUsername()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 User.setCurrentUser(user);
+
+                sqdb=my_db.getWritableDatabase();
+                ContentValues cv = new ContentValues();
+                cv.put(DBHelper.PASSWORD, etGetNewPassword.getText().toString());
+
+                sqdb.update(DBHelper.TABLE_NAME, cv,DBHelper.USERNAME+"=?", new String[]{User.getCurrentUser().getUsername()});
+                sqdb.close();
+
+                Toast.makeText(UserInfoScreen.this, "Password successfully changed.", Toast.LENGTH_SHORT).show();
             }
+            
+
         });
     }
 
@@ -160,6 +191,20 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
                 }
             }
         });
+    }
+
+    public void setCustomNetworkConnectionReceiver(){
+        networkConnectionReceiver = new NetworkConnectionReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                try{
+                    internetConnection = isOnline(context);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 
     public String getFileData(String fileName){
@@ -270,6 +315,15 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
+
+        IntentFilter networkConnectionFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            registerReceiver(networkConnectionReceiver, networkConnectionFilter);
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            registerReceiver(networkConnectionReceiver, networkConnectionFilter);
+        }
+        
         mediaPlayer.start();
         if(!me.getBooleanExtra("playMusic", true)){
             mediaPlayer.stop();
@@ -278,6 +332,14 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
 
     @Override
     protected void onPause() {
+
+        try{
+            unregisterReceiver(networkConnectionReceiver);
+        }
+        catch (IllegalArgumentException e){
+            e.getStackTrace();
+        }
+        
         videoView.suspend();
         mediaPlayer.pause();
         super.onPause();
