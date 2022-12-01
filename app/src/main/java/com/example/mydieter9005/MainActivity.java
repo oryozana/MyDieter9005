@@ -490,4 +490,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(viewId == btReadMealsFromExternalFile.getId())
             showFileData();
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }

@@ -147,6 +147,38 @@
             </LinearLayout>
         </LinearLayout>
 
+        <androidx.gridlayout.widget.GridLayout
+            android:id="@+id/groupSelectorGridLayout"
+            android:layout_width="160pt"
+            android:layout_height="wrap_content"
+            app:orientation="horizontal"
+            android:visibility="gone"
+            android:layoutDirection="ltr">
+
+            <ImageButton
+                android:id="@+id/ibtPreviousGroup"
+                android:layout_width="25pt"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_previous_arrow_icon"
+                android:visibility="invisible"
+                android:layoutDirection="ltr"/>
+
+            <TextView
+                android:id="@+id/tvGroupNumberOutOf"
+                android:layout_width="100pt"
+                android:layout_height="match_parent"
+                android:textSize="8pt"
+                android:gravity="center|bottom" />
+
+            <ImageButton
+                android:id="@+id/ibtNextGroup"
+                android:layout_width="25pt"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_next_arrow_icon"
+                android:layoutDirection="ltr"/>
+
+        </androidx.gridlayout.widget.GridLayout>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

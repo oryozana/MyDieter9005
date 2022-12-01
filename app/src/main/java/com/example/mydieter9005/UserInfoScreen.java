@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -31,6 +32,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -45,8 +48,9 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    Button btSendToProfilePictureSelection, btChangePassword;
+    Button btSendToProfilePictureSelection, btChangePassword, btLogoutUser;
     EditText etGetOldPassword, etGetNewPassword;
+    TextView tvUsernameDisplay;
     ImageView ivProfilePicture;
     LinearLayout linearLayout;
 
@@ -86,9 +90,14 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         btSendToProfilePictureSelection.setOnClickListener(this);
         btChangePassword = (Button) findViewById(R.id.btChangePassword);
         btChangePassword.setOnClickListener(this);
+        btLogoutUser = (Button) findViewById(R.id.btLogoutUser);
+        btLogoutUser.setOnClickListener(this);
 
         etGetOldPassword = (EditText) findViewById(R.id.etGetOldPassword);
         etGetNewPassword = (EditText) findViewById(R.id.etGetNewPassword);
+
+        tvUsernameDisplay = (TextView) findViewById(R.id.tvUsernameDisplay);
+        tvUsernameDisplay.setText(User.getCurrentUser().getUsername());
 
         setCustomNetworkConnectionReceiver();
         implementSettingsData();
@@ -191,6 +200,12 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
                 }
             }
         });
+    }
+
+    public void logoutUser(){
+        User.setCurrentUser(null);
+        me.setClass(UserInfoScreen.this, LocalUserSelection.class);
+        startActivity(me);
     }
 
     public void setCustomNetworkConnectionReceiver(){
@@ -362,6 +377,9 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
 
         if(viewId == btChangePassword.getId())
             changePassword();
+
+        if(viewId == btLogoutUser.getId())
+            logoutUser();
     }
 
     @Override

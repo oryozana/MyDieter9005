@@ -44,6 +44,14 @@
                 tools:srcCompat="@tools:sample/avatars" />
 
             <TextView
+                android:id="@+id/tvUsernameDisplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2pt"
+                android:textSize="10pt"
+                android:gravity="center" />
+
+            <TextView
                 android:layout_width="150pt"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15pt"
@@ -89,6 +97,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10pt"
                 android:text="Change password" />
+
+            <Button
+                android:id="@+id/btLogoutUser"
+                android:layout_width="125pt"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10pt"
+                android:text="Logout" />
 
         </LinearLayout>
     </ScrollView>

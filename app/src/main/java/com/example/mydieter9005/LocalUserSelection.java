@@ -19,6 +19,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -39,8 +41,12 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
     private VideoView videoView;
 
     Button btLoginAnotherUser, btRegisterAnotherUser;
+    ImageButton ibtPreviousGroup, ibtNextGroup;
     ImageView ivUser1, ivUser2, ivUser3, ivUser4;
     TextView tvUser1, tvUser2, tvUser3, tvUser4;
+    TextView tvGroupNumberOutOf;
+
+    androidx.gridlayout.widget.GridLayout groupSelectorGridLayout;
     LinearLayout linearLayout;
 
     User[] presentedLocalUsers;
@@ -72,6 +78,7 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
 
         my_db = new DBHelper(LocalUserSelection.this);
 
+        groupSelectorGridLayout = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.groupSelectorGridLayout);
         linearLayout = (LinearLayout) findViewById(R.id.localUserSelectionLinearLayout);
         videoView = (VideoView) findViewById(R.id.localUserSelectionVideoView);
 
@@ -81,11 +88,17 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         ivUser4 = (ImageView) findViewById(R.id.ivUser4);
         ivUsers = new ImageView[]{ivUser1, ivUser2, ivUser3, ivUser4};
 
+        tvGroupNumberOutOf = (TextView) findViewById(R.id.tvGroupNumberOutOf);
         tvUser1 = (TextView) findViewById(R.id.tvUser1);
         tvUser2 = (TextView) findViewById(R.id.tvUser2);
         tvUser3 = (TextView) findViewById(R.id.tvUser3);
         tvUser4 = (TextView) findViewById(R.id.tvUser4);
         tvUsers = new TextView[]{tvUser1, tvUser2, tvUser3, tvUser4};
+
+        ibtPreviousGroup = (ImageButton) findViewById(R.id.ibtPreviousGroup);
+        ibtPreviousGroup.setOnClickListener(this);
+        ibtNextGroup = (ImageButton) findViewById(R.id.ibtNextGroup);
+        ibtNextGroup.setOnClickListener(this);
 
         btRegisterAnotherUser = (Button) findViewById(R.id.btRegisterAnotherUser);
         btRegisterAnotherUser.setOnClickListener(this);
@@ -129,13 +142,41 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
                         userChosen(localUsers.get(3 + ((groupIndex - 1) * 4)));
                 }
             });
+
+            ivUsers[i].setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int viewId = v.getId();
+
+                    if(viewId == ivUser1.getId())
+                        showUserOptions(localUsers.get((groupIndex - 1) * 4));
+
+                    if(viewId == ivUser2.getId())
+                        showUserOptions(localUsers.get(1 + ((groupIndex - 1) * 4)));
+
+                    if(viewId == ivUser3.getId())
+                        showUserOptions(localUsers.get(2 + ((groupIndex - 1) * 4)));
+
+                    if(viewId == ivUser4.getId())
+                        showUserOptions(localUsers.get(3 + ((groupIndex - 1) * 4)));
+
+                    return true;
+                }
+            });
         }
+
+        tvGroupNumberOutOf.setText("   Group number " + groupIndex + " out of " + groupsAmount + "   ");
+
+        if(localUsersSavedOnDatabaseAmount() > ivUsers.length)
+            groupSelectorGridLayout.setVisibility(View.VISIBLE);
+        else
+            groupSelectorGridLayout.setVisibility(View.GONE);
     }
 
     private void initiateLocalUsersArrayList() {
         localUsers = new ArrayList<User>();
 
-        if(howManyLocalUsersSavedOnDatabase() != 0){
+        if(localUsersSavedOnDatabaseAmount() != 0){
             sqdb = my_db.getWritableDatabase();
 
             Cursor c = sqdb.query(DBHelper.TABLE_NAME,null, null, null, null, null, null);
@@ -178,7 +219,7 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
             groupsAmount++;
     }
 
-    private int howManyLocalUsersSavedOnDatabase() {
+    private int localUsersSavedOnDatabaseAmount() {
         sqdb = my_db.getWritableDatabase();
         int counter = 0;
 
@@ -196,11 +237,84 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         return counter;
     }
 
+    public void showUserOptions(User user){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Local user options:");
+        adb.setIcon(R.drawable.ic_account_icon);
+        adb.setMessage("Username: " + user.getUsername());
+
+        final ImageView ivUserImage = new ImageView(LocalUserSelection.this);
+        ivUserImage.setImageResource(user.getProfilePictureId());
+        ivUserImage.setAdjustViewBounds(true);
+        ivUserImage.setMaxHeight(1000);
+        ivUserImage.setMaxWidth(1000);
+        adb.setView(ivUserImage);
+
+        adb.setPositiveButton("Login", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                userChosen(user);
+            }
+        });
+
+        adb.setNegativeButton("Remove", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                sqdb = my_db.getWritableDatabase();
+                sqdb.delete(DBHelper.TABLE_NAME, DBHelper.USERNAME + "=?", new String[]{user.getUsername()});
+                sqdb.close();
+
+                me.setClass(LocalUserSelection.this, LocalUserSelection.class);
+                startActivity(me);
+
+                Toast.makeText(LocalUserSelection.this, "User removed successfully.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
+    }
+
     public void userChosen(User user){
         User.setCurrentUser(user);
         me.setClass(LocalUserSelection.this, MainActivity.class);
         me.putExtra("cameFromLogin", true);
         startActivity(me);
+    }
+
+    public void previousGroup(){
+        if(0 < groupIndex && groupIndex <= groupsAmount){
+            groupIndex--;
+
+            for(int i = 0; i < ivUsers.length; i++){
+                ivUsers[i].setVisibility(View.INVISIBLE);
+                tvUsers[i].setVisibility(View.INVISIBLE);
+            }
+
+            initiateUsersSelectionViews();
+            ibtNextGroup.setVisibility(View.VISIBLE);
+            if(groupIndex == 1)
+                ibtPreviousGroup.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void nextGroup(){
+        if(0 <= groupIndex && groupIndex < groupsAmount){
+            groupIndex++;
+
+            for(int i = 0; i < ivUsers.length; i++){
+                ivUsers[i].setVisibility(View.INVISIBLE);
+                tvUsers[i].setVisibility(View.INVISIBLE);
+            }
+
+            initiateUsersSelectionViews();
+            if(1 < groupIndex)
+                ibtPreviousGroup.setVisibility(View.VISIBLE);
+            if(groupIndex == groupsAmount)
+                ibtNextGroup.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void goToLogin(){
@@ -327,6 +441,12 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
 
         if(viewId == btRegisterAnotherUser.getId())
             goToRegister();
+
+        if(viewId == ibtNextGroup.getId())
+            nextGroup();
+
+        if(viewId == ibtPreviousGroup.getId())
+            previousGroup();
     }
 
     @Override
