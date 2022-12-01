@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String todayDate;
     int currentHour;
 
-    SQLiteDatabase sqdb; //הכרזה על עצם ממחלקה זו שהיא מחלקה פנימית של גאווה המכילה את כל הדרוש לגישה ועבודה עם בסיסי נתונים
-    DBHelper my_db; //הכרזה על עצם ממחלקה זו שהיא מחלקת עזר לעבודה עם בסיס נתונים אותה בנינו
+    SQLiteDatabase sqdb;
+    DBHelper my_db;
 
     FileInputStream is;
     InputStreamReader isr;
@@ -472,9 +472,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void firstInitiateLocalUsersDatabase(){
-        my_db = new DBHelper(this); //הקמת העצם. העצם מכיר את הטבלה  את השדות ואת הקובץ בו נמצא בסיס הנתונים. הוא גם מוכן לביצוע פעולות.
-        sqdb = my_db.getWritableDatabase();//הכרזה כי בסיס הנתונים מאפשר כתיבת נתונים בטבלה שלו
-        sqdb.close();//סגירת ערוץ הגישה לבסיס הנתונים
+        my_db = new DBHelper(this);
+        sqdb = my_db.getWritableDatabase();
+        sqdb.close();
     }
 
     @Override
