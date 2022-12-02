@@ -116,4 +116,26 @@
             android:text="Login" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/registerLoadingLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:textSize="20pt"
+            android:gravity="center"
+            android:layout_margin="10pt"
+            android:text="Please wait..." />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="150pt"
+            android:layout_height="150pt" />
+    </LinearLayout>
+
 </RelativeLayout>

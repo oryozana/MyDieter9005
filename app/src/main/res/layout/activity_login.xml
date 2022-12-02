@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     tools:context=".Login">
 
     <VideoView
@@ -54,6 +55,17 @@
             android:checked="true"
             android:text="Save user?" />
 
+        <TextView
+            android:id="@+id/tvForgotPassword"
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:textSize="7pt"
+            android:textColor="#2b2fd4"
+            android:gravity="start"
+            android:layout_margin="2pt"
+            android:clickable="true"
+            android:text="Forgot password?"/>
+
         <Button
             android:id="@+id/btLogin"
             android:layout_width="125pt"
@@ -67,6 +79,28 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4pt"
             android:text="Register" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loginLoadingLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:textSize="20pt"
+            android:gravity="center"
+            android:layout_margin="10pt"
+            android:text="Please wait..." />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="150pt"
+            android:layout_height="150pt" />
     </LinearLayout>
 
 </RelativeLayout>

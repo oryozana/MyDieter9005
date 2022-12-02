@@ -50,9 +50,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     EditText etGetUsername, etGetPassword, etGetEmail, etGetStartingWeight;
     EditText etGetTargetCalories, etGetTargetProteins, etGetTargetFats;
+    LinearLayout linearLayout, registerLoadingLinearLayout;
     CheckBox cbSaveRegisteredUserInLocalDatabase;
     Button btRegister, btGoToLogin;
-    LinearLayout linearLayout;
 
     Song activeSong = Song.getSongs().get(0);
     ArrayList<String> usernamesList = new ArrayList<String>();
@@ -80,6 +80,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
         my_db = new DBHelper(Register.this);
 
+        registerLoadingLinearLayout = (LinearLayout) findViewById(R.id.registerLoadingLinearLayout);
         linearLayout = (LinearLayout) findViewById(R.id.registerLinearLayout);
         videoView = (VideoView) findViewById(R.id.registerVideoView);
 
@@ -120,6 +121,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
             int profilePictureId = getResources().getIdentifier("user_picture_" + (((int)(Math.random() * userPicturesAmount)) + 1), "drawable", getPackageName());
             User user = new User(username, password, email, startingWeight, userPlan, profilePictureId);
+
+            linearLayout.setVisibility(View.GONE);
+            registerLoadingLinearLayout.setVisibility(View.VISIBLE);
 
             saveUserInFirebaseAndInDatabase(user);
         }

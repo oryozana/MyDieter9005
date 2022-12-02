@@ -11,11 +11,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +26,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -48,9 +53,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private VideoView videoView;
 
     EditText etGetUsernameLoginInfo, etGetPasswordLoginInfo;
+    LinearLayout linearLayout, loginLoadingLinearLayout;
     CheckBox cbSaveLoggedUserInLocalDatabase;
     Button btLogin, btGoToRegister;
-    LinearLayout linearLayout;
+    TextView tvForgotPassword;
 
     Song activeSong = Song.getSongs().get(0);
 
@@ -76,11 +82,15 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         my_db = new DBHelper(Login.this);
 
+        loginLoadingLinearLayout = (LinearLayout) findViewById(R.id.loginLoadingLinearLayout);
         linearLayout = (LinearLayout) findViewById(R.id.loginLinearLayout);
         videoView = (VideoView) findViewById(R.id.loginVideoView);
 
         etGetUsernameLoginInfo = (EditText) findViewById(R.id.etGetUsernameLoginInfo);
         etGetPasswordLoginInfo = (EditText) findViewById(R.id.etGetPasswordLoginInfo);
+
+        tvForgotPassword = (TextView) findViewById(R.id.tvForgotPassword);
+        tvForgotPassword.setOnClickListener(this);
 
         btGoToRegister = (Button) findViewById(R.id.btGoToRegister);
         btGoToRegister.setOnClickListener(this);
@@ -96,6 +106,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void getUserFromFirebaseDatabase(String username, String entered_password){
+        linearLayout.setVisibility(View.GONE);
+        loginLoadingLinearLayout.setVisibility(View.VISIBLE);
+
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
         databaseReference.child(username).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -127,9 +140,55 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         else
                             Toast.makeText(Login.this, "Username or password incorrect.", Toast.LENGTH_SHORT).show();
                     }
+                    else
+                        Toast.makeText(Login.this, "Username or password incorrect.", Toast.LENGTH_SHORT).show();
                 }
-                else{
+                else
                     Toast.makeText(Login.this, "Username or password incorrect.", Toast.LENGTH_SHORT).show();
+
+                loginLoadingLinearLayout.setVisibility(View.GONE);
+                linearLayout.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    public void checkUserInfoByFirebaseDatabase(String username, String enteredEmail){
+        databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        databaseReference.child(username).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    if(task.getResult().exists()){
+                        DataSnapshot dataSnapshot = task.getResult();
+                        String username = dataSnapshot.getKey();
+                        String email = String.valueOf(dataSnapshot.child("email").getValue());
+
+                        if(email.equals(enteredEmail)){
+                            double targetCalories = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetCalories").getValue()));
+                            double targetProteins = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetProteins").getValue()));
+                            double targetFats = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetFats").getValue()));
+                            Plan plan = new Plan(targetCalories, targetProteins, targetFats);
+
+                            String password = String.valueOf(dataSnapshot.child("password").getValue());
+                            double startingWeight = Double.parseDouble(String.valueOf(dataSnapshot.child("startingWeight").getValue()));
+                            int profilePictureId = Integer.parseInt(String.valueOf(dataSnapshot.child("profilePictureId").getValue()));
+                            User tmpUser = new User(username, password, email, startingWeight, plan, profilePictureId);
+
+                            newPasswordAlertDialog(tmpUser);
+                        }
+                        else {
+                            Toast.makeText(Login.this, "Username or email incorrect.", Toast.LENGTH_SHORT).show();
+                            forgotPasswordAlertDialog();
+                        }
+                    }
+                    else {
+                        Toast.makeText(Login.this, "Username or email incorrect.", Toast.LENGTH_SHORT).show();
+                        forgotPasswordAlertDialog();
+                    }
+                }
+                else {
+                    Toast.makeText(Login.this, "Username or email incorrect.", Toast.LENGTH_SHORT).show();
+                    forgotPasswordAlertDialog();
                 }
             }
         });
@@ -205,6 +264,170 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         sqdb.close();
 
         return flag;
+    }
+
+    public void forgotPasswordAlertDialog(){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Enter your username and email:");
+        adb.setIcon(R.drawable.ic_account_icon);
+        adb.setCancelable(false);
+
+        loginLoadingLinearLayout.setVisibility(View.GONE);
+        linearLayout.setVisibility(View.GONE);
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setGravity(Gravity.CENTER);
+
+        final EditText etUsername = new EditText(this);
+        etUsername.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+        etUsername.setHint("Username: ");
+        layout.addView(etUsername);
+
+        final EditText etEmail = new EditText(this);
+        etEmail.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+        etEmail.setHint("Email: ");
+        layout.addView(etEmail);
+
+        adb.setView(layout);
+
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String username = etUsername.getText().toString();
+                String email = etEmail.getText().toString();
+
+                if(!username.replaceAll(" ", "").equals("") && !email.replaceAll(" ", "").equals("")) {
+                    loginLoadingLinearLayout.setVisibility(View.VISIBLE);
+                    checkUserInfoByFirebaseDatabase(username, email);
+                }
+                else {
+                    Toast.makeText(Login.this, "One or more of the fields ware empty.", Toast.LENGTH_SHORT).show();
+                    forgotPasswordAlertDialog();
+                }
+            }
+        });
+
+        adb.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                linearLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
+    }
+
+    public void newPasswordAlertDialog(User user){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Enter your new password:");
+        adb.setIcon(R.drawable.ic_account_icon);
+        adb.setCancelable(false);
+
+        loginLoadingLinearLayout.setVisibility(View.GONE);
+        linearLayout.setVisibility(View.GONE);
+
+        LinearLayout layout = new LinearLayout(Login.this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setGravity(Gravity.CENTER);
+
+        EditText etNewPassword1 = new EditText(Login.this);
+        etNewPassword1.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        etNewPassword1.setHint("Enter Password: ");
+        layout.addView(etNewPassword1);
+
+        EditText etNewPassword2 = new EditText(Login.this);
+        etNewPassword2.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        etNewPassword2.setHint("Enter Password again: ");
+        layout.addView(etNewPassword2);
+
+        adb.setView(layout);
+
+        adb.setPositiveButton("Change password", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String newPassword1 = etNewPassword1.getText().toString();
+                String newPassword2 = etNewPassword2.getText().toString();
+
+                if(!newPassword1.replaceAll(" ", "").equals("") && !newPassword2.replaceAll(" ", "").equals("")){
+                    if(newPassword1.equals(newPassword2)) {
+                        loginLoadingLinearLayout.setVisibility(View.VISIBLE);
+                        changePassword(user, newPassword1);
+                    }
+                    else{
+                        Toast.makeText(Login.this, "Passwords doesn't match.", Toast.LENGTH_SHORT).show();
+                        newPasswordAlertDialog(user);
+                    }
+                }
+                else{
+                    Toast.makeText(Login.this, "One or more fields were empty.", Toast.LENGTH_SHORT).show();
+                    newPasswordAlertDialog(user);
+                }
+            }
+        });
+
+        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                linearLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
+    }
+
+    public void changePassword(User user, String newPassword){
+        boolean passTests = passChangePasswordTests(newPassword);
+
+        if(passTests){
+            user.setPassword(newPassword);
+            updateUserPasswordInFirebaseAndInLocalDatabase(user, newPassword);
+        }
+        else{
+            loginLoadingLinearLayout.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public boolean passChangePasswordTests(String newPassword){
+        boolean passTests = true;
+
+        if(newPassword.length() < 4 && passTests){
+            Toast.makeText(this, "Password should be at least 4 characters wide!", Toast.LENGTH_SHORT).show();
+            passTests = false;
+        }
+
+        return passTests;
+    }
+
+    public void updateUserPasswordInFirebaseAndInLocalDatabase(User user, String newPassword){
+        usersDb = FirebaseDatabase.getInstance();
+        databaseReference = usersDb.getReference("users");
+        databaseReference.child(user.getUsername()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                User.setCurrentUser(user);
+
+                sqdb=my_db.getWritableDatabase();
+                ContentValues cv = new ContentValues();
+                cv.put(DBHelper.PASSWORD, newPassword);
+
+                sqdb.update(DBHelper.TABLE_NAME, cv,DBHelper.USERNAME+"=?", new String[]{user.getUsername()});
+                sqdb.close();
+
+                Toast.makeText(Login.this, "Password successfully changed.", Toast.LENGTH_SHORT).show();
+
+                me.setClass(Login.this, MainActivity.class);
+                startActivity(me);
+            }
+        });
     }
 
     public void setCustomNetworkConnectionReceiver(){
@@ -379,5 +602,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         if(viewId == btGoToRegister.getId())
             goToRegister();
+
+        if(viewId == tvForgotPassword.getId())
+            forgotPasswordAlertDialog();
     }
 }

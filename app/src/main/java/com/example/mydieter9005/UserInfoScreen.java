@@ -169,8 +169,6 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
 
                 Toast.makeText(UserInfoScreen.this, "Password successfully changed.", Toast.LENGTH_SHORT).show();
             }
-            
-
         });
     }
 
