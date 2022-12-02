@@ -206,80 +206,80 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void write(){
-        if(me.hasExtra("meals")){
-            try {
-                fos = openFileOutput(todayDate, Context.MODE_PRIVATE);
-                osw = new OutputStreamWriter(fos);
-                bw = new BufferedWriter(osw);
+//    public void write(){
+//        if(me.hasExtra("meals")){
+//            try {
+//                fos = openFileOutput(todayDate, Context.MODE_PRIVATE);
+//                osw = new OutputStreamWriter(fos);
+//                bw = new BufferedWriter(osw);
+//
+//                bw.write(todayDate + "\n");
+//
+//                bw.write("Your breakfast: ");
+//                if(me.hasExtra("breakfast"))
+//                    bw.write(me.getStringExtra("breakfast"));
+//
+//                bw.write("\n" + "Your lunch: ");
+//                if(me.hasExtra("lunch"))
+//                    bw.write(me.getStringExtra("lunch"));
+//
+//                bw.write("\n" + "Your dinner: ");
+//                if(me.hasExtra("dinner"))
+//                    bw.write(me.getStringExtra("dinner"));
+//
+//                bw.write("\n" + tvTotalCaloriesMain.getText().toString() + "\n");
+//                //bw.write(tvCaloriesLeftMain.getText().toString());
+//
+//                bw.close();
+//
+//                Toast.makeText(this, todayDate + " wrote.", Toast.LENGTH_SHORT).show();
+//            }
+//            catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//            catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        else{
+//            Toast.makeText(this, "You didn't choose any meal yet.", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
-                bw.write(todayDate + "\n");
-
-                bw.write("Your breakfast: ");
-                if(me.hasExtra("breakfast"))
-                    bw.write(me.getStringExtra("breakfast"));
-
-                bw.write("\n" + "Your lunch: ");
-                if(me.hasExtra("lunch"))
-                    bw.write(me.getStringExtra("lunch"));
-
-                bw.write("\n" + "Your dinner: ");
-                if(me.hasExtra("dinner"))
-                    bw.write(me.getStringExtra("dinner"));
-
-                bw.write("\n" + tvTotalCaloriesMain.getText().toString() + "\n");
-                //bw.write(tvCaloriesLeftMain.getText().toString());
-
-                bw.close();
-
-                Toast.makeText(this, todayDate + " wrote.", Toast.LENGTH_SHORT).show();
-            }
-            catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        else{
-            Toast.makeText(this, "You didn't choose any meal yet.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void showFileData(){
-        String[] dataParts = getFileData(todayDate).split("\n");
-        String savedBreakfast="", savedLunch="", savedDinner="", savedTotalCalories="", savedCaloriesLeft="";
-        String[] meals = new String[3];
-
-        if(dataParts[1].replaceAll(":", "").length() == dataParts[1].length() - 2)
-            savedBreakfast = dataParts[1].split(": ")[1] + ": " + dataParts[1].split(": ")[2];
-        if(!savedBreakfast.equals("") && !savedBreakfast.equals(" "))
-            me.putExtra("breakfast", savedBreakfast);
-
-        if(dataParts[2].replaceAll(":", "").length() == dataParts[2].length() - 2)
-            savedLunch = dataParts[2].split(": ")[1] + ": " + dataParts[2].split(": ")[2];
-        if(!savedLunch.equals("") && !savedLunch.equals(" "))
-            me.putExtra("lunch", savedLunch);
-
-        if(dataParts[3].replaceAll(":", "").length() == dataParts[3].length() - 2)
-            savedDinner = dataParts[3].split(": ")[1] + ": " + dataParts[3].split(": ")[2];
-        if(!savedDinner.equals("") && !savedDinner.equals(" "))
-            me.putExtra("dinner", savedDinner);
-
-        savedTotalCalories = dataParts[4].split(": ")[1];
-        if(!savedTotalCalories.equals("") && !savedTotalCalories.equals(" "))
-            me.putExtra("totalCalories", multiUsageFunctions.getCaloriesOrMinutesOutOfString(savedTotalCalories));
-        savedCaloriesLeft = dataParts[5].split(": ")[1];
-        if(!savedCaloriesLeft.equals("") && !savedCaloriesLeft.equals(" "))
-            me.putExtra("caloriesLeft", multiUsageFunctions.getCaloriesOrMinutesOutOfString(savedCaloriesLeft));
-
-        meals[0] = savedBreakfast.split(":")[0];
-        meals[1] = savedLunch.split(":")[0];
-        meals[2] = savedDinner.split(":")[0];
-        me.putExtra("meals", meals);
-
-        updateMealsIfNeeded();
-    }
+//    public void showFileData(){
+//        String[] dataParts = getFileData(todayDate).split("\n");
+//        String savedBreakfast="", savedLunch="", savedDinner="", savedTotalCalories="", savedCaloriesLeft="";
+//        String[] meals = new String[3];
+//
+//        if(dataParts[1].replaceAll(":", "").length() == dataParts[1].length() - 2)
+//            savedBreakfast = dataParts[1].split(": ")[1] + ": " + dataParts[1].split(": ")[2];
+//        if(!savedBreakfast.equals("") && !savedBreakfast.equals(" "))
+//            me.putExtra("breakfast", savedBreakfast);
+//
+//        if(dataParts[2].replaceAll(":", "").length() == dataParts[2].length() - 2)
+//            savedLunch = dataParts[2].split(": ")[1] + ": " + dataParts[2].split(": ")[2];
+//        if(!savedLunch.equals("") && !savedLunch.equals(" "))
+//            me.putExtra("lunch", savedLunch);
+//
+//        if(dataParts[3].replaceAll(":", "").length() == dataParts[3].length() - 2)
+//            savedDinner = dataParts[3].split(": ")[1] + ": " + dataParts[3].split(": ")[2];
+//        if(!savedDinner.equals("") && !savedDinner.equals(" "))
+//            me.putExtra("dinner", savedDinner);
+//
+//        savedTotalCalories = dataParts[4].split(": ")[1];
+//        if(!savedTotalCalories.equals("") && !savedTotalCalories.equals(" "))
+//            me.putExtra("totalCalories", multiUsageFunctions.getCaloriesOrMinutesOutOfString(savedTotalCalories));
+//        savedCaloriesLeft = dataParts[5].split(": ")[1];
+//        if(!savedCaloriesLeft.equals("") && !savedCaloriesLeft.equals(" "))
+//            me.putExtra("caloriesLeft", multiUsageFunctions.getCaloriesOrMinutesOutOfString(savedCaloriesLeft));
+//
+//        meals[0] = savedBreakfast.split(":")[0];
+//        meals[1] = savedLunch.split(":")[0];
+//        meals[2] = savedDinner.split(":")[0];
+//        me.putExtra("meals", meals);
+//
+//        updateMealsIfNeeded();
+//    }
 
     public String getFileData(String fileName){
         String currentLine = "", allData = "";
@@ -484,11 +484,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(viewId == btMealsMenu.getId())
             sendToSelected(v);
 
-        if(viewId == btWriteMealsToExternalFile.getId())
-            write();
-
-        if(viewId == btReadMealsFromExternalFile.getId())
-            showFileData();
+//        if(viewId == btWriteMealsToExternalFile.getId())
+//            write();
+//
+//        if(viewId == btReadMealsFromExternalFile.getId())
+//            showFileData();
     }
 
     @Override

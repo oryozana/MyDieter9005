@@ -606,4 +606,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         if(viewId == tvForgotPassword.getId())
             forgotPasswordAlertDialog();
     }
+
+    @Override
+    public void onBackPressed() {
+        me.setClass(Login.this, LocalUserSelection.class);
+        startActivity(me);
+    }
 }

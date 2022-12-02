@@ -448,4 +448,10 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         if(viewId == btGoToLogin.getId())
             goToLogin();
     }
+
+    @Override
+    public void onBackPressed() {
+        me.setClass(Register.this, LocalUserSelection.class);
+        startActivity(me);
+    }
 }
