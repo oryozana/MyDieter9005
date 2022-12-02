@@ -604,4 +604,27 @@ public class removedFunctions extends AppCompatActivity {
 //            customMealsList.add(multiUsageFunctions.separateInfo(organizedMeal[2]));
 //        }
 //    }
+
+    //      From: Login
+
+    //    public void notEvenOneUserAdded(){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(this);
+//        adb.setTitle("Users not found!");
+//        adb.setMessage("It's seems like no one sing up for now, you can be the first!.");
+//        adb.setIcon(R.drawable.ic_users_not_found_icon);
+//        adb.setCancelable(false);
+//
+//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                me.setClass(Login.this, Register.class);
+//                startActivity(me);
+//            }
+//        });
+//
+//        ad = adb.create();
+//        ad.show();
+//    }
 }

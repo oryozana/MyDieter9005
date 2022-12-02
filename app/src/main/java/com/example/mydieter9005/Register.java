@@ -22,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     EditText etGetUsername, etGetPassword, etGetEmail, etGetStartingWeight;
     EditText etGetTargetCalories, etGetTargetProteins, etGetTargetFats;
+    CheckBox cbSaveRegisteredUserInLocalDatabase;
     Button btRegister, btGoToLogin;
     LinearLayout linearLayout;
 
@@ -95,6 +97,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         btRegister = (Button) findViewById(R.id.btRegister);
         btRegister.setOnClickListener(this);
 
+        cbSaveRegisteredUserInLocalDatabase = (CheckBox) findViewById(R.id.cbSaveRegisteredUserInLocalDatabase);
+
         setCustomNetworkConnectionReceiver();
         getAllExistingUsernames();
         implementSettingsData();
@@ -129,7 +133,10 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(Register.this, "User successfully created.", Toast.LENGTH_SHORT).show();
                 me.setClass(Register.this, MainActivity.class);
-                addRegisteredUserToDatabase(user);
+
+                if(cbSaveRegisteredUserInLocalDatabase.isChecked())
+                    addRegisteredUserToDatabase(user);
+
                 User.setCurrentUser(user);
                 startActivity(me);
             }

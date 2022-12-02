@@ -47,6 +47,13 @@
             android:inputType="textPassword"
             android:hint="Enter password: " />
 
+        <CheckBox
+            android:id="@+id/cbSaveLoggedUserInLocalDatabase"
+            android:layout_width="150pt"
+            android:layout_height="15pt"
+            android:checked="true"
+            android:text="Save user?" />
+
         <Button
             android:id="@+id/btLogin"
             android:layout_width="125pt"

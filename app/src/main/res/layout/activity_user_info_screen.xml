@@ -98,14 +98,29 @@
                 android:layout_marginTop="10pt"
                 android:text="Change password" />
 
+            <TextView
+                android:layout_width="150pt"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15pt"
+                android:layout_marginBottom="15pt"
+                android:gravity="center"
+                android:text="More options:"
+                android:textSize="8pt" />
+
             <Button
                 android:id="@+id/btLogoutUser"
                 android:layout_width="125pt"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10pt"
+                android:layout_marginBottom="2pt"
                 android:text="Logout" />
+
+            <Button
+                android:id="@+id/btDeleteUser"
+                android:layout_width="125pt"
+                android:layout_height="wrap_content"
+                android:textColor="#Ff0005"
+                android:text="Delete user" />
 
         </LinearLayout>
     </ScrollView>
-
 </RelativeLayout>

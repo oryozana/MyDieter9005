@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -46,9 +47,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    LinearLayout linearLayout;
     EditText etGetUsernameLoginInfo, etGetPasswordLoginInfo;
+    CheckBox cbSaveLoggedUserInLocalDatabase;
     Button btLogin, btGoToRegister;
+    LinearLayout linearLayout;
 
     Song activeSong = Song.getSongs().get(0);
 
@@ -85,6 +87,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         btLogin = (Button) findViewById(R.id.btLogin);
         btLogin.setOnClickListener(this);
 
+        cbSaveLoggedUserInLocalDatabase = (CheckBox) findViewById(R.id.cbSaveLoggedUserInLocalDatabase);
+
         setCustomNetworkConnectionReceiver();
         implementSettingsData();
         initiateVideoPlayer();
@@ -113,7 +117,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             int profilePictureId = Integer.parseInt(String.valueOf(dataSnapshot.child("profilePictureId").getValue()));
                             User.setCurrentUser(new User(username, password, email, startingWeight, plan, profilePictureId));
 
-                            addLoggedUserIntoLocalDatabase(User.getCurrentUser());
+                            if(cbSaveLoggedUserInLocalDatabase.isChecked())
+                                addLoggedUserIntoLocalDatabase(User.getCurrentUser());
 
                             me.setClass(Login.this, MainActivity.class);
                             me.putExtra("cameFromLogin", 0);
@@ -129,27 +134,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             }
         });
     }
-
-//    public void notEvenOneUserAdded(){
-//        AlertDialog ad;
-//        AlertDialog.Builder adb;
-//        adb = new AlertDialog.Builder(this);
-//        adb.setTitle("Users not found!");
-//        adb.setMessage("It's seems like no one sing up for now, you can be the first!.");
-//        adb.setIcon(R.drawable.ic_users_not_found_icon);
-//        adb.setCancelable(false);
-//
-//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                me.setClass(Login.this, Register.class);
-//                startActivity(me);
-//            }
-//        });
-//
-//        ad = adb.create();
-//        ad.show();
-//    }
 
     public void addLoggedUserIntoLocalDatabase(User user){
         boolean added = false;

@@ -48,7 +48,7 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    Button btSendToProfilePictureSelection, btChangePassword, btLogoutUser;
+    Button btSendToProfilePictureSelection, btChangePassword, btLogoutUser, btDeleteUser;
     EditText etGetOldPassword, etGetNewPassword;
     TextView tvUsernameDisplay;
     ImageView ivProfilePicture;
@@ -92,6 +92,8 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         btChangePassword.setOnClickListener(this);
         btLogoutUser = (Button) findViewById(R.id.btLogoutUser);
         btLogoutUser.setOnClickListener(this);
+        btDeleteUser = (Button) findViewById(R.id.btDeleteUser);
+        btDeleteUser.setOnClickListener(this);
 
         etGetOldPassword = (EditText) findViewById(R.id.etGetOldPassword);
         etGetNewPassword = (EditText) findViewById(R.id.etGetNewPassword);
@@ -200,6 +202,54 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
                 }
             }
         });
+    }
+
+    public void deleteUserAlertDialog(){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Are you sure you want to delete your user?:");
+        adb.setIcon(R.drawable.ic_account_icon);
+        adb.setMessage("Username: " + user.getUsername());
+
+        final ImageView ivUserImage = new ImageView(UserInfoScreen.this);
+        ivUserImage.setImageResource(user.getProfilePictureId());
+        ivUserImage.setAdjustViewBounds(true);
+        ivUserImage.setMaxHeight(1000);
+        ivUserImage.setMaxWidth(1000);
+        adb.setView(ivUserImage);
+
+        adb.setPositiveButton("Yes, delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deleteUser();
+            }
+        });
+
+        adb.setNegativeButton("No, cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
+    }
+    
+    public void deleteUser(){
+        if(internetConnection){
+            databaseReference = FirebaseDatabase.getInstance().getReference("users").child(user.getUsername());
+            databaseReference.removeValue();
+
+            sqdb = my_db.getWritableDatabase();
+            sqdb.delete(DBHelper.TABLE_NAME, DBHelper.USERNAME + "=?", new String[]{user.getUsername()});
+            sqdb.close();
+
+            Toast.makeText(this, "User deleted successfully.", Toast.LENGTH_SHORT).show();
+            logoutUser();
+        }
+        else
+            Toast.makeText(this, "No internet connection, can't delete user.", Toast.LENGTH_SHORT).show();
     }
 
     public void logoutUser(){
@@ -380,6 +430,9 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
 
         if(viewId == btLogoutUser.getId())
             logoutUser();
+
+        if(viewId == btDeleteUser.getId())
+            deleteUserAlertDialog();
     }
 
     @Override
