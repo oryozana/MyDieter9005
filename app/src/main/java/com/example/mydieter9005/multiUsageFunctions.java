@@ -1,15 +1,6 @@
 package com.example.mydieter9005;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.media.MediaPlayer;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-
-public class multiUsageFunctions extends AppCompatActivity {
+public class multiUsageFunctions {
 
     public static String[] organizeMeal(String meal){  // Get a full meal name and separate it into: name, calories and minutes.
         String mealName = "", mealCalories = "", mealTime = "";
