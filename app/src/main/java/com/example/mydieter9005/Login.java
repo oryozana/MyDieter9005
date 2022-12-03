@@ -305,7 +305,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     checkUserInfoByFirebaseDatabase(username, email);
                 }
                 else {
-                    Toast.makeText(Login.this, "One or more of the fields ware empty.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this, "One or more of the fields were empty.", Toast.LENGTH_SHORT).show();
                     forgotPasswordAlertDialog();
                 }
             }

@@ -183,47 +183,55 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             }
         }
 
-        if(etGetStartingWeight.getText().toString().replaceAll(" ", "").equals("") && passTests) {
-            Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
-            passTests = false;
-        }
-        else{
-            if(!(0 < Double.parseDouble(etGetStartingWeight.getText().toString()) && Double.parseDouble(etGetStartingWeight.getText().toString()) < 500) && passTests){
-                Toast.makeText(this, "Starting weight should be between 0 to 500 kg.", Toast.LENGTH_SHORT).show();
+        if(passTests){
+            if(etGetStartingWeight.getText().toString().replaceAll(" ", "").equals("")) {
+                Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
                 passTests = false;
+            }
+            else{
+                if(!(0 < Double.parseDouble(etGetStartingWeight.getText().toString()) && Double.parseDouble(etGetStartingWeight.getText().toString()) < 500)){
+                    Toast.makeText(this, "Starting weight should be between 0 to 500 kg.", Toast.LENGTH_SHORT).show();
+                    passTests = false;
+                }
             }
         }
 
-        if(etGetTargetCalories.getText().toString().replaceAll(" ", "").equals("") && passTests){
-            Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
-            passTests = false;
-        }
-        else{
-            if(!(0 < Double.parseDouble(etGetTargetCalories.getText().toString()) && Double.parseDouble(etGetTargetCalories.getText().toString()) < 5000) && passTests){
-                Toast.makeText(this, "Target calories should be between 0 to 5000.", Toast.LENGTH_SHORT).show();
+        if(passTests){
+            if(etGetTargetCalories.getText().toString().replaceAll(" ", "").equals("")){
+                Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
                 passTests = false;
+            }
+            else{
+                if(!(0 < Double.parseDouble(etGetTargetCalories.getText().toString()) && Double.parseDouble(etGetTargetCalories.getText().toString()) < 5000)){
+                    Toast.makeText(this, "Target calories should be between 0 to 5000.", Toast.LENGTH_SHORT).show();
+                    passTests = false;
+                }
             }
         }
 
-        if(etGetTargetProteins.getText().toString().replaceAll(" ", "").equals("") && passTests){
-            Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
-            passTests = false;
-        }
-        else{
-            if(!(0 < Double.parseDouble(etGetTargetProteins.getText().toString()) && Double.parseDouble(etGetTargetProteins.getText().toString()) < 1000) && passTests){
-                Toast.makeText(this, "Target proteins should be between 0 to 1000.", Toast.LENGTH_SHORT).show();
+        if(passTests){
+            if(etGetTargetProteins.getText().toString().replaceAll(" ", "").equals("")){
+                Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
                 passTests = false;
+            }
+            else{
+                if(!(0 < Double.parseDouble(etGetTargetProteins.getText().toString()) && Double.parseDouble(etGetTargetProteins.getText().toString()) < 1000)){
+                    Toast.makeText(this, "Target proteins should be between 0 to 1000.", Toast.LENGTH_SHORT).show();
+                    passTests = false;
+                }
             }
         }
 
-        if(etGetTargetFats.getText().toString().replaceAll(" ", "").equals("") && passTests){
-            Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
-            passTests = false;
-        }
-        else{
-            if(!(0 < Double.parseDouble(etGetTargetFats.getText().toString()) && Double.parseDouble(etGetTargetFats.getText().toString()) < 1000) && passTests){
-                Toast.makeText(this, "Target fats should be between 0 to 1000.", Toast.LENGTH_SHORT).show();
+        if(passTests){
+            if(etGetTargetFats.getText().toString().replaceAll(" ", "").equals("")){
+                Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
                 passTests = false;
+            }
+            else{
+                if(!(0 < Double.parseDouble(etGetTargetFats.getText().toString()) && Double.parseDouble(etGetTargetFats.getText().toString()) < 1000)){
+                    Toast.makeText(this, "Target fats should be between 0 to 1000.", Toast.LENGTH_SHORT).show();
+                    passTests = false;
+                }
             }
         }
 

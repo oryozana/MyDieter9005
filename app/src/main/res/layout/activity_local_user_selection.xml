@@ -217,7 +217,7 @@
             android:layout_width="160pt"
             android:layout_height="wrap_content"
             app:orientation="horizontal"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layoutDirection="ltr">
 
             <ImageButton

@@ -224,7 +224,7 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         if(localUsersSavedOnDatabaseAmount() > ivUsers.length)
             groupSelectorGridLayout.setVisibility(View.VISIBLE);
         else
-            groupSelectorGridLayout.setVisibility(View.GONE);
+            groupSelectorGridLayout.setVisibility(View.INVISIBLE);
     }
 
     private void initiateLocalUsersArrayList() {
@@ -468,6 +468,21 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         });
     }
 
+    public void backToChoosing(){
+        btGenerateCode.setVisibility(View.VISIBLE);
+        btUseCode.setVisibility(View.VISIBLE);
+
+        tvCodeState.setText("What are you intending to do?");
+
+        btCheckCode.setVisibility(View.GONE);
+
+        tvTimeBeforeExpiration.setVisibility(View.GONE);
+        etEnterCode.setVisibility(View.GONE);
+        btCheckCode.setVisibility(View.GONE);
+
+        btBack.setVisibility(View.GONE);
+    }
+
     public void addLoggedUserIntoLocalDatabase(User user){
         boolean added = false;
 
@@ -590,7 +605,9 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
 
         if(showUserMode) {
             tvLocalUserSelectionMainTextView.setVisibility(View.VISIBLE);
-            groupSelectorGridLayout.setVisibility(View.VISIBLE);
+
+            if(groupsAmount > 1)
+                groupSelectorGridLayout.setVisibility(View.VISIBLE);
 
             useOrGenerateCodesLinearLayout.setVisibility(View.GONE);
             localUsersLinearLayout.setVisibility(View.VISIBLE);
@@ -779,6 +796,9 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
 
         if(viewId == btCheckCode.getId())
             useCode();
+
+        if(viewId == btBack.getId())
+            backToChoosing();
     }
 
     @Override
