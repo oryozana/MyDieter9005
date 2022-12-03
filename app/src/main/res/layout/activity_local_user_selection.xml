@@ -25,6 +25,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tvLocalUserSelectionMainTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10pt"
@@ -147,6 +148,70 @@
             </LinearLayout>
         </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/useOrGenerateCodesLinearLayout"
+        android:layout_width="160pt"
+        android:layout_height="160pt"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center|top">
+
+        <TextView
+            android:id="@+id/tvCodeState"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16pt"
+            android:layout_margin="10pt"
+            android:text="What are you intending to do?"/>
+
+        <Button
+            android:id="@+id/btUseCode"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_margin="2pt"
+            android:text="Use Code" />
+
+        <EditText
+            android:id="@+id/etEnterCode"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:visibility="gone"
+            android:hint="Code: " />
+
+        <Button
+            android:id="@+id/btCheckCode"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Check code" />
+
+        <Button
+            android:id="@+id/btGenerateCode"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Generate Code" />
+
+        <Button
+            android:id="@+id/btBack"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_margin="5pt"
+            android:text="Back" />
+
+        <TextView
+            android:id="@+id/tvTimeBeforeExpiration"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:gravity="center"
+            android:text="You have 10 minutes to use this code." />
+
+    </LinearLayout>
+
         <androidx.gridlayout.widget.GridLayout
             android:id="@+id/groupSelectorGridLayout"
             android:layout_width="160pt"
@@ -199,5 +264,33 @@
             android:layout_height="wrap_content"
             android:text="Register" />
 
+        <Button
+            android:id="@+id/btUseOrGenerateCode"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Use / Generate Code" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/localUserSelectionLoadingLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:textSize="20pt"
+            android:gravity="center"
+            android:layout_margin="10pt"
+            android:text="Please wait..." />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="150pt"
+            android:layout_height="150pt" />
     </LinearLayout>
 </RelativeLayout>

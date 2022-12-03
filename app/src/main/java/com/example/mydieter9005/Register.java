@@ -125,23 +125,23 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             linearLayout.setVisibility(View.GONE);
             registerLoadingLinearLayout.setVisibility(View.VISIBLE);
 
-            saveUserInFirebaseAndInDatabase(user);
+            saveUserInFirebaseAndInLocalDatabase(user);
         }
     }
 
-    public void saveUserInFirebaseAndInDatabase(User user){
+    public void saveUserInFirebaseAndInLocalDatabase(User user){
         usersDb = FirebaseDatabase.getInstance();
         databaseReference = usersDb.getReference("users");
         databaseReference.child(user.getUsername()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(Register.this, "User successfully created.", Toast.LENGTH_SHORT).show();
-                me.setClass(Register.this, MainActivity.class);
-
                 if(cbSaveRegisteredUserInLocalDatabase.isChecked())
                     addRegisteredUserToDatabase(user);
 
                 User.setCurrentUser(user);
+                Toast.makeText(Register.this, "User successfully created.", Toast.LENGTH_SHORT).show();
+
+                me.setClass(Register.this, MainActivity.class);
                 startActivity(me);
             }
         });
