@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -56,6 +58,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 import java.util.TimeZone;
 
 public class LocalUserSelection extends AppCompatActivity implements View.OnClickListener {
@@ -65,10 +68,10 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    TextView tvGroupNumberOutOf, tvCodeState, tvTimeBeforeExpiration, tvLocalUserSelectionMainTextView;
+    TextView tvGroupNumberOutOf, tvCodeState, tvTimeBeforeExpiration, tvLocalUserSelectionMainTextView, tvShowGeneratedCode;
     Button btUseOrGenerateCode, btUseCode, btGenerateCode, btCheckCode, btBack;
+    ImageButton ibtPreviousGroup, ibtNextGroup, ibtShowCopyCodeOption;
     Button btLoginAnotherUser, btRegisterAnotherUser;
-    ImageButton ibtPreviousGroup, ibtNextGroup;
     ImageView ivUser1, ivUser2, ivUser3, ivUser4;
     TextView tvUser1, tvUser2, tvUser3, tvUser4;
     EditText etEnterCode;
@@ -130,6 +133,8 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         tvUser4 = (TextView) findViewById(R.id.tvUser4);
         tvUsers = new TextView[]{tvUser1, tvUser2, tvUser3, tvUser4};
 
+        ibtShowCopyCodeOption = (ImageButton) findViewById(R.id.ibtShowCopyCodeOption);
+        ibtShowCopyCodeOption.setOnClickListener(this);
         ibtPreviousGroup = (ImageButton) findViewById(R.id.ibtPreviousGroup);
         ibtPreviousGroup.setOnClickListener(this);
         ibtNextGroup = (ImageButton) findViewById(R.id.ibtNextGroup);
@@ -144,6 +149,7 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
 
         tvLocalUserSelectionMainTextView = (TextView) findViewById(R.id.tvLocalUserSelectionMainTextView);
         tvTimeBeforeExpiration = (TextView) findViewById(R.id.tvTimeBeforeExpiration);
+        tvShowGeneratedCode = (TextView) findViewById(R.id.tvShowGeneratedCode);
         tvCodeState = (TextView) findViewById(R.id.tvCodeState);
 
         etEnterCode = (EditText) findViewById(R.id.etEnterCode);
@@ -419,42 +425,46 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
                 if(task.isSuccessful()){
                     if(task.getResult().exists()){
                         DataSnapshot dataSnapshot = task.getResult();
+                        String codeType = String.valueOf(dataSnapshot.child("type").getValue());
 
-                        LocalDateTime expirationTime = LocalDateTime.parse(String.valueOf(dataSnapshot.child("expirationTime").getValue()).replaceAll("\\*", "\\."));
+                        if(codeType.equals("UserRandomCode")){
+                            LocalDateTime expirationTime = LocalDateTime.parse(String.valueOf(dataSnapshot.child("expirationTime").getValue()).replaceAll("\\*", "\\."));
+                            boolean isExpired = LocalDateTime.now(ZoneId.of("Asia/Jerusalem")).isAfter(expirationTime);
 
-                        boolean isExpired = LocalDateTime.now(ZoneId.of("Asia/Jerusalem")).isAfter(expirationTime);
+                            DataSnapshot users = dataSnapshot.child("users");
 
-                        DataSnapshot users = dataSnapshot.child("users");
+                            if(!isExpired){
+                                localUsers.clear();
 
-                        if(!isExpired){
-                            localUsers.clear();
+                                for(DataSnapshot user : users.getChildren()){
+                                    String username = String.valueOf(user.child("username").getValue());
+                                    String password = String.valueOf(user.child("password").getValue());
+                                    String email = String.valueOf(user.child("email").getValue());
+                                    double startingWeight = Double.parseDouble(String.valueOf(user.child("startingWeight").getValue()));
 
-                            for(DataSnapshot user : users.getChildren()){
-                                String username = String.valueOf(user.child("username").getValue());
-                                String password = String.valueOf(user.child("password").getValue());
-                                String email = String.valueOf(user.child("email").getValue());
-                                double startingWeight = Double.parseDouble(String.valueOf(user.child("startingWeight").getValue()));
+                                    double targetCalories = Double.parseDouble(String.valueOf(user.child("currentPlan").child("targetCalories").getValue()));
+                                    double targetProteins = Double.parseDouble(String.valueOf(user.child("currentPlan").child("targetProteins").getValue()));
+                                    double targetFats = Double.parseDouble(String.valueOf(user.child("currentPlan").child("targetFats").getValue()));
+                                    Plan plan = new Plan(targetCalories, targetProteins, targetFats);
 
-                                double targetCalories = Double.parseDouble(String.valueOf(user.child("currentPlan").child("targetCalories").getValue()));
-                                double targetProteins = Double.parseDouble(String.valueOf(user.child("currentPlan").child("targetProteins").getValue()));
-                                double targetFats = Double.parseDouble(String.valueOf(user.child("currentPlan").child("targetFats").getValue()));
-                                Plan plan = new Plan(targetCalories, targetProteins, targetFats);
+                                    int profilePictureId = Integer.parseInt(String.valueOf(user.child("profilePictureId").getValue()));
 
-                                int profilePictureId = Integer.parseInt(String.valueOf(user.child("profilePictureId").getValue()));
-
-                                if(!isUserAlreadyExists(username)) {
-                                    User tmpUser = new User(username, password, email, startingWeight, plan, profilePictureId);
-                                    addLoggedUserIntoLocalDatabase(tmpUser);
-                                    localUsers.add(tmpUser);
+                                    if(!isUserAlreadyExists(username)) {
+                                        User tmpUser = new User(username, password, email, startingWeight, plan, profilePictureId);
+                                        addLoggedUserIntoLocalDatabase(tmpUser);
+                                        localUsers.add(tmpUser);
+                                    }
                                 }
-                            }
-                            Toast.makeText(LocalUserSelection.this, "Users successfully added.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LocalUserSelection.this, "Users successfully added.", Toast.LENGTH_SHORT).show();
 
-                            me.setClass(LocalUserSelection.this, LocalUserSelection.class);
-                            startActivity(me);
+                                me.setClass(LocalUserSelection.this, LocalUserSelection.class);
+                                startActivity(me);
+                            }
+                            else
+                                Toast.makeText(LocalUserSelection.this, "Code expired.", Toast.LENGTH_SHORT).show();
                         }
                         else
-                            Toast.makeText(LocalUserSelection.this, "Code expired.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LocalUserSelection.this, "Unrecognized code.", Toast.LENGTH_SHORT).show();
                     }
                     else
                         Toast.makeText(LocalUserSelection.this, "Code incorrect.", Toast.LENGTH_SHORT).show();
@@ -468,6 +478,14 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         });
     }
 
+    public void copyCodeOption(){
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("TextView", tvShowGeneratedCode.getText().toString());
+        clipboard.setPrimaryClip(clip);
+        clip.getDescription();
+        Toast.makeText(this, "Copied.", Toast.LENGTH_SHORT).show();
+    }
+
     public void backToChoosing(){
         btGenerateCode.setVisibility(View.VISIBLE);
         btUseCode.setVisibility(View.VISIBLE);
@@ -479,6 +497,8 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         tvTimeBeforeExpiration.setVisibility(View.GONE);
         etEnterCode.setVisibility(View.GONE);
         btCheckCode.setVisibility(View.GONE);
+        tvShowGeneratedCode.setVisibility(View.GONE);
+        ibtShowCopyCodeOption.setVisibility(View.GONE);
 
         btBack.setVisibility(View.GONE);
     }
@@ -557,39 +577,33 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
 
     public void generateCodeAndExpirationDate() {
         if(internetConnection){
-            final int randomCodeMaximumLength = 8;
-            String allLettersAndDigits = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvxyz0123456789";
-
             LocalDateTime expirationDate = LocalDateTime.now(ZoneId.of("Asia/Jerusalem")).plusMinutes(10);
 
-            //   LocalDateTime.now(ZoneId.of("Asia/Jerusalem")).isAfter(expirationDate);
-
-            String randomCode = "";
-            for(int i = 0; i < randomCodeMaximumLength; i++)
-                randomCode += allLettersAndDigits.charAt((int)(Math.random() * allLettersAndDigits.length()));
+            UserRandomCode userRandomCode = new UserRandomCode(localUsers, expirationDate.toString());
 
             btGenerateCode.setVisibility(View.GONE);
             btUseCode.setVisibility(View.GONE);
 
-            tvCodeState.setText("Your code is:" + "\n" + randomCode);
+            tvCodeState.setText("Your code is: ");
+            tvShowGeneratedCode.setVisibility(View.VISIBLE);
+            tvShowGeneratedCode.setText(userRandomCode.getCode());
             tvTimeBeforeExpiration.setVisibility(View.VISIBLE);
+            ibtShowCopyCodeOption.setVisibility(View.VISIBLE);
             btBack.setVisibility(View.VISIBLE);
 
             linearLayout.setVisibility(View.GONE);
             localUserSelectionLoadingLinearLayout.setVisibility(View.VISIBLE);
 
-            Code code = new Code(randomCode, localUsers, expirationDate.toString());
-
-            saveUsersCodeInFirebase(code);
+            saveUsersCodeInFirebase(userRandomCode);
         }
         else
             Toast.makeText(this, "No internet connection, can't generate code.", Toast.LENGTH_SHORT).show();
     }
 
-    public void saveUsersCodeInFirebase(Code code){
+    public void saveUsersCodeInFirebase(UserRandomCode userRandomCode){
         codesDb = FirebaseDatabase.getInstance();
         databaseReference = codesDb.getReference("codes");
-        databaseReference.child(code.getCode()).setValue(code).addOnCompleteListener(new OnCompleteListener<Void>() {
+        databaseReference.child(userRandomCode.getCode()).setValue(userRandomCode).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(LocalUserSelection.this, "Code successfully created.", Toast.LENGTH_SHORT).show();
@@ -799,6 +813,9 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
 
         if(viewId == btBack.getId())
             backToChoosing();
+
+        if(viewId == ibtShowCopyCodeOption.getId())
+            copyCodeOption();
     }
 
     @Override

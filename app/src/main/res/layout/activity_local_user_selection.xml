@@ -181,6 +181,30 @@
             android:visibility="gone"
             android:hint="Code: " />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layoutDirection="ltr">
+
+            <TextView
+                android:id="@+id/tvShowGeneratedCode"
+                android:layout_width="100pt"
+                android:layout_height="wrap_content"
+                android:textSize="14pt"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/ibtShowCopyCodeOption"
+                android:layout_width="25pt"
+                android:layout_height="fill_parent"
+                android:visibility="gone"
+                android:background="@null"
+                app:srcCompat="@drawable/ic_copy_icon" />
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/btCheckCode"
             android:layout_width="125pt"

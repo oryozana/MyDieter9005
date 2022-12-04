@@ -1,17 +1,13 @@
 package com.example.mydieter9005;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
 public class Code {
-    private String code;
-    private ArrayList<User> users;
-    private String expirationTime;
+    final int codeMaximumLength = 8;
+    protected String code;
+    protected String type;
 
-    public Code(String code, ArrayList<User> users, String expirationTime) {
+    public Code(String code) {
         this.code = code;
-        this.users = users;
-        this.expirationTime = expirationTime.replaceAll("\\.", "*");
+        this.type = "Code";
     }
 
     public String getCode() {
@@ -22,19 +18,11 @@ public class Code {
         this.code = code;
     }
 
-    public ArrayList<User> getUsers() {
-        return users;
+    public String getType() {
+        return type;
     }
 
-    public void setUsers(ArrayList<User> users) {
-        this.users = users;
-    }
-
-    public String getExpirationTime() {
-        return expirationTime;
-    }
-
-    public void setExpirationTime(String expirationTime) {
-        this.expirationTime = expirationTime;
+    public void setType(String type) {
+        this.type = type;
     }
 }
