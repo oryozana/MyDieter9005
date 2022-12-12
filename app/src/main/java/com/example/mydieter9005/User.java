@@ -1,6 +1,7 @@
 package com.example.mydieter9005;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class User implements Serializable {
     private static User currentUser;
@@ -11,6 +12,7 @@ public class User implements Serializable {
     private double weight;
     private Plan currentPlan;
     private int profilePictureId;
+    private ArrayList<DailyMeals> dailyMeals;
 
     public User(String username, String password, String Email, double startingWeight, Plan currentPlan, int profilePictureId){
         this.username = username;
@@ -20,6 +22,7 @@ public class User implements Serializable {
         this.weight = startingWeight;
         this.currentPlan = currentPlan;
         this.profilePictureId = profilePictureId;
+        this.dailyMeals = new ArrayList<DailyMeals>();
     }
 
     public User(String username, String password, String Email, String startingWeight, String targetCalories, String targetProteins, String targetFats, String profilePictureId){
@@ -30,6 +33,7 @@ public class User implements Serializable {
         this.weight = Double.parseDouble(startingWeight);
         this.currentPlan = new Plan(targetCalories, targetProteins, targetFats);
         this.profilePictureId = Integer.parseInt(profilePictureId);
+        this.dailyMeals = new ArrayList<DailyMeals>();
     }
 
     public String getUsername() {
@@ -90,6 +94,14 @@ public class User implements Serializable {
 
     public static void setCurrentUser(User currentUser) {
         User.currentUser = currentUser;
+    }
+
+    public ArrayList<DailyMeals> getDailyMeals() {
+        return dailyMeals;
+    }
+
+    public void setDailyMeals(ArrayList<DailyMeals> dailyMeals) {
+        this.dailyMeals = dailyMeals;
     }
 
     @Override

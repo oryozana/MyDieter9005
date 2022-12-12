@@ -45,6 +45,17 @@ public class Meal extends Food {
             setNeededIngredientsForMeal(meal2.neededIngredientsForMeal);
     }
 
+    public String generateMealDescriptionForFiles(){
+        String message = "Meal [ " + this.name + ": ";
+
+        for(int i = 0; i < this.neededIngredientsForMeal.size(); i++)
+            message += "   " + this.neededIngredientsForMeal.get(i).generateIngredientDescriptionForFiles();
+
+        message += " ]";
+
+        return message;
+    }
+
     public void initiateNeededIngredientsForMeal(String name, int grams){
         String[] mealParts = name.split(" and | with | include ");
         for(String mealPart : mealParts){

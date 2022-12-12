@@ -31,6 +31,10 @@ public class Ingredient extends Food {
         roundValues();
     }
 
+    public String generateIngredientDescriptionForFiles(){
+        return "Ingredient [ " + this.name + " , " + this.grams + " ]";
+    }
+
     public static Ingredient getIngredientByName(String name){
         for(Ingredient ingredient : Ingredient.ingredients){
             if(ingredient.name.equals(name))
