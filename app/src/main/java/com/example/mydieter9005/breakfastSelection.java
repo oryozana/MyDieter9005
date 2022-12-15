@@ -45,7 +45,7 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
     EditText etFilterBreakfast;
     Song activeSong = Song.getSongs().get(0);
 
-    DailyMenu todayMeals = DailyMenu.getTodayMeals();
+    DailyMenu todayMenu = DailyMenu.getTodayMenu();
 
     FileInputStream is;
     InputStreamReader isr;
@@ -118,7 +118,7 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
 
-                todayMeals.addBreakfast(selectedItem);
+                todayMenu.addBreakfast(selectedItem);
 
                 me.setClass(breakfastSelection.this, mealsMenu.class);
                 startActivity(me);

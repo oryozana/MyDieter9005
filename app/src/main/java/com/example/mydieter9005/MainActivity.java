@@ -146,13 +146,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             initiateIngredientsPictures();
 
             todayMenu = new DailyMenu(currentDate);
-            DailyMenu.setTodayMeals(todayMenu);
+            DailyMenu.setTodayMenu(todayMenu);
 
             me.setClass(this, LocalUserSelection.class);
             startActivity(me);
         }
         else
-            todayMenu = DailyMenu.getTodayMeals();
+            todayMenu = DailyMenu.getTodayMenu();
         return me;
     }
 

@@ -23,15 +23,15 @@ public class DailyMenu {
         this.date = date;
     }
 
-    public static DailyMenu getTodayMeals() {
+    public static DailyMenu getTodayMenu() {
         return todayMenu;
     }
 
-    public static void setTodayMeals(DailyMenu todayMeals) {
+    public static void setTodayMenu(DailyMenu todayMeals) {
         DailyMenu.todayMenu = todayMeals;
     }
 
-    public String generateDailyMealsDescriptionForFiles(DailyMenu dailyMeals){
+    public String generateDailyMenuDescriptionForFiles(DailyMenu dailyMeals){
         String message = "DailyMenu { ";
 
         message += "breakfast ( ";
@@ -89,7 +89,7 @@ public class DailyMenu {
         return message;
     }
 
-    public static DailyMenu generateDailyMealsObjectFromFile(String data){
+    public static DailyMenu generateDailyMenuObjectFromFile(String data){
         return null;
     }
 
