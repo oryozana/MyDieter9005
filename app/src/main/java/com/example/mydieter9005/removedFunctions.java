@@ -598,4 +598,21 @@ public class removedFunctions {
 //        ad = adb.create();
 //        ad.show();
 //    }
+
+            // From: breakfastSelection, lunchSelection and dinnerSelection
+//    public void updateIfMealModified(){
+//        if(me.hasExtra("modifiedMeal")){
+//            Meal modifiedMeal = (Meal) me.getSerializableExtra("modifiedMeal");
+//            if(getMealIndexInMealsList(modifiedMeal) != -1)  // Check if exist inside mealsList.
+//                mealsList.set(getMealIndexInMealsList(modifiedMeal), modifiedMeal);
+//        }
+//    }
+//
+//    public int getMealIndexInMealsList(Meal meal){
+//        for(int i = 0; i < mealsList.size(); i++){
+//            if(mealsList.get(i).getName().equals(meal.getName()))
+//                return i;
+//        }
+//        return -1;
+//    }
 }

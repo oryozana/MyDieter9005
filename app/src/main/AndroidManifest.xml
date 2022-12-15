@@ -80,13 +80,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".mealModifier"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".settingsSetter"
             android:exported="false" />
         <activity

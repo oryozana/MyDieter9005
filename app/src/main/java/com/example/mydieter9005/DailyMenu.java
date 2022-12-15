@@ -2,8 +2,8 @@ package com.example.mydieter9005;
 
 import java.util.ArrayList;
 
-public class DailyMeals {
-    private static DailyMeals todayMeals;
+public class DailyMenu {
+    private static DailyMenu todayMenu;
     private ArrayList<Food> breakfast;
     private ArrayList<Food> lunch;
     private ArrayList<Food> dinner;
@@ -12,7 +12,7 @@ public class DailyMeals {
     private double totalCalories;
     private final String date;
 
-    public DailyMeals(String date) {
+    public DailyMenu(String date) {
         this.breakfast = new ArrayList<Food>();
         this.lunch = new ArrayList<Food>();
         this.dinner = new ArrayList<Food>();
@@ -23,16 +23,16 @@ public class DailyMeals {
         this.date = date;
     }
 
-    public static DailyMeals getTodayMeals() {
-        return todayMeals;
+    public static DailyMenu getTodayMeals() {
+        return todayMenu;
     }
 
-    public static void setTodayMeals(DailyMeals todayMeals) {
-        DailyMeals.todayMeals = todayMeals;
+    public static void setTodayMeals(DailyMenu todayMeals) {
+        DailyMenu.todayMenu = todayMeals;
     }
 
-    public String generateDailyMealsDescriptionForFiles(DailyMeals dailyMeals){
-        String message = "DailyMeals { ";
+    public String generateDailyMealsDescriptionForFiles(DailyMenu dailyMeals){
+        String message = "DailyMenu { ";
 
         message += "breakfast ( ";
         for(int i = 0; i < this.breakfast.size(); i++){
@@ -89,7 +89,7 @@ public class DailyMeals {
         return message;
     }
 
-    public static DailyMeals generateDailyMealsObjectFromFile(String data){
+    public static DailyMenu generateDailyMealsObjectFromFile(String data){
         return null;
     }
 
@@ -163,6 +163,48 @@ public class DailyMeals {
                 removed = true;
             }
         }
+    }
+
+    public String getUnitedBreakfastName(){
+        if(breakfast.size() == 0)
+            return "null";
+
+        String unitedName = breakfast.get(0).name;
+        for(int i = 1; i < breakfast.size(); i++){
+            if(i == breakfast.size() - 1)
+                unitedName += " and " + breakfast.get(i).name;
+            else
+                unitedName += breakfast.get(i).name + ".";
+        }
+        return unitedName;
+    }
+
+    public String getUnitedLunchName(){
+        if(lunch.size() == 0)
+            return "null";
+
+        String unitedName = lunch.get(0).name;
+        for(int i = 1; i < lunch.size(); i++){
+            if(i == lunch.size() - 1)
+                unitedName += " and " + lunch.get(i).name;
+            else
+                unitedName += " " + lunch.get(i).name + ".";
+        }
+        return unitedName;
+    }
+
+    public String getUnitedDinnerName(){
+        if(dinner.size() == 0)
+            return "";
+
+        String unitedName = dinner.get(0).name;
+        for(int i = 1; i < dinner.size(); i++){
+            if(i == dinner.size() - 1)
+                unitedName += " and " + dinner.get(i).name;
+            else
+                unitedName += dinner.get(i).name + ".";
+        }
+        return unitedName;
     }
 
     public double getTotalProteins() {

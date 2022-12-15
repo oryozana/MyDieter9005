@@ -1,12 +1,5 @@
 package com.example.mydieter9005;
 
-import android.widget.Toast;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Locale;
-
-
 import java.util.ArrayList;
 import java.util.Locale;
 

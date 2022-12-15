@@ -159,8 +159,6 @@ public class ingredientsSelection extends AppCompatActivity implements View.OnCl
 
         if(cameFrom.equals("customMeals"))
             me.setClass(ingredientsSelection.this, customMeals.class);
-        if(cameFrom.equals("mealModifier"))
-            me.setClass(ingredientsSelection.this, mealModifier.class);
 
         startActivity(me);
     }

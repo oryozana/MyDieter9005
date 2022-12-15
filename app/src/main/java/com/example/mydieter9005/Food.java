@@ -1,6 +1,5 @@
 package com.example.mydieter9005;
 
-
 import java.io.Serializable;
 
 public class Food implements Serializable {

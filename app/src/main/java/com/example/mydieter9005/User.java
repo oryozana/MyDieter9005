@@ -12,7 +12,7 @@ public class User implements Serializable {
     private double weight;
     private Plan currentPlan;
     private int profilePictureId;
-    private ArrayList<DailyMeals> dailyMeals;
+    private ArrayList<DailyMenu> dailyMeals;
 
     public User(String username, String password, String Email, double startingWeight, Plan currentPlan, int profilePictureId){
         this.username = username;
@@ -22,7 +22,7 @@ public class User implements Serializable {
         this.weight = startingWeight;
         this.currentPlan = currentPlan;
         this.profilePictureId = profilePictureId;
-        this.dailyMeals = new ArrayList<DailyMeals>();
+        this.dailyMeals = new ArrayList<DailyMenu>();
     }
 
     public User(String username, String password, String Email, String startingWeight, String targetCalories, String targetProteins, String targetFats, String profilePictureId){
@@ -33,7 +33,7 @@ public class User implements Serializable {
         this.weight = Double.parseDouble(startingWeight);
         this.currentPlan = new Plan(targetCalories, targetProteins, targetFats);
         this.profilePictureId = Integer.parseInt(profilePictureId);
-        this.dailyMeals = new ArrayList<DailyMeals>();
+        this.dailyMeals = new ArrayList<DailyMenu>();
     }
 
     public String getUsername() {
@@ -96,12 +96,27 @@ public class User implements Serializable {
         User.currentUser = currentUser;
     }
 
-    public ArrayList<DailyMeals> getDailyMeals() {
+    public ArrayList<DailyMenu> getDailyMeals() {
         return dailyMeals;
     }
 
-    public void setDailyMeals(ArrayList<DailyMeals> dailyMeals) {
+    public void setDailyMeals(ArrayList<DailyMenu> dailyMeals) {
         this.dailyMeals = dailyMeals;
+    }
+
+    public void addDailyMeals(DailyMenu dailyMeals) {
+        boolean found = false;
+
+        for(int i = 0; i < this.dailyMeals.size(); i++){
+            if(this.dailyMeals.get(i).getDate().equals(dailyMeals.getDate()) && !found){
+                this.dailyMeals.remove(i);
+                this.dailyMeals.add(dailyMeals);
+                found = true;
+            }
+        }
+
+        if(this.dailyMeals.size() == 0)
+            this.dailyMeals.add(dailyMeals);
     }
 
     @Override

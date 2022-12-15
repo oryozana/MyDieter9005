@@ -1,22 +1,14 @@
 package com.example.mydieter9005;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.text.Annotation;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,25 +16,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AnalogClock;
 import android.widget.Button;
-import android.widget.DigitalClock;
 import android.widget.LinearLayout;
 import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.example.mydieter9005.databinding.ActivityMainBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -51,9 +32,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -65,15 +44,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView tvBreakfastMain, tvLunchMain, tvDinnerMain;
     TextView tvTotalProteinsMain, tvTotalFatsMain, tvTotalCaloriesMain;
     Button btMealsMenu, btWriteMealsToExternalFile, btReadMealsFromExternalFile;
-    double totalProteins, totalFats, totalCalories;
     LinearLayout mainActivityLinearLayout;
-    Meal[] selectedMeals = new Meal[3];
     Song activeSong;  // In this activity he get a initial value at "createTheFirstIntent".
+
+    DailyMenu todayMenu;
 
     FileOutputStream fos;
     OutputStreamWriter osw;
     BufferedWriter bw;
-    String todayDate;
+    String currentDate;
     int currentHour;
 
     SQLiteDatabase sqdb;
@@ -97,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd_MM_yyyy");
         LocalDateTime today = LocalDateTime.now();
-        todayDate = dtf.format(today) + " saved file.";
+        currentDate = dtf.format(today) + " saved file.";
 
         Calendar calendar = Calendar.getInstance();
         currentHour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -137,27 +116,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void updateMealsIfNeeded(){
-        if(me.hasExtra("selectedBreakfast") || me.hasExtra("selectedLunch") || me.hasExtra("selectedDinner")) {
-            selectedMeals[0] = (Meal) me.getSerializableExtra("selectedBreakfast");
-            selectedMeals[1] = (Meal) me.getSerializableExtra("selectedLunch");
-            selectedMeals[2] = (Meal) me.getSerializableExtra("selectedDinner");
+        if(todayMenu.getBreakfast().size() != 0)
+            tvBreakfastMain.setText("Your breakfast: " + todayMenu.getUnitedBreakfastName());
+        if(todayMenu.getLunch().size() != 0)
+            tvLunchMain.setText("Your lunch: " + todayMenu.getUnitedLunchName());
+        if(todayMenu.getDinner().size() != 0)
+            tvDinnerMain.setText("Your dinner: " + todayMenu.getUnitedDinnerName());
 
-            if(selectedMeals[0] != null)
-                tvBreakfastMain.setText("Your breakfast: " + selectedMeals[0].getName());
-            if(selectedMeals[1] != null)
-                tvLunchMain.setText("Your lunch: " + selectedMeals[1].getName());
-            if(selectedMeals[2] != null)
-                tvDinnerMain.setText("Your dinner: " + selectedMeals[2].getName());
-
-            totalProteins = me.getDoubleExtra("totalProteins", 0);
-            tvTotalProteinsMain.setText("Total Proteins: " + Math.round(totalProteins * 1000.0) / 1000.0 + " .");
-
-            totalFats = me.getDoubleExtra("totalFats", 0);
-            tvTotalFatsMain.setText("Total Fats: " + Math.round(totalFats * 1000.0) / 1000.0 + " .");
-
-            totalCalories = me.getDoubleExtra("totalCalories", 0);
-            tvTotalCaloriesMain.setText("Total calories: " + Math.round(totalCalories * 1000.0) / 1000.0 + " .");
-        }
+        tvTotalProteinsMain.setText("Total Proteins: " + todayMenu.getTotalProteins() + " .");
+        tvTotalFatsMain.setText("Total Fats: " + todayMenu.getTotalFats() + " .");
+        tvTotalCaloriesMain.setText("Total calories: " + todayMenu.getTotalCalories() + " .");
     }
 
     public Intent createTheFirstIntent(Intent me){
@@ -168,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             me.putExtra("playMusic", true);
             me.putExtra("useVideos", true);
             me.putExtra("useManuallySave", true);
-            me.putExtra("todayDate", todayDate);
+            me.putExtra("currentDate", currentDate);
 
             Song.initiateSongs();
             activeSong = Song.getActiveSong();
@@ -177,9 +145,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Ingredient.initiateIngredientsList();
             initiateIngredientsPictures();
 
+            todayMenu = new DailyMenu(currentDate);
+            DailyMenu.setTodayMeals(todayMenu);
+
             me.setClass(this, LocalUserSelection.class);
             startActivity(me);
         }
+        else
+            todayMenu = DailyMenu.getTodayMeals();
         return me;
     }
 

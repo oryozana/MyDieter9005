@@ -45,10 +45,11 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
     EditText etFilterBreakfast;
     Song activeSong = Song.getSongs().get(0);
 
+    DailyMenu todayMeals = DailyMenu.getTodayMeals();
+
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
-    String modifiedMealsFileName = "breakfastSelectionModifiedMeals";
     Intent me;
 
     @Override
@@ -102,7 +103,6 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
             public void afterTextChanged(Editable s) {}
         });
 
-        updateIfMealModified();
         setListViewAdapter();
         initiateVideoPlayer();
         initiateMediaPlayer();
@@ -118,16 +118,10 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
 
-                if(!multiSelect){
-                    me.setClass(breakfastSelection.this, mealsMenu.class);
-                    me.putExtra("breakfast", selectedItem);
-                    startActivity(me);
-                }
-                else {
-                    chosenMultiSelectBreakfast = new Meal(chosenMultiSelectBreakfast, selectedItem);
-                    Toast.makeText(breakfastSelection.this, selectedItem.getName() + " has added.", Toast.LENGTH_SHORT).show();
-                    multiSelectCounter++;
-                }
+                todayMeals.addBreakfast(selectedItem);
+
+                me.setClass(breakfastSelection.this, mealsMenu.class);
+                startActivity(me);
             }
         });
 
@@ -162,16 +156,6 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
             }
         });
 
-        adb.setNeutralButton("Edit meal", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                me.setClass(breakfastSelection.this, mealModifier.class);
-                me.putExtra("mealToModify", meal);
-                me.putExtra("cameToMealModifierFrom", getLocalClassName());
-                startActivity(me);
-            }
-        });
-
         ad = adb.create();
         ad.show();
     }
@@ -199,34 +183,8 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
             }
         });
 
-        adb.setNeutralButton("Edit meal", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                me.setClass(breakfastSelection.this, mealModifier.class);
-                me.putExtra("mealToModify", meal);
-                me.putExtra("cameToMealModifierFrom", getLocalClassName());
-                startActivity(me);
-            }
-        });
-
         ad = adb.create();
         ad.show();
-    }
-
-    public void updateIfMealModified(){
-        if(me.hasExtra("modifiedMeal")){
-            Meal modifiedMeal = (Meal) me.getSerializableExtra("modifiedMeal");
-            if(getMealIndexInMealsList(modifiedMeal) != -1)  // Check if exist inside mealsList.
-                mealsList.set(getMealIndexInMealsList(modifiedMeal), modifiedMeal);
-        }
-    }
-
-    public int getMealIndexInMealsList(Meal meal){
-        for(int i = 0; i < mealsList.size(); i++){
-            if(mealsList.get(i).getName().equals(meal.getName()))
-                return i;
-        }
-        return -1;
     }
 
     public void sendToCustomize(){

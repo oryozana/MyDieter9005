@@ -48,7 +48,6 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
-    String modifiedMealsFileName = "lunchSelectionModifiedMeals";
     Intent me;
 
     @Override
@@ -145,7 +144,6 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
             public void afterTextChanged(Editable s) {}
         });
 
-        updateIfMealModified();
         setListViewAdapter();
         implementSettingsData();
         initiateVideoPlayer();
@@ -205,16 +203,6 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        adb.setNeutralButton("Edit meal", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                me.setClass(lunchSelection.this, mealModifier.class);
-                me.putExtra("mealToModify", meal);
-                me.putExtra("cameToMealModifierFrom", getLocalClassName());
-                startActivity(me);
-            }
-        });
-
         ad = adb.create();
         ad.show();
     }
@@ -242,16 +230,6 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        adb.setNeutralButton("Edit meal", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                me.setClass(lunchSelection.this, mealModifier.class);
-                me.putExtra("mealToModify", meal);
-                me.putExtra("cameToMealModifierFrom", getLocalClassName());
-                startActivity(me);
-            }
-        });
-
         ad = adb.create();
         ad.show();
     }
@@ -272,22 +250,6 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
             multiSelectCounter = 0;
             multiSelect = false;
         }
-    }
-
-    public void updateIfMealModified(){
-        if(me.hasExtra("modifiedMeal")){
-            Meal modifiedMeal = (Meal) me.getSerializableExtra("modifiedMeal");
-            if(getMealIndexInMealsList(modifiedMeal) != -1)  // Check if exist inside mealsList.
-                mealsList.set(getMealIndexInMealsList(modifiedMeal), modifiedMeal);
-        }
-    }
-
-    public int getMealIndexInMealsList(Meal meal){
-        for(int i = 0; i < mealsList.size(); i++){
-            if(mealsList.get(i).getName().equals(meal.getName()))
-                return i;
-        }
-        return -1;
     }
 
     public void sendToCustomize(){
