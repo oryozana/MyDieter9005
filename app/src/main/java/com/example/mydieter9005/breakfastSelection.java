@@ -20,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import java.io.BufferedReader;
@@ -35,17 +34,14 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    Button btSendBreakfastToCustomize, btClearBreakfastSelection, btMultiBreakfastSelect;
-    ArrayList<Meal> mealsList;
-    ArrayAdapter<Meal> adapter;
-    boolean multiSelect = false;
-    Meal chosenMultiSelectBreakfast = null;
-    int multiSelectCounter = 0;
-    ListView listView;
+    Button btSendBreakfastToCustomize, btClearBreakfastSelection, btBackFromBreakfastSelect;
     EditText etFilterBreakfast;
-    Song activeSong = Song.getSongs().get(0);
+    ListView listView;
 
     DailyMenu todayMenu = DailyMenu.getTodayMenu();
+    Song activeSong = Song.getSongs().get(0);
+    ArrayList<Meal> mealsList;
+    ArrayAdapter<Meal> adapter;
 
     FileInputStream is;
     InputStreamReader isr;
@@ -86,8 +82,8 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
         btSendBreakfastToCustomize.setOnClickListener(this);
         btClearBreakfastSelection = (Button) findViewById(R.id.btClearBreakfastSelection);
         btClearBreakfastSelection.setOnClickListener(this);
-        btMultiBreakfastSelect = (Button) findViewById(R.id.btMultiBreakfastSelect);
-        btMultiBreakfastSelect.setOnClickListener(this);
+        btBackFromBreakfastSelect = (Button) findViewById(R.id.btBackFromBreakfastSelect);
+        btBackFromBreakfastSelect.setOnClickListener(this);
 
         etFilterBreakfast = (EditText) findViewById(R.id.etFilterBreakfast);
         etFilterBreakfast.addTextChangedListener(new TextWatcher() {
@@ -193,45 +189,9 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
         startActivity(me);
     }
 
-    public void multiOrSingleSelectUpdate(){
-        if(!multiSelect){
-            Toast.makeText(this, "Multi select has enabled.", Toast.LENGTH_SHORT).show();
-            btMultiBreakfastSelect.setText("Disable multi select");
-            btClearBreakfastSelection.setText("Finish choosing");
-            multiSelectCounter = 0;
-            multiSelect = true;
-        }
-        else{
-            Toast.makeText(this, "Multi select has disabled.", Toast.LENGTH_SHORT).show();
-            btMultiBreakfastSelect.setText("Enable multi select");
-            btClearBreakfastSelection.setText("Clear selection");
-            chosenMultiSelectBreakfast = null;
-            multiSelectCounter = 0;
-            multiSelect = false;
-        }
-    }
-
-    public void clearBreakfastSelectionOrFinishMultiSelect(){
-        if(multiSelect){
-            if(multiSelectCounter == 0){
-                Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                me.setClass(breakfastSelection.this, mealsMenu.class);
-                me.putExtra("breakfast", chosenMultiSelectBreakfast);
-                startActivity(me);
-            }
-        }
-        else{
-            if(me.hasExtra("breakfast")){
-                me.removeExtra("breakfast");
-                me.setClass(breakfastSelection.this, mealsMenu.class);
-                startActivity(me);
-            }
-            else{
-                Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
-            }
-        }
+    public void backToMealsMenu(){
+        me.setClass(breakfastSelection.this, mealsMenu.class);
+        startActivity(me);
     }
 
     public String getFileData(String fileName){
@@ -376,10 +336,10 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
         if(viewId == btSendBreakfastToCustomize.getId())
             sendToCustomize();
 
-        if(viewId == btMultiBreakfastSelect.getId())
-            multiOrSingleSelectUpdate();
-
         if(viewId == btClearBreakfastSelection.getId())
-            clearBreakfastSelectionOrFinishMultiSelect();
+            todayMenu.getBreakfast().clear();
+
+        if(viewId == btBackFromBreakfastSelect.getId())
+            backToMealsMenu();
     }
 }

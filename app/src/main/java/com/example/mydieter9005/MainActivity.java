@@ -116,11 +116,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void updateMealsIfNeeded(){
-        if(todayMenu.getBreakfast().size() != 0)
+        if(todayMenu.hasBreakfast())
             tvBreakfastMain.setText("Your breakfast: " + todayMenu.getUnitedBreakfastName());
-        if(todayMenu.getLunch().size() != 0)
+        if(todayMenu.hasLunch())
             tvLunchMain.setText("Your lunch: " + todayMenu.getUnitedLunchName());
-        if(todayMenu.getDinner().size() != 0)
+        if(todayMenu.hasDinner())
             tvDinnerMain.setText("Your dinner: " + todayMenu.getUnitedDinnerName());
 
         tvTotalProteinsMain.setText("Total Proteins: " + todayMenu.getTotalProteins() + " .");

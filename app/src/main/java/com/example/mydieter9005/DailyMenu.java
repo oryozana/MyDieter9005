@@ -93,20 +93,47 @@ public class DailyMenu {
         return null;
     }
 
+    public boolean isThereAtLeastOneThing(){
+        boolean found = false;
+
+        if(this.breakfast.size() != 0)
+            found = true;
+
+        if(this.lunch.size() != 0)
+            found = true;
+
+        if(this.dinner.size() != 0)
+            found = true;
+
+        return found;
+    }
+
+    private void roundNutritionalValues(){
+        this.totalProteins = Math.round(this.totalProteins * 1000.0) / 1000.0;
+        this.totalFats = Math.round(this.totalFats * 1000.0) / 1000.0;
+        this.totalCalories = Math.round(this.totalCalories * 1000.0) / 1000.0;
+    }
+
     private void addFoodNutritionalValues(Food food) {
         this.totalProteins += food.getProteins();
         this.totalFats += food.getFats();
         this.totalCalories += food.getCalories();
+        roundNutritionalValues();
     }
 
     private void subtractFoodNutritionalValues(Food food) {
         this.totalProteins -= food.getProteins();
         this.totalFats -= food.getFats();
         this.totalCalories -= food.getCalories();
+        roundNutritionalValues();
     }
 
     public ArrayList<Food> getBreakfast() {
         return this.breakfast;
+    }
+
+    public boolean hasBreakfast() {
+        return this.breakfast.size() != 0;
     }
 
     public void addBreakfast(Food breakfast) {
@@ -129,6 +156,10 @@ public class DailyMenu {
         return this.lunch;
     }
 
+    public boolean hasLunch(){
+        return this.lunch.size() != 0;
+    }
+
     public void addLunch(Food lunch) {
         this.lunch.add(lunch);
         addFoodNutritionalValues(lunch);
@@ -147,6 +178,10 @@ public class DailyMenu {
 
     public ArrayList<Food> getDinner() {
         return this.dinner;
+    }
+
+    public boolean hasDinner() {
+        return this.dinner.size() != 0;
     }
 
     public void addDinner(Food dinner) {

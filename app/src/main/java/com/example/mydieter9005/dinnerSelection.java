@@ -20,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import java.io.BufferedReader;
@@ -35,15 +34,14 @@ public class dinnerSelection extends AppCompatActivity implements View.OnClickLi
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    Button btSendDinnerToCustomize, btClearDinnerSelection, btMultiDinnerSelect;
-    ArrayList<Meal> mealsList;
-    ArrayAdapter<Meal> adapter;
-    boolean multiSelect = false;
-    Meal chosenMultiSelectDinner = null;
-    int multiSelectCounter = 0;
-    Song activeSong = Song.getSongs().get(0);
+    Button btSendDinnerToCustomize, btClearDinnerSelection, btBackFromDinnerSelect;
     EditText etFilterDinner;
     ListView listView;
+
+    DailyMenu todayMenu = DailyMenu.getTodayMenu();
+    Song activeSong = Song.getSongs().get(0);
+    ArrayAdapter<Meal> adapter;
+    ArrayList<Meal> mealsList;
 
     FileInputStream is;
     InputStreamReader isr;
@@ -126,8 +124,8 @@ public class dinnerSelection extends AppCompatActivity implements View.OnClickLi
         btSendDinnerToCustomize.setOnClickListener(this);
         btClearDinnerSelection = (Button) findViewById(R.id.btClearDinnerSelection);
         btClearDinnerSelection.setOnClickListener(this);
-        btMultiDinnerSelect = (Button) findViewById(R.id.btMultiDinnerSelect);
-        btMultiDinnerSelect.setOnClickListener(this);
+        btBackFromDinnerSelect = (Button) findViewById(R.id.btBackFromDinnerSelect);
+        btBackFromDinnerSelect.setOnClickListener(this);
 
         etFilterDinner = (EditText) findViewById(R.id.etFilterDinner);
         etFilterDinner.addTextChangedListener(new TextWatcher() {
@@ -158,16 +156,10 @@ public class dinnerSelection extends AppCompatActivity implements View.OnClickLi
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
 
-                if(!multiSelect){
-                    me.setClass(dinnerSelection.this, mealsMenu.class);
-                    me.putExtra("dinner", selectedItem);
-                    startActivity(me);
-                }
-                else {
-                    chosenMultiSelectDinner = new Meal(chosenMultiSelectDinner, selectedItem);
-                    Toast.makeText(dinnerSelection.this, selectedItem.getName() + " has added.", Toast.LENGTH_SHORT).show();
-                    multiSelectCounter++;
-                }
+                todayMenu.addDinner(selectedItem);
+
+                me.setClass(dinnerSelection.this, mealsMenu.class);
+                startActivity(me);
             }
         });
 
@@ -233,52 +225,15 @@ public class dinnerSelection extends AppCompatActivity implements View.OnClickLi
         ad.show();
     }
 
-    public void multiOrSingleSelectUpdate(){
-        if(!multiSelect){
-            Toast.makeText(this, "Multi select has enabled.", Toast.LENGTH_SHORT).show();
-            btMultiDinnerSelect.setText("Disable multi select");
-            btClearDinnerSelection.setText("Finish choosing");
-            multiSelectCounter = 0;
-            multiSelect = true;
-        }
-        else{
-            Toast.makeText(this, "Multi select has disabled.", Toast.LENGTH_SHORT).show();
-            btMultiDinnerSelect.setText("Enable multi select");
-            btClearDinnerSelection.setText("Clear selection");
-            chosenMultiSelectDinner = null;
-            multiSelectCounter = 0;
-            multiSelect = false;
-        }
-    }
-
-
     public void sendToCustomize(){
         me.setClass(dinnerSelection.this, customMeals.class);
         me.putExtra("cameFrom", "dinner");
         startActivity(me);
     }
 
-    public void clearDinnerSelectionOrFinishMultiSelect(){
-        if(multiSelect){
-            if(multiSelectCounter == 0){
-                Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                me.setClass(dinnerSelection.this, mealsMenu.class);
-                me.putExtra("dinner", chosenMultiSelectDinner);
-                startActivity(me);
-            }
-        }
-        else{
-            if(me.hasExtra("dinner")){
-                me.removeExtra("dinner");
-                me.setClass(dinnerSelection.this, mealsMenu.class);
-                startActivity(me);
-            }
-            else{
-                Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
-            }
-        }
+    public void backToMealsMenu(){
+        me.setClass(dinnerSelection.this, mealsMenu.class);
+        startActivity(me);
     }
 
     public String getFileData(String fileName){
@@ -423,10 +378,10 @@ public class dinnerSelection extends AppCompatActivity implements View.OnClickLi
         if(viewId == btSendDinnerToCustomize.getId())
             sendToCustomize();
 
-        if(viewId == btMultiDinnerSelect.getId())
-            multiOrSingleSelectUpdate();
-
         if(viewId == btClearDinnerSelection.getId())
-            clearDinnerSelectionOrFinishMultiSelect();
+            todayMenu.getDinner().clear();
+
+        if(viewId == btBackFromDinnerSelect.getId())
+            backToMealsMenu();
     }
 }

@@ -57,19 +57,21 @@
             android:text="Customize meal" />
 
         <Button
-            android:id="@+id/btMultiDinnerSelect"
+            android:id="@+id/btClearDinnerSelection"
             android:layout_width="125pt"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15pt"
             android:layout_marginRight="15pt"
             android:layout_marginBottom="2pt"
-            android:text="Enable multi select" />
+            android:text="Clear selection" />
 
         <Button
-            android:id="@+id/btClearDinnerSelection"
+            android:id="@+id/btBackFromDinnerSelect"
             android:layout_width="125pt"
             android:layout_height="wrap_content"
-            android:text="Clear selection" />
+            android:layout_marginLeft="15pt"
+            android:layout_marginRight="15pt"
+            android:text="Back" />
     </LinearLayout>
 
 </RelativeLayout>

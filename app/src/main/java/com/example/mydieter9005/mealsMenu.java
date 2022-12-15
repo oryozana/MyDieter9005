@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,9 +30,7 @@ public class mealsMenu extends AppCompatActivity implements View.OnClickListener
     TextView tvTotalProteins, tvTotalFats, tvTotalCalories;
     Button btBreakfast, btLunch, btDinner, btFinish;
 
-    Meal breakfast, lunch, dinner;
-    Meal[] selectedMeals = new Meal[3];
-    double totalProteins = 0, totalFats = 0, totalCalories = 0;
+    DailyMenu todayMenu = DailyMenu.getTodayMenu();
     Song activeSong = Song.getSongs().get(0);
 
     FileInputStream is;
@@ -117,39 +113,24 @@ public class mealsMenu extends AppCompatActivity implements View.OnClickListener
         btLunch.setText("Select");
         btDinner.setText("Select");
 
-        if(me.hasExtra("breakfast")){
-            breakfast = (Meal) me.getSerializableExtra("breakfast");
-            tvBreakfast.setText("Your breakfast is: " + breakfast.getName() + ".");
+        if(todayMenu.hasBreakfast()){
+            tvBreakfast.setText("Your breakfast is: " + todayMenu.getUnitedBreakfastName() + ".");
             btBreakfast.setText("Reselect");
-            totalProteins += breakfast.getProteins();
-            totalFats += breakfast.getFats();
-            totalCalories += breakfast.getCalories();
-            selectedMeals[0] = breakfast;
         }
 
-        if(me.hasExtra("lunch")){
-            lunch = (Meal) me.getSerializableExtra("lunch");
-            tvLunch.setText("Your lunch is: " + lunch.getName() + ".");
+        if(todayMenu.hasLunch()){
+            tvLunch.setText("Your lunch is: " + todayMenu.getUnitedLunchName() + ".");
             btLunch.setText("Reselect");
-            totalProteins += lunch.getProteins();
-            totalFats += lunch.getFats();
-            totalCalories += lunch.getCalories();
-            selectedMeals[1] = lunch;
         }
 
-        if(me.hasExtra("dinner")){
-            dinner = (Meal) me.getSerializableExtra("dinner");
-            tvDinner.setText("Your dinner is: " + dinner.getName() + ".");
+        if(todayMenu.hasDinner()){
+            tvDinner.setText("Your dinner is: " + todayMenu.getUnitedDinnerName() + ".");
             btDinner.setText("Reselect");
-            totalProteins += dinner.getProteins();
-            totalFats += dinner.getFats();
-            totalCalories += dinner.getCalories();
-            selectedMeals[2] = dinner;
         }
 
-        tvTotalProteins.setText("Total proteins: " + Math.round(totalProteins * 1000.0) / 1000.0 + " .");
-        tvTotalFats.setText("Total fats: " + Math.round(totalFats * 1000.0) / 1000.0 + " .");
-        tvTotalCalories.setText("Total calories: " + Math.round(totalCalories * 1000.0) / 1000.0 + " .");
+        tvTotalProteins.setText("Total proteins: " + todayMenu.getTotalProteins() + " .");
+        tvTotalFats.setText("Total fats: " + todayMenu.getTotalFats() + " .");
+        tvTotalCalories.setText("Total calories: " + todayMenu.getTotalCalories() + " .");
     }
 
     public String getFileData(String fileName){
@@ -260,33 +241,24 @@ public class mealsMenu extends AppCompatActivity implements View.OnClickListener
             me.setClass(this, breakfastSelection.class);
             startActivity(me);
         }
+
         if(viewId == btLunch.getId()) {
             me.setClass(this, lunchSelection.class);
             startActivity(me);
         }
+
         if(viewId == btDinner.getId()) {
             me.setClass(this, dinnerSelection.class);
             startActivity(me);
         }
+
         if(viewId == btFinish.getId()) {
-            if(me.hasExtra("breakfast") || me.hasExtra("lunch") || me.hasExtra("dinner")){
+            if(todayMenu.isThereAtLeastOneThing()){
                 me.setClass(mealsMenu.this, finishMeals.class);
-
-                if(selectedMeals[0] != null)
-                    me.putExtra("selectedBreakfast", selectedMeals[0]);
-                if(selectedMeals[1] != null)
-                    me.putExtra("selectedLunch", selectedMeals[1]);
-                if(selectedMeals[2] != null)
-                    me.putExtra("selectedDinner", selectedMeals[2]);
-
-                me.putExtra("totalProteins", totalProteins);
-                me.putExtra("totalFats", totalFats);
-                me.putExtra("totalCalories", totalCalories);
                 startActivity(me);
             }
-            else{
+            else
                 Toast.makeText(this, "Please pick at least one meal !", Toast.LENGTH_LONG).show();
-            }
         }
     }
 }

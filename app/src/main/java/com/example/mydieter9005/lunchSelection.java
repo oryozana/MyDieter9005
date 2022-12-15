@@ -35,15 +35,14 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    Button btSendLunchToCustomize, btClearLunchSelection, btMultiLunchSelect;
-    ArrayList<Meal> mealsList;
-    ArrayAdapter<Meal> adapter;
-    boolean multiSelect = false;
-    Meal chosenMultiSelectLunch = null;
-    int multiSelectCounter = 0;
-    Song activeSong = Song.getSongs().get(0);
+    Button btSendLunchToCustomize, btClearLunchSelection, btBackFromLunchSelect;
     EditText etFilterLunch;
     ListView listView;
+
+    DailyMenu todayMenu = DailyMenu.getTodayMenu();
+    Song activeSong = Song.getSongs().get(0);
+    ArrayAdapter<Meal> adapter;
+    ArrayList<Meal> mealsList;
 
     FileInputStream is;
     InputStreamReader isr;
@@ -127,8 +126,8 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
         btSendLunchToCustomize.setOnClickListener(this);
         btClearLunchSelection = (Button) findViewById(R.id.btClearLunchSelection);
         btClearLunchSelection.setOnClickListener(this);
-        btMultiLunchSelect = (Button) findViewById(R.id.btMultiLunchSelect);
-        btMultiLunchSelect.setOnClickListener(this);
+        btBackFromLunchSelect = (Button) findViewById(R.id.btBackFromLunchSelect);
+        btBackFromLunchSelect.setOnClickListener(this);
 
         etFilterLunch = (EditText) findViewById(R.id.etFilterLunch);
         etFilterLunch.addTextChangedListener(new TextWatcher() {
@@ -159,16 +158,10 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
 
-                if(!multiSelect){
-                    me.setClass(lunchSelection.this, mealsMenu.class);
-                    me.putExtra("lunch", selectedItem);
-                    startActivity(me);
-                }
-                else {
-                    chosenMultiSelectLunch = new Meal(chosenMultiSelectLunch, selectedItem);
-                    Toast.makeText(lunchSelection.this, selectedItem.getName() + " has added.", Toast.LENGTH_SHORT).show();
-                    multiSelectCounter++;
-                }
+                todayMenu.addLunch(selectedItem);
+
+                me.setClass(lunchSelection.this, mealsMenu.class);
+                startActivity(me);
             }
         });
 
@@ -234,51 +227,15 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
         ad.show();
     }
 
-    public void multiOrSingleSelectUpdate(){
-        if(!multiSelect){
-            Toast.makeText(this, "Multi select has enabled.", Toast.LENGTH_SHORT).show();
-            btMultiLunchSelect.setText("Disable multi select");
-            btClearLunchSelection.setText("Finish choosing");
-            multiSelectCounter = 0;
-            multiSelect = true;
-        }
-        else{
-            Toast.makeText(this, "Multi select has disabled.", Toast.LENGTH_SHORT).show();
-            btMultiLunchSelect.setText("Enable multi select");
-            btClearLunchSelection.setText("Clear selection");
-            chosenMultiSelectLunch = null;
-            multiSelectCounter = 0;
-            multiSelect = false;
-        }
-    }
-
     public void sendToCustomize(){
         me.setClass(lunchSelection.this, customMeals.class);
         me.putExtra("cameFrom", "lunch");
         startActivity(me);
     }
 
-    public void clearLunchSelectionOrFinishMultiSelect(){
-        if(multiSelect){
-            if(multiSelectCounter == 0){
-                Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                me.setClass(lunchSelection.this, mealsMenu.class);
-                me.putExtra("lunch", chosenMultiSelectLunch);
-                startActivity(me);
-            }
-        }
-        else{
-            if(me.hasExtra("lunch")){
-                me.removeExtra("lunch");
-                me.setClass(lunchSelection.this, mealsMenu.class);
-                startActivity(me);
-            }
-            else{
-                Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
-            }
-        }
+    public void backToMealsMenu(){
+        me.setClass(lunchSelection.this, mealsMenu.class);
+        startActivity(me);
     }
 
     public String getFileData(String fileName){
@@ -423,10 +380,10 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
         if(viewId == btSendLunchToCustomize.getId())
             sendToCustomize();
 
-        if(viewId == btMultiLunchSelect.getId())
-            multiOrSingleSelectUpdate();
-
         if(viewId == btClearLunchSelection.getId())
-            clearLunchSelectionOrFinishMultiSelect();
+            todayMenu.getLunch().clear();
+
+        if(viewId == btBackFromLunchSelect.getId())
+            backToMealsMenu();
     }
 }

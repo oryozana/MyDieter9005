@@ -615,4 +615,180 @@ public class removedFunctions {
 //        }
 //        return -1;
 //    }
+//
+//    public void multiOrSingleSelectUpdate(){
+//        if(!multiSelect){
+//            Toast.makeText(this, "Multi select has enabled.", Toast.LENGTH_SHORT).show();
+//            btMultiBreakfastSelect.setText("Disable multi select");
+//            btClearBreakfastSelection.setText("Finish choosing");
+//            multiSelectCounter = 0;
+//            multiSelect = true;
+//        }
+//        else{
+//            Toast.makeText(this, "Multi select has disabled.", Toast.LENGTH_SHORT).show();
+//            btMultiBreakfastSelect.setText("Enable multi select");
+//            btClearBreakfastSelection.setText("Clear selection");
+//            chosenMultiSelectBreakfast = null;
+//            multiSelectCounter = 0;
+//            multiSelect = false;
+//        }
+//    }
+//
+
+//    Meal chosenMultiSelectBreakfast = null;
+//    boolean multiSelect = false;
+//    int multiSelectCounter = 0;
+
+//    public void clearBreakfastSelectionOrFinishMultiSelect(){
+//        if(multiSelect){
+//            if(multiSelectCounter == 0){
+//                Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
+//            }
+//            else{
+//                me.setClass(breakfastSelection.this, mealsMenu.class);
+//                me.putExtra("breakfast", chosenMultiSelectBreakfast);
+//                startActivity(me);
+//            }
+//        }
+//        else{
+//            if(me.hasExtra("breakfast")){
+//                me.removeExtra("breakfast");
+//                me.setClass(breakfastSelection.this, mealsMenu.class);
+//                startActivity(me);
+//            }
+//            else{
+//                Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
+
+            // From: mealMenu
+//            public void updateMeals(){
+//                btBreakfast.setText("Select");
+//                btLunch.setText("Select");
+//                btDinner.setText("Select");
+//
+//                if(me.hasExtra("breakfast")){
+//                    breakfast = (Meal) me.getSerializableExtra("breakfast");
+//                    tvBreakfast.setText("Your breakfast is: " + breakfast.getName() + ".");
+//                    btBreakfast.setText("Reselect");
+//                    totalProteins += breakfast.getProteins();
+//                    totalFats += breakfast.getFats();
+//                    totalCalories += breakfast.getCalories();
+//                    selectedMeals[0] = breakfast;
+//                }
+//
+//                if(me.hasExtra("lunch")){
+//                    lunch = (Meal) me.getSerializableExtra("lunch");
+//                    tvLunch.setText("Your lunch is: " + lunch.getName() + ".");
+//                    btLunch.setText("Reselect");
+//                    totalProteins += lunch.getProteins();
+//                    totalFats += lunch.getFats();
+//                    totalCalories += lunch.getCalories();
+//                    selectedMeals[1] = lunch;
+//                }
+//
+//                if(me.hasExtra("dinner")){
+//                    dinner = (Meal) me.getSerializableExtra("dinner");
+//                    tvDinner.setText("Your dinner is: " + dinner.getName() + ".");
+//                    btDinner.setText("Reselect");
+//                    totalProteins += dinner.getProteins();
+//                    totalFats += dinner.getFats();
+//                    totalCalories += dinner.getCalories();
+//                    selectedMeals[2] = dinner;
+//                }
+//
+//                tvTotalProteins.setText("Total proteins: " + Math.round(totalProteins * 1000.0) / 1000.0 + " .");
+//                tvTotalFats.setText("Total fats: " + Math.round(totalFats * 1000.0) / 1000.0 + " .");
+//                tvTotalCalories.setText("Total calories: " + Math.round(totalCalories * 1000.0) / 1000.0 + " .");
+//            }
+
+//            if(viewId == btFinish.getId()) {
+//        if(me.hasExtra("breakfast") || me.hasExtra("lunch") || me.hasExtra("dinner")){
+//            me.setClass(mealsMenu.this, finishMeals.class);
+//
+//            if(selectedMeals[0] != null)
+//                me.putExtra("selectedBreakfast", selectedMeals[0]);
+//            if(selectedMeals[1] != null)
+//                me.putExtra("selectedLunch", selectedMeals[1]);
+//            if(selectedMeals[2] != null)
+//                me.putExtra("selectedDinner", selectedMeals[2]);
+//
+//            me.putExtra("totalProteins", totalProteins);
+//            me.putExtra("totalFats", totalFats);
+//            me.putExtra("totalCalories", totalCalories);
+//            startActivity(me);
+//        }
+//        else{
+//            Toast.makeText(this, "Please pick at least one meal !", Toast.LENGTH_LONG).show();
+//        }
+//    }
+
+            // From: finishMeals
+//            public void setAdapters(){
+//                initiateIngredientListsAndSetMealsNames();
+//                initiateListViewsFields();
+//
+//                if(selectedMeals[0] != null){  // Breakfast.
+//                    breakfastIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, breakfastFields);
+//                    lvBreakfastIngredients.setAdapter(breakfastIngredientsAdapter);
+//                    lvBreakfastIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                        @Override
+//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                            Ingredient selectedItem = breakfastIngredientsList.get(position);
+//
+//                            showIngredientImage(selectedItem);
+//                        }
+//                    });
+//                }
+//
+//                if(selectedMeals[1] != null){  // Lunch.
+//                    lunchIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lunchFields);
+//                    lvLunchIngredients.setAdapter(lunchIngredientsAdapter);
+//                    lvLunchIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                        @Override
+//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                            Ingredient selectedItem = lunchIngredientsList.get(position);
+//
+//                            showIngredientImage(selectedItem);
+//                        }
+//                    });
+//                }
+//
+//                if(selectedMeals[2] != null){  // Dinner.
+//                    dinnerIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dinnerFields);
+//                    lvDinnerIngredients.setAdapter(dinnerIngredientsAdapter);
+//                    lvDinnerIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                        @Override
+//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                            Ingredient selectedItem = dinnerIngredientsList.get(position);
+//
+//                            showIngredientImage(selectedItem);
+//                        }
+//                    });
+//                }
+//            }
+
+//    public void initiateIngredientListsAndSetMealsNames(){
+//        breakfastIngredientsList = new ArrayList<Ingredient>();
+//        if(selectedMeals[0] != null) {
+//            tvBreakfastInfo.setText("Breakfast: " + selectedMeals[0].getName());
+//            for (int i = 0; i < selectedMeals[0].getNeededIngredientsForMeal().size(); i++)
+//                breakfastIngredientsList.add(new Ingredient(selectedMeals[0].getNeededIngredientsForMeal().get(i)));
+//        }
+//
+//        lunchIngredientsList = new ArrayList<Ingredient>();
+//        if(selectedMeals[1] != null){
+//            tvLunchInfo.setText("Lunch: " + selectedMeals[1].getName());
+//            for(int i = 0; i < selectedMeals[1].getNeededIngredientsForMeal().size(); i++)
+//                lunchIngredientsList.add(new Ingredient(selectedMeals[1].getNeededIngredientsForMeal().get(i)));
+//        }
+//
+//        dinnerIngredientsList = new ArrayList<Ingredient>();
+//        if(selectedMeals[2] != null){
+//            tvDinnerInfo.setText("Dinner: " + selectedMeals[2].getName());
+//            for(int i = 0; i < selectedMeals[2].getNeededIngredientsForMeal().size(); i++)
+//                dinnerIngredientsList.add(new Ingredient(selectedMeals[2].getNeededIngredientsForMeal().get(i)));
+//        }
+//    }
 }
