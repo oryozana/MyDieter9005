@@ -10,6 +10,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd_MM_yyyy");
         LocalDateTime today = LocalDateTime.now();
-        currentDate = dtf.format(today) + " saved file.";
+        currentDate = dtf.format(today);
 
         Calendar calendar = Calendar.getInstance();
         currentHour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -145,16 +147,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Ingredient.initiateIngredientsList();
             initiateIngredientsPictures();
 
-            todayMenu = new DailyMenu(currentDate);
+            DailyMenu.setDailyMenus(MainActivity.this);
+            if(DailyMenu.hasTodayMenuInsideAllDailyMenus(currentDate))
+                todayMenu = DailyMenu.getTodayMenuFromAllDailyMenus(currentDate);
+            else
+                todayMenu = new DailyMenu(currentDate);
             DailyMenu.setTodayMenu(todayMenu);
 
             me.setClass(this, LocalUserSelection.class);
             startActivity(me);
         }
-        else
+        else {
+//            Toast.makeText(this, currentDate +"", Toast.LENGTH_SHORT).show();
+//            if(User.getCurrentUser().hasTodayMenu(currentDate)) {
+//                todayMenu = User.getCurrentUser().getTodayMenu(currentDate);
+//            }
+//            else {
+//                todayMenu = DailyMenu.getTodayMenu();
+//                User.getCurrentUser().addDailyMeals(todayMenu);
+//            }
+
             todayMenu = DailyMenu.getTodayMenu();
+            DailyMenu.saveDailyMenuIntoFile(DailyMenu.getTodayMenu(), MainActivity.this);
+        }
         return me;
     }
+
+//    public void saveDailyMenuIntoFile(DailyMenu dailyMenu){
+//        try {
+//            fos = openFileOutput("dailyMenusFile", Context.MODE_PRIVATE);
+//            osw = new OutputStreamWriter(fos);
+//            bw = new BufferedWriter(osw);
+//
+//            bw.write("Daily menus: " + "\n");
+//
+//            DailyMenu.removeDailyMenuDuplicationsAndAddAnotherOne(dailyMenu);
+//            for(int i = 0; i < DailyMenu.getDailyMenus().size(); i++)
+//                bw.write(DailyMenu.getDailyMenus().get(i).generateDailyMenuDescriptionForFiles() + "\n");
+//
+//            bw.close();
+//        }
+//        catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void initiateIngredientsPictures(){  // Save all the ingredients pictures IDs.
         String customIngredientName;
@@ -275,6 +314,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 firstInitiateSettingsFile();
                 firstInitiateCustomMealsNamesFile();
                 firstInitiateLocalUsersDatabase();
+                firstInitiateDailyMenusFile();
                 implementSettingsData();
             }
         }
@@ -433,6 +473,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bw = new BufferedWriter(osw);
 
             bw.write("Custom meals names: " + "\n");
+
+            bw.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void firstInitiateDailyMenusFile(){
+        try {
+            fos = openFileOutput("dailyMenusFile", Context.MODE_PRIVATE);
+            osw = new OutputStreamWriter(fos);
+            bw = new BufferedWriter(osw);
+
+            bw.write("Daily menus: " + "\n");
 
             bw.close();
         }

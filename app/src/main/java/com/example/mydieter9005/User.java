@@ -104,6 +104,24 @@ public class User implements Serializable {
         this.dailyMeals = dailyMeals;
     }
 
+    public boolean hasTodayMenu(String currentDate){
+        for(int i = 0; i < this.dailyMeals.size(); i++){
+            if(this.dailyMeals.get(i).getDate().equals(currentDate))
+                return true;
+        }
+        return false;
+    }
+
+    public DailyMenu getTodayMenu(String currentDate){
+        if(hasTodayMenu(currentDate)){
+            for(int i = 0; i < this.dailyMeals.size(); i++){
+                if(this.dailyMeals.get(i).getDate().equals(currentDate))
+                    return this.dailyMeals.get(i);
+            }
+        }
+        return null;
+    }
+
     public void addDailyMeals(DailyMenu dailyMeals) {
         boolean found = false;
 

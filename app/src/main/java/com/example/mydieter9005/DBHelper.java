@@ -22,6 +22,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TARGET_PROTEIN = "Target_protein";
     public static final String TARGET_FATS = "Target_fats";
     public static final String PROFILE_PICTURE_ID = "Profile_picture_id";
+//    public static final String DAILY_MENUS = "Daily_menus";
 
     //מחרוזות שבאמצעותן נריץ שאילתות SQL ליצירת טבלה או עדכון ומחיקת טבלה
     String SQL_Create="";
@@ -45,6 +46,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQL_Create+=TARGET_PROTEIN+" INTEGER, ";
         SQL_Create+=TARGET_FATS+" INTEGER, ";
         SQL_Create+=PROFILE_PICTURE_ID+" INTEGER);";
+//        SQL_Create+=DAILY_MENUS+" TEXT);";
         sqLiteDatabase.execSQL(SQL_Create);
     }
 

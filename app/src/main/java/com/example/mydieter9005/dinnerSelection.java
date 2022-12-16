@@ -379,7 +379,7 @@ public class dinnerSelection extends AppCompatActivity implements View.OnClickLi
             sendToCustomize();
 
         if(viewId == btClearDinnerSelection.getId())
-            todayMenu.getDinner().clear();
+            todayMenu.clearDinner(dinnerSelection.this);
 
         if(viewId == btBackFromDinnerSelect.getId())
             backToMealsMenu();

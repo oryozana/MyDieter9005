@@ -1,5 +1,7 @@
 package com.example.mydieter9005;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -28,15 +30,15 @@ public class Meal extends Food {
         updateMealInfo();
     }
 
-    public Meal(Meal meal1, Meal meal2){
-        super(meal2.name);
-        if(meal1 != null) {
-            this.name = meal1.name + " and " + this.name;
-            addNeededIngredientsForMeal(meal1.neededIngredientsForMeal, meal2.neededIngredientsForMeal);
-        }
-        else
-            setNeededIngredientsForMeal(meal2.neededIngredientsForMeal);
-    }
+//    public Meal(Meal meal1, Meal meal2){
+//        super(meal2.name);
+//        if(meal1 != null) {
+//            this.name = meal1.name + " and " + this.name;
+//            addNeededIngredientsForMeal(meal1.neededIngredientsForMeal, meal2.neededIngredientsForMeal);
+//        }
+//        else
+//            setNeededIngredientsForMeal(meal2.neededIngredientsForMeal);
+//    }
 
     public String generateMealDescriptionForFiles(){
         String message = "Meal [ " + this.name + ": ";
@@ -47,6 +49,27 @@ public class Meal extends Food {
         message += " ]";
 
         return message;
+    }
+
+    public static Meal generateMealObjectFromFileDescription(String data){
+        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+        String[] dataParts;
+        String name;
+
+        dataParts = data.split("Meal \\[ ", 2);
+        dataParts = dataParts[1].split(" \\]", 2);
+        data = dataParts[0];
+
+        name = data.split(": ")[0];
+        data = data.split(": ")[1];
+
+        dataParts = data.split("   ");
+        for(int i = 0; i < dataParts.length; i++) {
+            if(!dataParts[i].equals(""))
+                ingredients.add(Ingredient.generateIngredientObjectFromFileDescription(dataParts[i] + " ]"));
+        }
+
+        return new Meal(name, ingredients);
     }
 
     public void initiateNeededIngredientsForMeal(String name, int grams){

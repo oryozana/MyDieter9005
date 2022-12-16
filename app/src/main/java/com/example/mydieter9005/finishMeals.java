@@ -73,6 +73,7 @@ public class finishMeals extends AppCompatActivity implements View.OnClickListen
         btFinishMeals = (Button) findViewById(R.id.btFinishMeals);
         btFinishMeals.setOnClickListener(this);
 
+        DailyMenu.saveDailyMenuIntoFile(DailyMenu.getTodayMenu(), finishMeals.this);
         implementSettingsData();
         initiateMediaPlayer();
         setAdapters();
@@ -166,8 +167,6 @@ public class finishMeals extends AppCompatActivity implements View.OnClickListen
     }
 
     public void initiateIngredientListsAndSetMealsNames(){
-        Ingredient tmpIngredient;
-
         breakfastIngredientsList = new ArrayList<Ingredient>();
         if(todayMenu.hasBreakfast()) {
             tvBreakfastInfo.setText("Breakfast: " + todayMenu.getUnitedBreakfastName() + " .");

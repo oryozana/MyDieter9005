@@ -250,6 +250,7 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
             int col7 = c.getColumnIndex(DBHelper.TARGET_PROTEIN);
             int col8 = c.getColumnIndex(DBHelper.TARGET_FATS);
             int col9 = c.getColumnIndex(DBHelper.PROFILE_PICTURE_ID);
+     //       int col10 = c.getColumnIndex(DBHelper.DAILY_MENUS);
 
             c.moveToFirst();
 
@@ -263,6 +264,7 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
                 String t7 = c.getString(col7);
                 String t8 = c.getString(col8);
                 String t9 = c.getString(col9);
+        //        String t10 = c.getString(col10);
 
                 localUsers.add(new User(t1, t2, t3, t4, t6, t7, t8, t9));
                 c.moveToNext();
@@ -517,7 +519,11 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
     }
 
 
-    private void addUserToDatabase(User user) {  // ZRabD8s7
+    private void addUserToDatabase(User user) {
+//        String dailyMenusDescription = "";
+//        for(int i = 0; i < user.getDailyMeals().size(); i++)
+//            dailyMenusDescription += user.getDailyMeals().get(i).generateDailyMenuDescriptionForFiles();
+
         ContentValues cv = new ContentValues();
 
         cv.put(my_db.USERNAME, user.getUsername());
@@ -529,6 +535,7 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         cv.put(my_db.TARGET_PROTEIN, user.getCurrentPlan().getTargetProteins());
         cv.put(my_db.TARGET_FATS, user.getCurrentPlan().getTargetFats());
         cv.put(my_db.PROFILE_PICTURE_ID, user.getProfilePictureId());
+   //     cv.put(my_db.DAILY_MENUS, dailyMenusDescription);
 
         sqdb = my_db.getWritableDatabase();
         sqdb.insert(my_db.TABLE_NAME, null, cv);

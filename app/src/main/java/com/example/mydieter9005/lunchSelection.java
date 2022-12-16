@@ -381,7 +381,7 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
             sendToCustomize();
 
         if(viewId == btClearLunchSelection.getId())
-            todayMenu.getLunch().clear();
+            todayMenu.clearLunch(lunchSelection.this);
 
         if(viewId == btBackFromLunchSelect.getId())
             backToMealsMenu();

@@ -64,6 +64,7 @@ public class mealsMenu extends AppCompatActivity implements View.OnClickListener
         tvTotalFats = (TextView) findViewById(R.id.tvTotalFats);
         tvTotalCalories = (TextView) findViewById(R.id.tvTotalCalories);
 
+        DailyMenu.saveDailyMenuIntoFile(DailyMenu.getTodayMenu(), mealsMenu.this);
         implementSettingsData();
         initiateMediaPlayer();
         updateMeals();

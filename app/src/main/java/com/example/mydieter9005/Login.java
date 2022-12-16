@@ -130,6 +130,15 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             int profilePictureId = Integer.parseInt(String.valueOf(dataSnapshot.child("profilePictureId").getValue()));
                             User.setCurrentUser(new User(username, password, email, startingWeight, plan, profilePictureId));
 
+//                            DataSnapshot dailyMenus = dataSnapshot.child("dailyMenus");
+//                            for(DataSnapshot dailyMenu : dailyMenus.getChildren()){
+//                                String dailyMenuDate = dailyMenu.getKey();
+//                                for(int i = 0; i < dailyMenu.getChildrenCount(); i++){
+//
+//                                }
+//                                User.getCurrentUser().addDailyMeals(DailyMenu.generateDailyMenuObjectFromFile(dailyMenu.getValue()));
+//                            }
+
                             if(cbSaveLoggedUserInLocalDatabase.isChecked())
                                 addLoggedUserIntoLocalDatabase(User.getCurrentUser());
 

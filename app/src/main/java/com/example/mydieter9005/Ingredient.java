@@ -1,5 +1,7 @@
 package com.example.mydieter9005;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class Ingredient extends Food {
@@ -33,6 +35,20 @@ public class Ingredient extends Food {
 
     public String generateIngredientDescriptionForFiles(){
         return "Ingredient [ " + this.name + " , " + this.grams + " ]";
+    }
+
+    public static Ingredient generateIngredientObjectFromFileDescription(String data){
+        String name, grams;
+        String[] dataParts;
+
+        dataParts = data.split("Ingredient \\[ ", 2);
+        dataParts = dataParts[1].split(" \\]", 2);
+        data = dataParts[0];
+
+        name = data.split(" , ")[0];
+        grams = data.split(" , ")[1];
+
+        return new Ingredient(getIngredientByName(name), Double.parseDouble(grams));
     }
 
     public static Ingredient getIngredientByName(String name){

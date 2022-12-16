@@ -337,7 +337,7 @@ public class breakfastSelection extends AppCompatActivity implements View.OnClic
             sendToCustomize();
 
         if(viewId == btClearBreakfastSelection.getId())
-            todayMenu.getBreakfast().clear();
+            todayMenu.clearBreakfast(breakfastSelection.this);
 
         if(viewId == btBackFromBreakfastSelect.getId())
             backToMealsMenu();
