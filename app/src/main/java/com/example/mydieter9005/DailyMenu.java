@@ -152,6 +152,25 @@ public class DailyMenu {
         }
     }
 
+    public ArrayList<Ingredient> generateBreakfastIngredientsArray(){
+        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+        Ingredient tmpIngredient;
+
+        for(int i = 0; i < this.breakfast.size(); i++){
+            Food food = this.breakfast.get(i);
+            if(food instanceof Ingredient)
+                ingredients.add(new Ingredient((Ingredient) food));
+
+            if(food instanceof Meal){
+                for(int j = 0; j < ((Meal) food).getNeededIngredientsForMeal().size(); j++){
+                    tmpIngredient = ((Meal) food).getNeededIngredientsForMeal().get(j);
+                    ingredients.add(new Ingredient(tmpIngredient));
+                }
+            }
+        }
+        return ingredients;
+    }
+
     public ArrayList<Food> getLunch() {
         return this.lunch;
     }
@@ -176,6 +195,25 @@ public class DailyMenu {
         }
     }
 
+    public ArrayList<Ingredient> generateLunchIngredientsArray(){
+        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+        Ingredient tmpIngredient;
+
+        for(int i = 0; i < this.lunch.size(); i++){
+            Food food = this.lunch.get(i);
+            if(food instanceof Ingredient)
+                ingredients.add(new Ingredient((Ingredient) food));
+
+            if(food instanceof Meal){
+                for(int j = 0; j < ((Meal) food).getNeededIngredientsForMeal().size(); j++){
+                    tmpIngredient = ((Meal) food).getNeededIngredientsForMeal().get(j);
+                    ingredients.add(new Ingredient(tmpIngredient));
+                }
+            }
+        }
+        return ingredients;
+    }
+
     public ArrayList<Food> getDinner() {
         return this.dinner;
     }
@@ -198,6 +236,25 @@ public class DailyMenu {
                 removed = true;
             }
         }
+    }
+
+    public ArrayList<Ingredient> generateDinnerIngredientsArray(){
+        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+        Ingredient tmpIngredient;
+
+        for(int i = 0; i < this.dinner.size(); i++){
+            Food food = this.dinner.get(i);
+            if(food instanceof Ingredient)
+                ingredients.add(new Ingredient((Ingredient) food));
+
+            if(food instanceof Meal){
+                for(int j = 0; j < ((Meal) food).getNeededIngredientsForMeal().size(); j++){
+                    tmpIngredient = ((Meal) food).getNeededIngredientsForMeal().get(j);
+                    ingredients.add(new Ingredient(tmpIngredient));
+                }
+            }
+        }
+        return ingredients;
     }
 
     public String getUnitedBreakfastName(){
@@ -240,6 +297,25 @@ public class DailyMenu {
                 unitedName += dinner.get(i).name + ".";
         }
         return unitedName;
+    }
+
+    public ArrayList<Ingredient> generateAllIngredientsNeededArrayList(){
+        ArrayList<Ingredient> allIngredients = new ArrayList<Ingredient>();
+        ArrayList<Ingredient> tmpIngredients;
+
+        tmpIngredients = generateBreakfastIngredientsArray();
+        for(int i = 0; i < tmpIngredients.size(); i++)
+            allIngredients.add(tmpIngredients.get(i));
+
+        tmpIngredients = generateLunchIngredientsArray();
+        for(int i = 0; i < tmpIngredients.size(); i++)
+            allIngredients.add(tmpIngredients.get(i));
+
+        tmpIngredients = generateDinnerIngredientsArray();
+        for(int i = 0; i < tmpIngredients.size(); i++)
+            allIngredients.add(tmpIngredients.get(i));
+
+        return allIngredients;
     }
 
     public double getTotalProteins() {

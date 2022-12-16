@@ -36,7 +36,7 @@ public class finishMeals extends AppCompatActivity implements View.OnClickListen
     TextView tvBreakfastInfo, tvLunchInfo, tvDinnerInfo;
     ListView lvBreakfastIngredients, lvLunchIngredients, lvDinnerIngredients;
 
-    DailyMenu todayMeals = DailyMenu.getTodayMenu();
+    DailyMenu todayMenu = DailyMenu.getTodayMenu();
     Song activeSong = Song.getSongs().get(0);
 
     ArrayList<Ingredient> breakfastIngredientsList, lunchIngredientsList, dinnerIngredientsList;
@@ -82,7 +82,7 @@ public class finishMeals extends AppCompatActivity implements View.OnClickListen
         initiateIngredientListsAndSetMealsNames();  // Must come before initiateListViewsFields()
         initiateListViewsFields();
 
-        if(todayMeals.hasBreakfast()){
+        if(todayMenu.hasBreakfast()){
             breakfastIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, breakfastFields);
             lvBreakfastIngredients.setAdapter(breakfastIngredientsAdapter);
             lvBreakfastIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -95,7 +95,7 @@ public class finishMeals extends AppCompatActivity implements View.OnClickListen
             });
         }
 
-        if(todayMeals.hasLunch()){
+        if(todayMenu.hasLunch()){
             lunchIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lunchFields);
             lvLunchIngredients.setAdapter(lunchIngredientsAdapter);
             lvLunchIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -108,7 +108,7 @@ public class finishMeals extends AppCompatActivity implements View.OnClickListen
             });
         }
 
-        if(todayMeals.hasDinner()){
+        if(todayMenu.hasDinner()){
             dinnerIngredientsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dinnerFields);
             lvDinnerIngredients.setAdapter(dinnerIngredientsAdapter);
             lvDinnerIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -169,57 +169,21 @@ public class finishMeals extends AppCompatActivity implements View.OnClickListen
         Ingredient tmpIngredient;
 
         breakfastIngredientsList = new ArrayList<Ingredient>();
-        if(todayMeals.hasBreakfast()) {
-            tvBreakfastInfo.setText("Breakfast: " + todayMeals.getUnitedBreakfastName() + " .");
-
-            for(int i = 0; i < todayMeals.getBreakfast().size(); i++){
-                Food food = todayMeals.getBreakfast().get(i);
-                if(food instanceof Ingredient)
-                    breakfastIngredientsList.add(new Ingredient((Ingredient) food));
-
-                if(food instanceof Meal){
-                    for(int j = 0; j < ((Meal) food).getNeededIngredientsForMeal().size(); j++){
-                        tmpIngredient = (Ingredient)(((Meal) food).getNeededIngredientsForMeal().get(j));
-                        breakfastIngredientsList.add(new Ingredient(tmpIngredient));
-                    }
-                }
-            }
+        if(todayMenu.hasBreakfast()) {
+            tvBreakfastInfo.setText("Breakfast: " + todayMenu.getUnitedBreakfastName() + " .");
+            breakfastIngredientsList = todayMenu.generateBreakfastIngredientsArray();
         }
 
         lunchIngredientsList = new ArrayList<Ingredient>();
-        if(todayMeals.hasLunch()) {
-            tvLunchInfo.setText("Lunch: " + todayMeals.getUnitedLunchName() + " .");
-
-            for(int i = 0; i < todayMeals.getLunch().size(); i++){
-                Food food = todayMeals.getLunch().get(i);
-                if(food instanceof Ingredient)
-                    lunchIngredientsList.add(new Ingredient((Ingredient) food));
-
-                if(food instanceof Meal){
-                    for(int j = 0; j < ((Meal) food).getNeededIngredientsForMeal().size(); j++){
-                        tmpIngredient = (Ingredient)(((Meal) food).getNeededIngredientsForMeal().get(j));
-                        lunchIngredientsList.add(new Ingredient(tmpIngredient));
-                    }
-                }
-            }
+        if(todayMenu.hasLunch()) {
+            tvLunchInfo.setText("Lunch: " + todayMenu.getUnitedLunchName() + " .");
+            lunchIngredientsList = todayMenu.generateLunchIngredientsArray();
         }
 
         dinnerIngredientsList = new ArrayList<Ingredient>();
-        if(todayMeals.hasDinner()) {
-            tvDinnerInfo.setText("Dinner: " + todayMeals.getUnitedDinnerName() + " .");
-
-            for(int i = 0; i < todayMeals.getDinner().size(); i++){
-                Food food = todayMeals.getDinner().get(i);
-                if(food instanceof Ingredient)
-                    dinnerIngredientsList.add(new Ingredient((Ingredient) food));
-
-                if(food instanceof Meal){
-                    for(int j = 0; j < ((Meal) food).getNeededIngredientsForMeal().size(); j++){
-                        tmpIngredient = (Ingredient)(((Meal) food).getNeededIngredientsForMeal().get(j));
-                        dinnerIngredientsList.add(new Ingredient(tmpIngredient));
-                    }
-                }
-            }
+        if(todayMenu.hasDinner()) {
+            tvDinnerInfo.setText("Dinner: " + todayMenu.getUnitedDinnerName() + " .");
+            dinnerIngredientsList = todayMenu.generateDinnerIngredientsArray();
         }
     }
 

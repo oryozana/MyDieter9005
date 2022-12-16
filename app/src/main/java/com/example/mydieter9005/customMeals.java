@@ -55,13 +55,15 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
     private VideoView videoView;
 
     Button btSendToCustomSelection, btShowMealInfo, btFinishCustomize;
-    Song activeSong = Song.getSongs().get(0);
-    Ingredient addedIngredient;
     ListView lvCustomMealIngredients;
-    ArrayAdapter<Ingredient> adapter;
-    Meal customMeal;
     EditText etCustomMeal;
+
+    ArrayAdapter<Ingredient> adapter;
+    Ingredient addedIngredient;
+    Meal customMeal;
     String cameFrom;
+
+    Song activeSong = Song.getSongs().get(0);
 
     FileOutputStream fos;
     OutputStreamWriter osw;

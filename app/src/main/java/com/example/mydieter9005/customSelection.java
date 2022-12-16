@@ -40,16 +40,17 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    Button btMultiCustomSelect, btSentToWorldSavedCustomMeals, btFinishCustomSelection;
-    ArrayList<Meal> customMealsList;
-    String[] customMealsNames;
-    ArrayAdapter<Meal> adapter;
-    boolean multiSelect = false;
-    Meal chosenMultiSelectCustom = null;
-    int multiSelectCounter = 0;
-    Song activeSong = Song.getSongs().get(0);
-    String cameFrom;
+    Button btSentToWorldSavedCustomMeals, btFinishCustomSelection;
     ListView listView;
+
+    ArrayList<Meal> customMealsList;
+    ArrayAdapter<Meal> adapter;
+
+    String[] customMealsNames;
+    String cameFrom;
+
+    DailyMenu todayMenu = DailyMenu.getTodayMenu();
+    Song activeSong = Song.getSongs().get(0);
 
     FirebaseDatabase recipesDb;
     DatabaseReference databaseReference;
@@ -59,6 +60,7 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     InputStreamReader isr;
     BufferedReader br;
     String fileName = "customMealsNames";
+
     Intent me;
 
     @Override
@@ -78,8 +80,6 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
         btSentToWorldSavedCustomMeals.setOnClickListener(this);
         btFinishCustomSelection = (Button) findViewById(R.id.btFinishCustomSelection);
         btFinishCustomSelection.setOnClickListener(this);
-        btMultiCustomSelect = (Button) findViewById(R.id.btMultiCustomSelect);
-        btMultiCustomSelect.setOnClickListener(this);
 
         initiateCustomMealsList();
         implementSettingsData();
@@ -177,16 +177,17 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
 
-                if(!multiSelect){
-                    me.setClass(customSelection.this, mealsMenu.class);
-                    me.putExtra(cameFrom, selectedItem);
-                    startActivity(me);
-                }
-                else {
-                    chosenMultiSelectCustom = new Meal(chosenMultiSelectCustom, selectedItem);
-                    Toast.makeText(customSelection.this, selectedItem.getName() + " has added.", Toast.LENGTH_SHORT).show();
-                    multiSelectCounter++;
-                }
+                if(cameFrom.equals("breakfast"))
+                    todayMenu.addBreakfast(selectedItem);
+
+                if(cameFrom.equals("lunch"))
+                    todayMenu.addLunch(selectedItem);
+
+                if(cameFrom.equals("dinner"))
+                    todayMenu.addDinner(selectedItem);
+
+                me.setClass(customSelection.this, mealsMenu.class);
+                startActivity(me);
             }
         });
 
@@ -288,39 +289,9 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
         ad.show();
     }
 
-    public void multiOrSingleSelectUpdate(){
-        if(!multiSelect){
-            Toast.makeText(this, "Multi select has enabled.", Toast.LENGTH_SHORT).show();
-            btMultiCustomSelect.setText("Disable multi select");
-            btFinishCustomSelection.setText("Finish selection");
-            multiSelectCounter = 0;
-            multiSelect = true;
-        }
-        else{
-            Toast.makeText(this, "Multi select has disabled.", Toast.LENGTH_SHORT).show();
-            btMultiCustomSelect.setText("Enable multi select");
-            btFinishCustomSelection.setText("Return to customize");
-            chosenMultiSelectCustom = null;
-            multiSelectCounter = 0;
-            multiSelect = false;
-        }
-    }
-
-    public void finishSelectionOrReturnToCustomize(){
-        if(multiSelect){
-            if(multiSelectCounter == 0){
-                Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                me.setClass(customSelection.this, mealsMenu.class);
-                me.putExtra(cameFrom, chosenMultiSelectCustom);
-                startActivity(me);
-            }
-        }
-        else{
-            me.setClass(customSelection.this, customMeals.class);
-            startActivity(me);
-        }
+    public void returnToCustomize(){
+        me.setClass(customSelection.this, customMeals.class);
+        startActivity(me);
     }
 
     public void sendToWorldSavedCustomSelection(){
@@ -467,13 +438,10 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         int viewId = v.getId();
 
-        if(viewId == btMultiCustomSelect.getId())
-            multiOrSingleSelectUpdate();
-
         if(viewId == btSentToWorldSavedCustomMeals.getId())
             sendToWorldSavedCustomSelection();
 
         if(viewId == btFinishCustomSelection.getId())
-            finishSelectionOrReturnToCustomize();
+            returnToCustomize();
     }
 }

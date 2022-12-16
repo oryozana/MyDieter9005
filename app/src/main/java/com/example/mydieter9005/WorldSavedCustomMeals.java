@@ -50,19 +50,17 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    Button btMultiDinnerSelect, btFinishWorldSavedCustomMeals;
+    Button btFinishWorldSavedCustomMeals;
     EditText etFilterWorldSavedCustomMeals;
     LinearLayout linearLayout;
     ListView listView;
 
     ArrayList<Meal> mealsList = new ArrayList<Meal>();
     ArrayAdapter<Meal> adapter;
+    String cameFrom;
 
+    DailyMenu todayMenu = DailyMenu.getTodayMenu();
     Song activeSong = Song.getSongs().get(0);
-
-    boolean multiSelect = false;
-    Meal chosenMultiSelectDinner = null;
-    int multiSelectCounter = 0;
 
     DatabaseReference databaseReference;
 
@@ -79,6 +77,7 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
         me = getIntent();
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
+        cameFrom = me.getStringExtra("cameFrom");
 
         listView = (ListView) findViewById(R.id.lvWorldSavedCustomMeals);
         videoView = (VideoView) findViewById(R.id.worldSavedCustomMealsVideoView);
@@ -86,8 +85,6 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
 
         btFinishWorldSavedCustomMeals = (Button) findViewById(R.id.btFinishWorldSavedCustomMeals);
         btFinishWorldSavedCustomMeals.setOnClickListener(this);
-        btMultiDinnerSelect = (Button) findViewById(R.id.btMultiWorldSavedCustomMealsSelect);
-        btMultiDinnerSelect.setOnClickListener(this);
 
         etFilterWorldSavedCustomMeals = (EditText) findViewById(R.id.etFilterWorldSavedCustomMeals);
         etFilterWorldSavedCustomMeals.addTextChangedListener(new TextWatcher() {
@@ -218,16 +215,19 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
+                selectedItem.setName(selectedItem.getName().split(" - ")[1]);
 
-                if(!multiSelect){
-                    me.setClass(WorldSavedCustomMeals.this, mealsMenu.class);
-                    startActivity(me);
-                }
-                else {
-                    chosenMultiSelectDinner = new Meal(chosenMultiSelectDinner, selectedItem);
-                    Toast.makeText(WorldSavedCustomMeals.this, selectedItem.getName() + " has added.", Toast.LENGTH_SHORT).show();
-                    multiSelectCounter++;
-                }
+                if(cameFrom.equals("breakfast"))
+                    todayMenu.addBreakfast(selectedItem);
+
+                if(cameFrom.equals("lunch"))
+                    todayMenu.addLunch(selectedItem);
+
+                if(cameFrom.equals("dinner"))
+                    todayMenu.addDinner(selectedItem);
+
+                me.setClass(WorldSavedCustomMeals.this, mealsMenu.class);
+                startActivity(me);
             }
         });
 
@@ -313,38 +313,9 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
         ad.show();
     }
 
-    public void multiOrSingleSelectUpdate(){
-        if(!multiSelect){
-            Toast.makeText(this, "Multi select has enabled.", Toast.LENGTH_SHORT).show();
-            btMultiDinnerSelect.setText("Disable multi select");
-            btFinishWorldSavedCustomMeals.setText("Finish choosing");
-            multiSelectCounter = 0;
-            multiSelect = true;
-        }
-        else{
-            Toast.makeText(this, "Multi select has disabled.", Toast.LENGTH_SHORT).show();
-            btMultiDinnerSelect.setText("Enable multi select");
-            btFinishWorldSavedCustomMeals.setText("Finish");
-            chosenMultiSelectDinner = null;
-            multiSelectCounter = 0;
-            multiSelect = false;
-        }
-    }
-
-    public void finishMultiSelectOrExitWorldSavedCustomMeals(){
-        if(multiSelect){
-            if(multiSelectCounter == 0){
-                Toast.makeText(this, "You didn't choose anything yet.", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                me.setClass(WorldSavedCustomMeals.this, mealsMenu.class);
-                startActivity(me);
-            }
-        }
-        else{
-            me.setClass(WorldSavedCustomMeals.this, customSelection.class);
-            startActivity(me);
-        }
+    public void exitWorldSavedCustomMeals(){
+        me.setClass(WorldSavedCustomMeals.this, customSelection.class);
+        startActivity(me);
     }
 
     public void setCustomNetworkConnectionReceiver(){
@@ -545,15 +516,11 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
         super.onDestroy();
     }
 
-
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
 
-        if(viewId == btMultiDinnerSelect.getId())
-            multiOrSingleSelectUpdate();
-
         if(viewId == btFinishWorldSavedCustomMeals.getId())
-            finishMultiSelectOrExitWorldSavedCustomMeals();
+            exitWorldSavedCustomMeals();
     }
 }

@@ -28,15 +28,17 @@ public class ingredientsPickup extends AppCompatActivity implements View.OnClick
     private MediaPlayer mediaPlayer;
 
     TextView tvFoodName, tvFoodGrams, tvCounterShow;
-    ImageView ivFoodImg;
     ImageButton ibtNext, ibtPrevious;
     Button btFinishIngredientsPickup;
-    Meal[] selectedMeals = new Meal[3];
+    ImageView ivFoodImg;
+
     ArrayList<Ingredient> ingredients, finalIngredients;
     int ingredientsCounter = 0, ingredientsAmount = 0;
     ArrayList<Ingredient> ingredientsToShow;
-    Song activeSong = Song.getSongs().get(0);
     String lastClicked = "next";
+
+    DailyMenu todayMenu = DailyMenu.getTodayMenu();
+    Song activeSong = Song.getSongs().get(0);
 
     FileInputStream is;
     InputStreamReader isr;
@@ -51,10 +53,6 @@ public class ingredientsPickup extends AppCompatActivity implements View.OnClick
         me = getIntent();
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
-
-        selectedMeals[0] = (Meal) me.getSerializableExtra("selectedBreakfast");
-        selectedMeals[1] = (Meal) me.getSerializableExtra("selectedLunch");
-        selectedMeals[2] = (Meal) me.getSerializableExtra("selectedDinner");
 
         ingredients = Ingredient.getIngredientsList();  // All the ingredients that inside the app.
         finalIngredients = new ArrayList<Ingredient>();  // The needed ingredients to make the meals.
@@ -86,19 +84,7 @@ public class ingredientsPickup extends AppCompatActivity implements View.OnClick
     }
 
     public void initiateIngredientsToShow(){
-        ingredientsToShow = new ArrayList<Ingredient>();
-        for(Meal meal : selectedMeals) {
-            if(meal != null){
-                for(int i = 0; i < meal.getNeededIngredientsForMeal().size(); i++) {
-                    Ingredient ingredient = new Ingredient(meal.getNeededIngredientsForMeal().get(i));
-
-                    if(getIngredientIndexInArrayList(ingredient, ingredientsToShow) == -1)
-                        ingredientsToShow.add(new Ingredient(ingredient));
-                    else
-                        ingredientsToShow.get(getIngredientIndexInArrayList(ingredient, ingredientsToShow)).addGrams(ingredient.getGrams());
-                }
-            }
-        }
+        ingredientsToShow = todayMenu.generateAllIngredientsNeededArrayList();
         ingredientsAmount = ingredientsToShow.size();
 
         tvCounterShow.setText("Item: " + ingredientsCounter + " out of " + ingredientsAmount);

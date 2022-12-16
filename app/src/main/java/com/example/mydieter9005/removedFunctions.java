@@ -1,5 +1,9 @@
 package com.example.mydieter9005;
 
+import android.view.View;
+
+import java.util.ArrayList;
+
 public class removedFunctions {
 
     // From: ingredientPickup:
@@ -599,7 +603,7 @@ public class removedFunctions {
 //        ad.show();
 //    }
 
-            // From: breakfastSelection, lunchSelection and dinnerSelection
+            // From: breakfastSelection, lunchSelection, dinnerSelection, customSelection and WorldSavedCustomMeals
 //    public void updateIfMealModified(){
 //        if(me.hasExtra("modifiedMeal")){
 //            Meal modifiedMeal = (Meal) me.getSerializableExtra("modifiedMeal");
@@ -791,4 +795,26 @@ public class removedFunctions {
 //                dinnerIngredientsList.add(new Ingredient(selectedMeals[2].getNeededIngredientsForMeal().get(i)));
 //        }
 //    }
+
+            // From: ingredientsPickup
+//            public void initiateIngredientsToShow(){
+//                ingredientsToShow = new ArrayList<Ingredient>();
+//                for(Meal meal : selectedMeals) {
+//                    if(meal != null){
+//                        for(int i = 0; i < meal.getNeededIngredientsForMeal().size(); i++) {
+//                            Ingredient ingredient = new Ingredient(meal.getNeededIngredientsForMeal().get(i));
+//
+//                            if(getIngredientIndexInArrayList(ingredient, ingredientsToShow) == -1)
+//                                ingredientsToShow.add(new Ingredient(ingredient));
+//                            else
+//                                ingredientsToShow.get(getIngredientIndexInArrayList(ingredient, ingredientsToShow)).addGrams(ingredient.getGrams());
+//                        }
+//                    }
+//                }
+//                ingredientsAmount = ingredientsToShow.size();
+//
+//                tvCounterShow.setText("Item: " + ingredientsCounter + " out of " + ingredientsAmount);
+//                if(ingredientsAmount == 0)
+//                    ibtNext.setVisibility(View.INVISIBLE);
+//            }
 }
