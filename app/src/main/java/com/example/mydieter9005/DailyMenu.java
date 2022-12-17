@@ -63,12 +63,10 @@ public class DailyMenu {
         message += "breakfast ( ";
         for(int i = 0; i < this.breakfast.size(); i++){
             Food food = this.breakfast.get(i);
-            if(food instanceof Meal){
+            if(food instanceof Meal)
                 message += "     " + ((Meal) food).generateMealDescriptionForFiles();
-            }
-            if(food instanceof Ingredient){
+            if(food instanceof Ingredient)
                 message += "     " + ((Ingredient) food).generateIngredientDescriptionForFiles();
-            }
         }
 
         if(this.breakfast.size() == 0)
@@ -80,12 +78,10 @@ public class DailyMenu {
         message += "lunch ( ";
         for(int i = 0; i < this.lunch.size(); i++){
             Food food = this.lunch.get(i);
-            if(food instanceof Meal){
+            if(food instanceof Meal)
                 message += "     " + ((Meal) food).generateMealDescriptionForFiles();
-            }
-            if(food instanceof Ingredient){
+            if(food instanceof Ingredient)
                 message += "     " + ((Ingredient) food).generateIngredientDescriptionForFiles();
-            }
         }
 
         if(this.lunch.size() == 0)
@@ -97,12 +93,10 @@ public class DailyMenu {
         message += "dinner ( ";
         for(int i = 0; i < this.dinner.size(); i++){
             Food food = this.dinner.get(i);
-            if(food instanceof Meal){
+            if(food instanceof Meal)
                 message += "     " + ((Meal) food).generateMealDescriptionForFiles();
-            }
-            if(food instanceof Ingredient){
+            if(food instanceof Ingredient)
                 message += "     " + ((Ingredient) food).generateIngredientDescriptionForFiles();
-            }
         }
 
         if(this.dinner.size() == 0)

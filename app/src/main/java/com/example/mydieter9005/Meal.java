@@ -3,6 +3,7 @@ package com.example.mydieter9005;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 
 public class Meal extends Food {
@@ -57,17 +58,16 @@ public class Meal extends Food {
         String name;
 
         dataParts = data.split("Meal \\[ ", 2);
-        dataParts = dataParts[1].split(" \\]", 2);
+        dataParts = dataParts[1].split(" \\] \\]");
         data = dataParts[0];
 
         name = data.split(": ")[0];
         data = data.split(": ")[1];
 
         dataParts = data.split("   ");
-        for(int i = 0; i < dataParts.length; i++) {
-            if(!dataParts[i].equals(""))
-                ingredients.add(Ingredient.generateIngredientObjectFromFileDescription(dataParts[i] + " ]"));
-        }
+        dataParts[dataParts.length - 1] += " ]";
+        for(int i = 1; i < dataParts.length; i++)   // i = 1 because it's has "" in the first index.
+            ingredients.add(Ingredient.generateIngredientObjectFromFileDescription(dataParts[i] + " ]"));
 
         return new Meal(name, ingredients);
     }
