@@ -148,8 +148,6 @@ public class musicMaster extends AppCompatActivity implements View.OnClickListen
             me.setClass(musicMaster.this, Login.class);
         if(cameToMusicMasterFrom.equals("UserInfoScreen"))
             me.setClass(musicMaster.this, UserInfoScreen.class);
-        if(cameToMusicMasterFrom.equals("ProfilePictureSelection"))
-            me.setClass(musicMaster.this, ProfilePictureSelection.class);
 
         me.putExtra("activeSong", activeSong);
         saveSong();

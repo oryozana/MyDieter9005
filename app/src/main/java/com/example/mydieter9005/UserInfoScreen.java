@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,8 +33,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -54,9 +53,17 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
     ImageView ivProfilePicture;
     LinearLayout linearLayout;
 
+    TextView tvPictureNumberOutOf, tvNoInternetConnectionToChangePictureMessage;
+    Button btChoseProfilePicture, btCancelProfilePictureSelection;
+    LinearLayout profilePictureSelectionLinearLayout;
+    ImageButton ibtPreviousPicture, ibtNextPicture;
+    ImageView ivProfilePictureSelector;
+
+    int currentPictureIndex = 0, maxPictureAmount = 10;
+
+    boolean internetConnection = true, isChoosingProfilePicture = false;
     Song activeSong = Song.getSongs().get(0);
     User user = User.getCurrentUser();
-    boolean internetConnection = true;
 
     FirebaseDatabase usersDb;
     DatabaseReference databaseReference;
@@ -80,8 +87,9 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
 
         my_db = new DBHelper(UserInfoScreen.this);
 
-        videoView = (VideoView) findViewById(R.id.userInfoScreenVideoView);
+        profilePictureSelectionLinearLayout = (LinearLayout) findViewById(R.id.profilePictureSelectionLinearLayout);
         linearLayout = (LinearLayout) findViewById(R.id.userInfoScreenLinearLayout);
+        videoView = (VideoView) findViewById(R.id.userInfoScreenVideoView);
 
         ivProfilePicture = (ImageView) findViewById(R.id.ivProfilePicture);
         ivProfilePicture.setImageResource(user.getProfilePictureId());
@@ -101,15 +109,96 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         tvUsernameDisplay = (TextView) findViewById(R.id.tvUsernameDisplay);
         tvUsernameDisplay.setText(User.getCurrentUser().getUsername());
 
+        // ProfilePictureSelection:
+        ivProfilePictureSelector = (ImageView) findViewById(R.id.ivProfilePictureSelector);
+        tvPictureNumberOutOf = (TextView) findViewById(R.id.tvPictureNumberOutOf);
+
+        btCancelProfilePictureSelection = (Button) findViewById(R.id.btCancelProfilePictureSelection);
+        btCancelProfilePictureSelection.setOnClickListener(this);
+        btChoseProfilePicture = (Button) findViewById(R.id.btChoseProfilePicture);
+        btChoseProfilePicture.setOnClickListener(this);
+
+        ibtPreviousPicture = (ImageButton) findViewById(R.id.ibtPreviousPicture);
+        ibtPreviousPicture.setOnClickListener(this);
+        ibtNextPicture = (ImageButton) findViewById(R.id.ibtNextPicture);
+        ibtNextPicture.setOnClickListener(this);
+
+        tvNoInternetConnectionToChangePictureMessage = (TextView) findViewById(R.id.tvNoInternetConnectionToChangePictureMessage);
+        tvNoInternetConnectionToChangePictureMessage.setText("You don't have Internet connection." + "\n" + "Reconnect in order to change picture.");
+
+        nextPicture();
         setCustomNetworkConnectionReceiver();
         implementSettingsData();
         initiateVideoPlayer();
         initiateMediaPlayer();
     }
 
-    public void sendToProfilePictureSelection(){
-        me.setClass(UserInfoScreen.this, ProfilePictureSelection.class);
-        startActivity(me);
+    public void switchBetweenProfilePictureSelectionAndUserInfoScreen(){
+        if(isChoosingProfilePicture){
+            profilePictureSelectionLinearLayout.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.VISIBLE);
+            isChoosingProfilePicture = false;
+        }
+        else{
+            linearLayout.setVisibility(View.GONE);
+            profilePictureSelectionLinearLayout.setVisibility(View.VISIBLE);
+            isChoosingProfilePicture = true;
+        }
+    }
+
+    public void setImageBasedOnIndex(){
+        ivProfilePictureSelector.setImageResource(getResources().getIdentifier("user_picture_" + (currentPictureIndex), "drawable", getPackageName()));
+    }
+
+    public void previousPicture(){
+        if(0 < currentPictureIndex && currentPictureIndex <= maxPictureAmount){
+            currentPictureIndex--;
+            tvPictureNumberOutOf.setText("  Picture number " + currentPictureIndex + " out of " + maxPictureAmount + "  ");
+            setImageBasedOnIndex();
+
+            ibtNextPicture.setVisibility(View.VISIBLE);
+            if(currentPictureIndex == 1)
+                ibtPreviousPicture.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void nextPicture(){
+        if(0 <= currentPictureIndex && currentPictureIndex < maxPictureAmount){
+            currentPictureIndex++;
+            tvPictureNumberOutOf.setText("   Picture number " + currentPictureIndex + " out of " + maxPictureAmount + "   ");
+            setImageBasedOnIndex();
+
+            if(1 < currentPictureIndex)
+                ibtPreviousPicture.setVisibility(View.VISIBLE);
+            if(currentPictureIndex == maxPictureAmount)
+                ibtNextPicture.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void profilePictureSelected(){
+        User.getCurrentUser().setProfilePictureId(getResources().getIdentifier("user_picture_" + (currentPictureIndex), "drawable", getPackageName()));
+        updateUserProfilePictureIdInFirebaseAndDatabase(User.getCurrentUser());
+    }
+
+    public void updateUserProfilePictureIdInFirebaseAndDatabase(User user){
+        usersDb = FirebaseDatabase.getInstance();
+        databaseReference = usersDb.getReference("users");
+        databaseReference.child(user.getUsername()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                sqdb=my_db.getWritableDatabase();
+                ContentValues cv = new ContentValues();
+                cv.put(DBHelper.PROFILE_PICTURE_ID, user.getProfilePictureId());
+
+                sqdb.update(DBHelper.TABLE_NAME, cv,DBHelper.USERNAME+"=?", new String[]{User.getCurrentUser().getUsername()});
+                sqdb.close();
+
+                Toast.makeText(UserInfoScreen.this, "User profile picture successfully changed.", Toast.LENGTH_SHORT).show();
+
+                me.setClass(UserInfoScreen.this, UserInfoScreen.class);
+                startActivity(me);
+            }
+        });
     }
 
     public void changePassword(){
@@ -257,17 +346,49 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
     }
 
     public void setCustomNetworkConnectionReceiver(){
+        unregisterRegisteredReceiver();
+        networkConnectionReceiver = null;
         networkConnectionReceiver = new NetworkConnectionReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                try{
+                try {
                     internetConnection = isOnline(context);
-                }
+                    
+                    if(internetConnection) {
+                        btChoseProfilePicture.setVisibility(View.VISIBLE);
+                        tvNoInternetConnectionToChangePictureMessage.setVisibility(View.INVISIBLE);
+                    }
+                    else {
+                        btChoseProfilePicture.setVisibility(View.INVISIBLE);
+                        tvNoInternetConnectionToChangePictureMessage.setVisibility(View.VISIBLE);
+                    }
+
+                } 
                 catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
+        registerUnregisteredReceiver();
+    }
+
+    public void unregisterRegisteredReceiver(){
+        try{
+            unregisterReceiver(networkConnectionReceiver);
+        }
+        catch (IllegalArgumentException e){
+            e.getStackTrace();
+        }
+    }
+
+    public void registerUnregisteredReceiver(){
+        IntentFilter networkConnectionFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            registerReceiver(networkConnectionReceiver, networkConnectionFilter);
+        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            registerReceiver(networkConnectionReceiver, networkConnectionFilter);
+        }
     }
 
     public String getFileData(String fileName){
@@ -378,15 +499,7 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-
-        IntentFilter networkConnectionFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-            registerReceiver(networkConnectionReceiver, networkConnectionFilter);
-        }
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            registerReceiver(networkConnectionReceiver, networkConnectionFilter);
-        }
-        
+        registerUnregisteredReceiver();
         mediaPlayer.start();
         if(!me.getBooleanExtra("playMusic", true)){
             mediaPlayer.stop();
@@ -395,14 +508,7 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
 
     @Override
     protected void onPause() {
-
-        try{
-            unregisterReceiver(networkConnectionReceiver);
-        }
-        catch (IllegalArgumentException e){
-            e.getStackTrace();
-        }
-        
+        unregisterRegisteredReceiver();
         videoView.suspend();
         mediaPlayer.pause();
         super.onPause();
@@ -421,7 +527,7 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         int viewId = v.getId();
 
         if(viewId == btSendToProfilePictureSelection.getId())
-            sendToProfilePictureSelection();
+            switchBetweenProfilePictureSelectionAndUserInfoScreen();
 
         if(viewId == btChangePassword.getId())
             changePassword();
@@ -431,11 +537,27 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
 
         if(viewId == btDeleteUser.getId())
             deleteUserAlertDialog();
+
+        if(viewId == ibtNextPicture.getId())
+            nextPicture();
+
+        if(viewId == ibtPreviousPicture.getId())
+            previousPicture();
+
+        if(viewId == btChoseProfilePicture.getId())
+            profilePictureSelected();
+
+        if(viewId == btCancelProfilePictureSelection.getId())
+            switchBetweenProfilePictureSelectionAndUserInfoScreen();
     }
 
     @Override
     public void onBackPressed(){
-        me.setClass(UserInfoScreen.this, MainActivity.class);
-        startActivity(me);
+        if(isChoosingProfilePicture)
+            switchBetweenProfilePictureSelectionAndUserInfoScreen();
+        else{
+            me.setClass(UserInfoScreen.this, MainActivity.class);
+            startActivity(me);
+        }
     }
 }
