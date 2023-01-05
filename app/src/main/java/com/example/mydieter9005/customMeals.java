@@ -58,7 +58,7 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
     ListView lvCustomMealIngredients;
     EditText etCustomMeal;
 
-    ArrayAdapter<Ingredient> adapter;
+    IngredientListAdapter adapter;
     Ingredient addedIngredient;
     Meal customMeal;
     String cameFrom;
@@ -149,7 +149,7 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
         if(customMeal != null)
             ingredients = customMeal.getNeededIngredientsForMeal();
 
-        adapter = new ArrayAdapter<Ingredient>(this, android.R.layout.simple_list_item_1, ingredients);
+        adapter = new IngredientListAdapter(this, ingredients);
         lvCustomMealIngredients.setAdapter(adapter);
         lvCustomMealIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

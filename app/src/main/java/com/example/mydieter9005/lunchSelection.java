@@ -41,7 +41,7 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
 
     DailyMenu todayMenu = DailyMenu.getTodayMenu();
     Song activeSong = Song.getSongs().get(0);
-    ArrayAdapter<Meal> adapter;
+    MealListAdapter adapter;
     ArrayList<Meal> mealsList;
 
     FileInputStream is;
@@ -150,7 +150,7 @@ public class lunchSelection extends AppCompatActivity implements View.OnClickLis
     }
 
     public void setListViewAdapter(){
-        adapter = new ArrayAdapter<Meal>(this, android.R.layout.simple_list_item_1, mealsList);
+        adapter = new MealListAdapter(this, mealsList);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

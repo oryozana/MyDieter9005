@@ -56,7 +56,7 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
     ListView listView;
 
     ArrayList<Meal> mealsList = new ArrayList<Meal>();
-    ArrayAdapter<Meal> adapter;
+    MealListAdapter adapter;
     String cameFrom;
 
     DailyMenu todayMenu = DailyMenu.getTodayMenu();
@@ -208,7 +208,7 @@ public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnC
     public void setListViewAdapter(){
         initiateListViewFields();
 
-        adapter = new ArrayAdapter<Meal>(this, android.R.layout.simple_list_item_1, mealsList);
+        adapter = new MealListAdapter(this, mealsList);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

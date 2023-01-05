@@ -47,7 +47,7 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    Button btSendToProfilePictureSelection, btChangePassword, btLogoutUser, btDeleteUser;
+    Button btSendToProfilePictureSelection, btChangePassword, btShareUserByCode, btLogoutUser, btDeleteUser;
     EditText etGetOldPassword, etGetNewPassword;
     TextView tvUsernameDisplay;
     ImageView ivProfilePicture;
@@ -98,6 +98,8 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         btSendToProfilePictureSelection.setOnClickListener(this);
         btChangePassword = (Button) findViewById(R.id.btChangePassword);
         btChangePassword.setOnClickListener(this);
+        btShareUserByCode = (Button) findViewById(R.id.btShareUserByCode);
+        btShareUserByCode.setOnClickListener(this);
         btLogoutUser = (Button) findViewById(R.id.btLogoutUser);
         btLogoutUser.setOnClickListener(this);
         btDeleteUser = (Button) findViewById(R.id.btDeleteUser);
@@ -142,6 +144,10 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         else{
             linearLayout.setVisibility(View.GONE);
             profilePictureSelectionLinearLayout.setVisibility(View.VISIBLE);
+            currentPictureIndex = 0;
+            ibtPreviousPicture.setVisibility(View.INVISIBLE);
+            ibtNextPicture.setVisibility(View.VISIBLE);
+            nextPicture();
             isChoosingProfilePicture = true;
         }
     }
@@ -289,6 +295,28 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
                 }
             }
         });
+    }
+
+    public void showCodeGenerator(){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(this);
+        adb.setTitle("Your user code is: ");
+        adb.setIcon(R.drawable.ic_code_icon);
+
+        LinearLayout shareUserByCodeLinearLayout = (LinearLayout) findViewById(R.id.shareUserByCodeLinearLayout);
+        shareUserByCodeLinearLayout.setVisibility(View.VISIBLE);
+        adb.setView(shareUserByCodeLinearLayout);
+
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        ad = adb.create();
+        ad.show();
     }
 
     public void deleteUserAlertDialog(){
@@ -549,6 +577,9 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
 
         if(viewId == btCancelProfilePictureSelection.getId())
             switchBetweenProfilePictureSelectionAndUserInfoScreen();
+
+        if(viewId == btShareUserByCode.getId())
+            showCodeGenerator();
     }
 
     @Override

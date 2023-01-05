@@ -44,7 +44,7 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     ListView listView;
 
     ArrayList<Meal> customMealsList;
-    ArrayAdapter<Meal> adapter;
+    MealListAdapter adapter;
 
     String[] customMealsNames;
     String cameFrom;
@@ -169,7 +169,7 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     }
 
     public void setListViewAdapter(){
-        adapter = new ArrayAdapter<Meal>(this, android.R.layout.simple_list_item_1, customMealsList);
+        adapter = new MealListAdapter(this, customMealsList);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

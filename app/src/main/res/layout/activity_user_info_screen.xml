@@ -108,6 +108,37 @@
                 android:textSize="8pt" />
 
             <Button
+                android:id="@+id/btShareUserByCode"
+                android:layout_width="125pt"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2pt"
+                android:text="Share user" />
+
+            <LinearLayout
+                android:id="@+id/shareUserByCodeLinearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layoutDirection="ltr">
+
+                <TextView
+                    android:id="@+id/tvShowGeneratedCode"
+                    android:layout_width="100pt"
+                    android:layout_height="wrap_content"
+                    android:textSize="14pt" />
+
+                <ImageButton
+                    android:id="@+id/ibtShowCopyCodeOption"
+                    android:layout_width="25pt"
+                    android:layout_height="fill_parent"
+                    android:background="@null"
+                    app:srcCompat="@drawable/ic_copy_icon" />
+
+            </LinearLayout>
+
+            <Button
                 android:id="@+id/btLogoutUser"
                 android:layout_width="125pt"
                 android:layout_height="wrap_content"
