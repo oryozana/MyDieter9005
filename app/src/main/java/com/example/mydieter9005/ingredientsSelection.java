@@ -42,7 +42,7 @@ public class ingredientsSelection extends AppCompatActivity implements View.OnCl
 
     Song activeSong = Song.getSongs().get(0);
     ArrayList<Ingredient> ingredients;
-    ArrayAdapter<Ingredient> adapter;
+    IngredientListAdapter adapter;
     Ingredient ingredientSelected;
     EditText etFilterIngredients;
     ListView lvIngredients;
@@ -102,7 +102,7 @@ public class ingredientsSelection extends AppCompatActivity implements View.OnCl
     public void setAdapters() {
         initiateIngredientsList();
 
-        adapter = new ArrayAdapter<Ingredient>(this, android.R.layout.simple_list_item_1, ingredients);
+        adapter = new IngredientListAdapter(this, ingredients);
         lvIngredients.setAdapter(adapter);
         lvIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -125,7 +125,7 @@ public class ingredientsSelection extends AppCompatActivity implements View.OnCl
         adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                adapter = new ArrayAdapter<Ingredient>(ingredientsSelection.this, android.R.layout.simple_list_item_1, ingredients);
+                adapter = new IngredientListAdapter(ingredientsSelection.this, ingredients);
                 lvIngredients.setAdapter(adapter);
 
                 String filter = etFilterIngredients.getText().toString();

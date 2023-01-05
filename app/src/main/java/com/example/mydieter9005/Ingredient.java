@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Ingredient extends Food {
     private static ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>(); // Contain every ingredient basic info.
-    private int imgId = 0;
+    private int imgId = R.drawable.image_not_available;
 
     public Ingredient(String name, double grams, double proteins, double fats, double calories) {  // Full info ingredient, not for new ones.
         super(name, grams, proteins, fats, calories);
