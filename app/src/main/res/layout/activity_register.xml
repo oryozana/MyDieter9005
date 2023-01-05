@@ -95,11 +95,11 @@
             android:hint="Enter your target fats: " />
 
         <CheckBox
-            android:id="@+id/cbSaveRegisteredUserInLocalDatabase"
+            android:id="@+id/cbRememberRegisteredUserInLocalDatabase"
             android:layout_width="150pt"
             android:layout_height="15pt"
             android:checked="true"
-            android:text="Save user?" />
+            android:text="Remember user?" />
 
         <Button
             android:id="@+id/btRegister"

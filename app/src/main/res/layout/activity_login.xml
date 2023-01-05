@@ -49,11 +49,11 @@
             android:hint="Enter password: " />
 
         <CheckBox
-            android:id="@+id/cbSaveLoggedUserInLocalDatabase"
+            android:id="@+id/cbRememberLoggedUserInLocalDatabase"
             android:layout_width="150pt"
             android:layout_height="15pt"
             android:checked="true"
-            android:text="Save user?" />
+            android:text="Remember user?" />
 
         <TextView
             android:id="@+id/tvForgotPassword"

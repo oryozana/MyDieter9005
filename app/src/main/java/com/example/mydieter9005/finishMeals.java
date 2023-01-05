@@ -37,15 +37,13 @@ public class finishMeals extends AppCompatActivity implements View.OnClickListen
     ListView lvBreakfastIngredients, lvLunchIngredients, lvDinnerIngredients;
 
     DailyMenu todayMenu = DailyMenu.getTodayMenu();
+    FileAndDatabaseHelper fileAndDatabaseHelper;
     Song activeSong = Song.getSongs().get(0);
 
     ArrayList<Ingredient> breakfastIngredientsList, lunchIngredientsList, dinnerIngredientsList;
     ArrayList<String> breakfastFields, lunchFields, dinnerFields;
     ArrayAdapter<String> breakfastIngredientsAdapter, lunchIngredientsAdapter, dinnerIngredientsAdapter;
 
-    FileInputStream is;
-    InputStreamReader isr;
-    BufferedReader br;
     Intent me;
 
     @Override
@@ -73,8 +71,10 @@ public class finishMeals extends AppCompatActivity implements View.OnClickListen
         btFinishMeals = (Button) findViewById(R.id.btFinishMeals);
         btFinishMeals.setOnClickListener(this);
 
+        fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
+        activeSong = fileAndDatabaseHelper.implementSettingsData();
+
         DailyMenu.saveDailyMenuIntoFile(DailyMenu.getTodayMenu(), finishMeals.this);
-        implementSettingsData();
         initiateMediaPlayer();
         setAdapters();
     }
@@ -194,46 +194,6 @@ public class finishMeals extends AppCompatActivity implements View.OnClickListen
     public void finishFinishMeals(){
         me.setClass(this, MainActivity.class);
         startActivity(me);
-    }
-
-    public String getFileData(String fileName){
-        String currentLine = "", allData = "";
-        try{
-            is = openFileInput(fileName);
-            isr = new InputStreamReader(is);
-            br = new BufferedReader(isr);
-
-            currentLine = br.readLine();
-            while(currentLine != null){
-                allData += currentLine + "\n";
-                currentLine = br.readLine();
-            }
-            br.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return allData;
-    }
-
-    public void implementSettingsData(){
-        if(getFileData("settings") != null){
-            String[] settingsParts = getFileData("settings").split("\n");
-            Boolean playMusic, useVideos, useManuallySave;
-
-            playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
-            useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
-            useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
-            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
-
-            me.putExtra("playMusic", playMusic);
-            me.putExtra("useVideos", useVideos);
-            me.putExtra("useManuallySave", useManuallySave);
-            me.putExtra("activeSong", activeSong);
-        }
     }
 
     public void initiateMediaPlayer(){

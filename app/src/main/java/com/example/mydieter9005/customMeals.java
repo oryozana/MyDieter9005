@@ -63,6 +63,7 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
     Meal customMeal;
     String cameFrom;
 
+    FileAndDatabaseHelper fileAndDatabaseHelper;
     Song activeSong = Song.getSongs().get(0);
 
     FileOutputStream fos;
@@ -70,9 +71,6 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
     BufferedWriter bw;
     String fileName = "customMealsNames";
 
-    FileInputStream is;
-    InputStreamReader isr;
-    BufferedReader br;
     Intent me;
 
     @Override
@@ -138,10 +136,12 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
             public void afterTextChanged(Editable s) {}
         });
 
+        fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
+        activeSong = fileAndDatabaseHelper.implementSettingsData();
+
         setAdapters();
         initiateVideoPlayer();
         initiateMediaPlayer();
-        implementSettingsData();
     }
 
     public void setAdapters() {
@@ -263,7 +263,7 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
     }
 
     public String[] getSavedCustomMealsNames(){
-        String[] customMealsNames = getFileData(fileName).split("\n");
+        String[] customMealsNames = fileAndDatabaseHelper.getFileData(fileName).split("\n");
 
         for(int i = 1; i < customMealsNames.length; i++)  // Get rid of first line.
             customMealsNames[i - 1] = customMealsNames[i];
@@ -350,46 +350,6 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
         me.setClass(customMeals.this, mealsMenu.class);
         me.putExtra(cameFrom, customMeal);
         startActivity(me);
-    }
-
-    public String getFileData(String fileName){
-        String currentLine = "", allData = "";
-        try{
-            is = openFileInput(fileName);
-            isr = new InputStreamReader(is);
-            br = new BufferedReader(isr);
-
-            currentLine = br.readLine();
-            while(currentLine != null){
-                allData += currentLine + "\n";
-                currentLine = br.readLine();
-            }
-            br.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return allData;
-    }
-
-    public void implementSettingsData(){
-        if(getFileData("settings") != null){
-            String[] settingsParts = getFileData("settings").split("\n");
-            Boolean playMusic, useVideos, useManuallySave;
-
-            playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
-            useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
-            useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
-            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
-
-            me.putExtra("playMusic", playMusic);
-            me.putExtra("useVideos", useVideos);
-            me.putExtra("useManuallySave", useManuallySave);
-            me.putExtra("activeSong", activeSong);
-        }
     }
 
     public void initiateVideoPlayer(){

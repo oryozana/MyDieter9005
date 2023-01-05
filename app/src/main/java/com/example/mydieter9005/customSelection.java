@@ -50,17 +50,14 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     String cameFrom;
 
     DailyMenu todayMenu = DailyMenu.getTodayMenu();
+    FileAndDatabaseHelper fileAndDatabaseHelper;
     Song activeSong = Song.getSongs().get(0);
 
     FirebaseDatabase recipesDb;
     DatabaseReference databaseReference;
     String userName = User.getCurrentUser().getUsername();
 
-    FileInputStream is;
-    InputStreamReader isr;
-    BufferedReader br;
     String fileName = "customMealsNames";
-
     Intent me;
 
     @Override
@@ -81,11 +78,12 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
         btFinishCustomSelection = (Button) findViewById(R.id.btFinishCustomSelection);
         btFinishCustomSelection.setOnClickListener(this);
 
+        fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
+        activeSong = fileAndDatabaseHelper.implementSettingsData();
+
         initiateCustomMealsList();
-        implementSettingsData();
         initiateVideoPlayer();
         initiateMediaPlayer();
-
         checkIfAtLeastOneCustomMealAdded();
     }
 
@@ -100,7 +98,7 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     }
 
     public String[] getSavedCustomMealsNames(){
-        String[] customMealsNames = getFileData(fileName).split("\n");
+        String[] customMealsNames = fileAndDatabaseHelper.getFileData(fileName).split("\n");
 
         for(int i = 1; i < customMealsNames.length; i++)  // Get rid of first line.
             customMealsNames[i - 1] = customMealsNames[i];
@@ -110,7 +108,7 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     }
 
     public ArrayList<Ingredient> getIngredientsFromFileByCustomMealName(String mealName){
-        String[] mealIngredients = getFileData("customMeal: " + mealName).split("\n");
+        String[] mealIngredients = fileAndDatabaseHelper.getFileData("customMeal: " + mealName).split("\n");
         ArrayList<Ingredient> ingredientsFound = new ArrayList<Ingredient>();
 
         for(int i = 1; i < mealIngredients.length; i++){  // i = 1 to skip the custom meal name line.
@@ -297,46 +295,6 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     public void sendToWorldSavedCustomSelection(){
         me.setClass(customSelection.this, WorldSavedCustomMeals.class);
         startActivity(me);
-    }
-
-    public String getFileData(String fileName){
-        String currentLine = "", allData = "";
-        try{
-            is = openFileInput(fileName);
-            isr = new InputStreamReader(is);
-            br = new BufferedReader(isr);
-
-            currentLine = br.readLine();
-            while(currentLine != null){
-                allData += currentLine + "\n";
-                currentLine = br.readLine();
-            }
-            br.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return allData;
-    }
-
-    public void implementSettingsData(){
-        if(getFileData("settings") != null){
-            String[] settingsParts = getFileData("settings").split("\n");
-            Boolean playMusic, useVideos, useManuallySave;
-
-            playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
-            useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
-            useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
-            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
-
-            me.putExtra("playMusic", playMusic);
-            me.putExtra("useVideos", useVideos);
-            me.putExtra("useManuallySave", useManuallySave);
-            me.putExtra("activeSong", activeSong);
-        }
     }
 
     public void initiateVideoPlayer(){

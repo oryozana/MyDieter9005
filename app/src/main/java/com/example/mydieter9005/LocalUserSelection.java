@@ -83,6 +83,7 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
     ImageView[] ivUsers;
     TextView[] tvUsers;
 
+    FileAndDatabaseHelper fileAndDatabaseHelper;
     Song activeSong = Song.getSongs().get(0);
     ArrayList<User> localUsers;
 
@@ -97,9 +98,6 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
     SQLiteDatabase sqdb;
     DBHelper my_db;
 
-    FileInputStream is;
-    InputStreamReader isr;
-    BufferedReader br;
     Intent me;
 
     @Override
@@ -164,10 +162,12 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         btBack = (Button) findViewById(R.id.btBack);
         btBack.setOnClickListener(this);
 
+        fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
+        activeSong = fileAndDatabaseHelper.implementSettingsData();
+
         setCustomNetworkConnectionReceiver();
         initiateLocalUsersArrayList();
         initiateUsersSelectionViews();
-        implementSettingsData();
         initiateVideoPlayer();
         initiateMediaPlayer();
     }
@@ -451,9 +451,9 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
 
                                     int profilePictureId = Integer.parseInt(String.valueOf(user.child("profilePictureId").getValue()));
 
-                                    if(!isUserAlreadyExists(username)) {
+                                    if(!fileAndDatabaseHelper.isUserAlreadyExists(username)) {
                                         User tmpUser = new User(username, password, email, startingWeight, plan, profilePictureId);
-                                        addLoggedUserIntoLocalDatabase(tmpUser);
+                                        fileAndDatabaseHelper.addLoggedUserIntoLocalDatabase(tmpUser);
                                         localUsers.add(tmpUser);
                                     }
                                 }
@@ -503,83 +503,6 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         ibtShowCopyCodeOption.setVisibility(View.GONE);
 
         btBack.setVisibility(View.GONE);
-    }
-
-    public void addLoggedUserIntoLocalDatabase(User user){
-        boolean added = false;
-
-        if(isDatabaseEmpty()) {
-            addUserToDatabase(user);
-            added = true;
-        }
-
-        if(!isUserAlreadyExists(user.getUsername()))
-            if(!added)
-                addUserToDatabase(user);
-    }
-
-
-    private void addUserToDatabase(User user) {
-//        String dailyMenusDescription = "";
-//        for(int i = 0; i < user.getDailyMeals().size(); i++)
-//            dailyMenusDescription += user.getDailyMeals().get(i).generateDailyMenuDescriptionForFiles();
-
-        ContentValues cv = new ContentValues();
-
-        cv.put(my_db.USERNAME, user.getUsername());
-        cv.put(my_db.PASSWORD, user.getPassword());
-        cv.put(my_db.EMAIL, user.getEmail());
-        cv.put(my_db.STARTING_WEIGHT, user.getStartingWeight());
-        cv.put(my_db.WEIGHT, user.getWeight());
-        cv.put(my_db.TARGET_CALORIES, user.getCurrentPlan().getTargetCalories());
-        cv.put(my_db.TARGET_PROTEIN, user.getCurrentPlan().getTargetProteins());
-        cv.put(my_db.TARGET_FATS, user.getCurrentPlan().getTargetFats());
-        cv.put(my_db.PROFILE_PICTURE_ID, user.getProfilePictureId());
-   //     cv.put(my_db.DAILY_MENUS, dailyMenusDescription);
-
-        sqdb = my_db.getWritableDatabase();
-        sqdb.insert(my_db.TABLE_NAME, null, cv);
-        sqdb.close();
-    }
-
-    private boolean isUserAlreadyExists(String username) {
-        boolean flag = false;
-        sqdb = my_db.getWritableDatabase();
-
-        Cursor c = sqdb.query(DBHelper.TABLE_NAME,null, null, null, null, null, null);
-
-        int col1 = c.getColumnIndex(DBHelper.USERNAME);
-
-        c.moveToFirst();
-
-        while(!c.isAfterLast()) {
-            String t1 = c.getString(col1);
-
-            if(username.equals(t1))
-                flag = true;
-
-            c.moveToNext();
-        }
-
-        c.close();
-        sqdb.close();
-        return flag;
-    }
-
-    private boolean isDatabaseEmpty() {
-        sqdb = my_db.getWritableDatabase();
-        boolean flag = true;
-
-        Cursor c = sqdb.query(DBHelper.TABLE_NAME,null, null, null, null, null, null);
-        c.moveToFirst();
-
-        if(!c.isAfterLast())
-            flag = false;
-
-        c.close();
-        sqdb.close();
-
-        return flag;
     }
 
     public void generateCodeAndExpirationDate() {
@@ -666,46 +589,6 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
                 }
             }
         };
-    }
-
-    public String getFileData(String fileName){
-        String currentLine = "", allData = "";
-        try{
-            is = openFileInput(fileName);
-            isr = new InputStreamReader(is);
-            br = new BufferedReader(isr);
-
-            currentLine = br.readLine();
-            while(currentLine != null){
-                allData += currentLine + "\n";
-                currentLine = br.readLine();
-            }
-            br.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return allData;
-    }
-
-    public void implementSettingsData(){
-        if(getFileData("settings") != null){
-            String[] settingsParts = getFileData("settings").split("\n");
-            Boolean playMusic, useVideos, useManuallySave;
-
-            playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
-            useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
-            useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
-            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
-
-            me.putExtra("playMusic", playMusic);
-            me.putExtra("useVideos", useVideos);
-            me.putExtra("useManuallySave", useManuallySave);
-            me.putExtra("activeSong", activeSong);
-        }
     }
 
     public void initiateVideoPlayer(){

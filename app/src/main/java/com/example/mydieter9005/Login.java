@@ -54,21 +54,16 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     EditText etGetUsernameLoginInfo, etGetPasswordLoginInfo;
     LinearLayout linearLayout, loginLoadingLinearLayout;
-    CheckBox cbSaveLoggedUserInLocalDatabase;
+    CheckBox cbRememberLoggedUserInLocalDatabase;
     Button btLogin, btGoToRegister;
     TextView tvForgotPassword;
 
+    FileAndDatabaseHelper fileAndDatabaseHelper;
     Song activeSong = Song.getSongs().get(0);
 
     FirebaseDatabase usersDb;
     DatabaseReference databaseReference;
 
-    SQLiteDatabase sqdb;
-    DBHelper my_db;
-
-    FileInputStream is;
-    InputStreamReader isr;
-    BufferedReader br;
     Intent me;
 
     @Override
@@ -79,8 +74,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         me = getIntent();
         if(me.hasExtra("activeSong"))
             activeSong = (Song) me.getSerializableExtra("activeSong");
-
-        my_db = new DBHelper(Login.this);
 
         loginLoadingLinearLayout = (LinearLayout) findViewById(R.id.loginLoadingLinearLayout);
         linearLayout = (LinearLayout) findViewById(R.id.loginLinearLayout);
@@ -97,10 +90,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         btLogin = (Button) findViewById(R.id.btLogin);
         btLogin.setOnClickListener(this);
 
-        cbSaveLoggedUserInLocalDatabase = (CheckBox) findViewById(R.id.cbSaveLoggedUserInLocalDatabase);
+        cbRememberLoggedUserInLocalDatabase = (CheckBox) findViewById(R.id.cbRememberLoggedUserInLocalDatabase);
+
+        fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
+        activeSong = fileAndDatabaseHelper.implementSettingsData();
 
         setCustomNetworkConnectionReceiver();
-        implementSettingsData();
         initiateVideoPlayer();
         initiateMediaPlayer();
     }
@@ -139,8 +134,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 //                                User.getCurrentUser().addDailyMeals(DailyMenu.generateDailyMenuObjectFromFile(dailyMenu.getValue()));
 //                            }
 
-                            if(cbSaveLoggedUserInLocalDatabase.isChecked())
-                                addLoggedUserIntoLocalDatabase(User.getCurrentUser());
+                            if(cbRememberLoggedUserInLocalDatabase.isChecked())
+                                fileAndDatabaseHelper.addLoggedUserIntoLocalDatabase(User.getCurrentUser());
 
                             me.setClass(Login.this, MainActivity.class);
                             me.putExtra("cameFromLogin", 0);
@@ -201,78 +196,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 }
             }
         });
-    }
-
-    public void addLoggedUserIntoLocalDatabase(User user){
-        boolean added = false;
-
-        if(isDatabaseEmpty()) {
-            addUserToDatabase(user);
-            added = true;
-        }
-
-        if(!isUserAlreadyExists(user.getUsername()))
-            if(!added)
-                addUserToDatabase(user);
-    }
-
-
-    private void addUserToDatabase(User user) {
-        ContentValues cv = new ContentValues();
-
-        cv.put(my_db.USERNAME, user.getUsername());
-        cv.put(my_db.PASSWORD, user.getPassword());
-        cv.put(my_db.EMAIL, user.getEmail());
-        cv.put(my_db.STARTING_WEIGHT, user.getStartingWeight());
-        cv.put(my_db.WEIGHT, user.getWeight());
-        cv.put(my_db.TARGET_CALORIES, user.getCurrentPlan().getTargetCalories());
-        cv.put(my_db.TARGET_PROTEIN, user.getCurrentPlan().getTargetProteins());
-        cv.put(my_db.TARGET_FATS, user.getCurrentPlan().getTargetFats());
-        cv.put(my_db.PROFILE_PICTURE_ID, user.getProfilePictureId());
-
-        sqdb = my_db.getWritableDatabase();
-        sqdb.insert(my_db.TABLE_NAME, null, cv);
-        sqdb.close();
-    }
-
-    private boolean isUserAlreadyExists(String username) {
-        boolean flag = false;
-        sqdb = my_db.getWritableDatabase();
-
-        Cursor c = sqdb.query(DBHelper.TABLE_NAME,null, null, null, null, null, null);
-
-        int col1 = c.getColumnIndex(DBHelper.USERNAME);
-
-        c.moveToFirst();
-
-        while(!c.isAfterLast()) {
-            String t1 = c.getString(col1);
-
-            if(username.equals(t1))
-                flag = true;
-
-            c.moveToNext();
-        }
-
-        c.close();
-        sqdb.close();
-        return flag;
-    }
-
-    private boolean isDatabaseEmpty() {
-        sqdb = my_db.getWritableDatabase();
-        boolean flag = true;
-
-        Cursor c = sqdb.query(DBHelper.TABLE_NAME,null, null, null, null, null, null);
-        c.moveToFirst();
-
-        if(!c.isAfterLast())
-            flag = false;
-
-        c.close();
-        sqdb.close();
-
-        return flag;
     }
 
     public void forgotPasswordAlertDialog(){
@@ -424,14 +347,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             public void onComplete(@NonNull Task<Void> task) {
                 User.setCurrentUser(user);
 
-                sqdb=my_db.getWritableDatabase();
-                ContentValues cv = new ContentValues();
-                cv.put(DBHelper.PASSWORD, newPassword);
-
-                sqdb.update(DBHelper.TABLE_NAME, cv,DBHelper.USERNAME+"=?", new String[]{user.getUsername()});
-                sqdb.close();
-
-                Toast.makeText(Login.this, "Password successfully changed.", Toast.LENGTH_SHORT).show();
+                fileAndDatabaseHelper.updateUserPasswordInLocalDatabase(user, newPassword);
 
                 me.setClass(Login.this, MainActivity.class);
                 startActivity(me);
@@ -478,46 +394,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     public void goToRegister(){
         me.setClass(this, Register.class);
         startActivity(me);
-    }
-
-    public String getFileData(String fileName){
-        String currentLine = "", allData = "";
-        try{
-            is = openFileInput(fileName);
-            isr = new InputStreamReader(is);
-            br = new BufferedReader(isr);
-
-            currentLine = br.readLine();
-            while(currentLine != null){
-                allData += currentLine + "\n";
-                currentLine = br.readLine();
-            }
-            br.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return allData;
-    }
-
-    public void implementSettingsData(){
-        if(getFileData("settings") != null){
-            String[] settingsParts = getFileData("settings").split("\n");
-            Boolean playMusic, useVideos, useManuallySave;
-
-            playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
-            useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
-            useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
-            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
-
-            me.putExtra("playMusic", playMusic);
-            me.putExtra("useVideos", useVideos);
-            me.putExtra("useManuallySave", useManuallySave);
-            me.putExtra("activeSong", activeSong);
-        }
     }
 
     public void initiateVideoPlayer(){

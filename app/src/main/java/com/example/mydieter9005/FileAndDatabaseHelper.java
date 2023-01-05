@@ -99,6 +99,10 @@ public class FileAndDatabaseHelper {
     }
 
     public void addUserToDatabase(User user) {
+        //        String dailyMenusDescription = "";
+//        for(int i = 0; i < user.getDailyMeals().size(); i++)
+//            dailyMenusDescription += user.getDailyMeals().get(i).generateDailyMenuDescriptionForFiles();
+
         ContentValues cv = new ContentValues();
 
         cv.put(my_db.USERNAME, user.getUsername());
@@ -154,5 +158,23 @@ public class FileAndDatabaseHelper {
         sqdb.close();
 
         return flag;
+    }
+
+    public void addRegisteredUserToDatabase(User user) {
+        ContentValues cv = new ContentValues();
+
+        cv.put(my_db.USERNAME, user.getUsername());
+        cv.put(my_db.PASSWORD, user.getPassword());
+        cv.put(my_db.EMAIL, user.getEmail());
+        cv.put(my_db.STARTING_WEIGHT, user.getStartingWeight());
+        cv.put(my_db.WEIGHT, user.getWeight());
+        cv.put(my_db.TARGET_CALORIES, user.getCurrentPlan().getTargetCalories());
+        cv.put(my_db.TARGET_PROTEIN, user.getCurrentPlan().getTargetProteins());
+        cv.put(my_db.TARGET_FATS, user.getCurrentPlan().getTargetFats());
+        cv.put(my_db.PROFILE_PICTURE_ID, user.getProfilePictureId());
+
+        sqdb = my_db.getWritableDatabase();
+        sqdb.insert(my_db.TABLE_NAME, null, cv);
+        sqdb.close();
     }
 }

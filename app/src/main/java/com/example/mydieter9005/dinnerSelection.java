@@ -39,13 +39,11 @@ public class dinnerSelection extends AppCompatActivity implements View.OnClickLi
     ListView listView;
 
     DailyMenu todayMenu = DailyMenu.getTodayMenu();
+    FileAndDatabaseHelper fileAndDatabaseHelper;
     Song activeSong = Song.getSongs().get(0);
     MealListAdapter adapter;
     ArrayList<Meal> mealsList;
 
-    FileInputStream is;
-    InputStreamReader isr;
-    BufferedReader br;
     Intent me;
 
     @Override
@@ -141,10 +139,12 @@ public class dinnerSelection extends AppCompatActivity implements View.OnClickLi
             public void afterTextChanged(Editable s) {}
         });
 
+        fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
+        activeSong = fileAndDatabaseHelper.implementSettingsData();
+
         setListViewAdapter();
         initiateVideoPlayer();
         initiateMediaPlayer();
-        implementSettingsData();
     }
 
     public void setListViewAdapter(){
@@ -234,46 +234,6 @@ public class dinnerSelection extends AppCompatActivity implements View.OnClickLi
     public void backToMealsMenu(){
         me.setClass(dinnerSelection.this, mealsMenu.class);
         startActivity(me);
-    }
-
-    public String getFileData(String fileName){
-        String currentLine = "", allData = "";
-        try{
-            is = openFileInput(fileName);
-            isr = new InputStreamReader(is);
-            br = new BufferedReader(isr);
-
-            currentLine = br.readLine();
-            while(currentLine != null){
-                allData += currentLine + "\n";
-                currentLine = br.readLine();
-            }
-            br.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return allData;
-    }
-
-    public void implementSettingsData(){
-        if(getFileData("settings") != null){
-            String[] settingsParts = getFileData("settings").split("\n");
-            Boolean playMusic, useVideos, useManuallySave;
-
-            playMusic = Boolean.parseBoolean(settingsParts[0].split(": ")[1]);
-            useVideos = Boolean.parseBoolean(settingsParts[1].split(": ")[1]);
-            useManuallySave = Boolean.parseBoolean(settingsParts[2].split(": ")[1]);
-            activeSong = Song.getSongByName(settingsParts[3].split(": ")[1]);
-
-            me.putExtra("playMusic", playMusic);
-            me.putExtra("useVideos", useVideos);
-            me.putExtra("useManuallySave", useManuallySave);
-            me.putExtra("activeSong", activeSong);
-        }
     }
 
     public void initiateVideoPlayer(){
