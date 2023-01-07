@@ -56,7 +56,6 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
 
     ArrayList<Ingredient> ingredients;
     IngredientListAdapter ingredientsAdapter;
-    Ingredient ingredientSelected;
 
     boolean isOnMealsMode = false;
     boolean isOnLocalMode = true;
