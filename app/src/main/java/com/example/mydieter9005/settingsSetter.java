@@ -194,14 +194,6 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
             String cameToSettingsFrom = me.getStringExtra("cameToSettingsFrom");
             if(cameToSettingsFrom.equals("MainActivity"))
                 me.setClass(settingsSetter.this, MainActivity.class);
-            if(cameToSettingsFrom.equals("mealsMenu"))
-                me.setClass(settingsSetter.this, mealsMenu.class);
-//            if(cameToSettingsFrom.equals("breakfastSelection"))
-//                me.setClass(settingsSetter.this, breakfastSelection.class);
-            if(cameToSettingsFrom.equals("lunchSelection"))
-                me.setClass(settingsSetter.this, lunchSelection.class);
-            if(cameToSettingsFrom.equals("dinnerSelection"))
-                me.setClass(settingsSetter.this, dinnerSelection.class);
             if(cameToSettingsFrom.equals("ingredientsPickup"))
                 me.setClass(settingsSetter.this, ingredientsPickup.class);
             if(cameToSettingsFrom.equals("finishMeals"))
@@ -214,8 +206,6 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
                 me.setClass(settingsSetter.this, musicMaster.class);
             if(cameToSettingsFrom.equals("ingredientsSelection"))
                 me.setClass(settingsSetter.this, ingredientsSelection.class);
-            if(cameToSettingsFrom.equals("WorldSavedCustomMeals"))
-                me.setClass(settingsSetter.this, WorldSavedCustomMeals.class);
             if(cameToSettingsFrom.equals("Register"))
                 me.setClass(settingsSetter.this, Register.class);
             if(cameToSettingsFrom.equals("Login"))

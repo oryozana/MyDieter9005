@@ -155,12 +155,12 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-        adb.setNegativeButton("World saved", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                sendToWorldSavedCustomSelection();
-            }
-        });
+//        adb.setNegativeButton("World saved", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                sendToWorldSavedCustomSelection();
+//            }
+//        });
 
         ad = adb.create();
         ad.show();
@@ -170,24 +170,24 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
         adapter = new MealListAdapter(this, customMealsList);
         listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
-
-                if(cameFrom.equals("breakfast"))
-                    todayMenu.addBreakfast(selectedItem);
-
-                if(cameFrom.equals("lunch"))
-                    todayMenu.addLunch(selectedItem);
-
-                if(cameFrom.equals("dinner"))
-                    todayMenu.addDinner(selectedItem);
-
-                me.setClass(customSelection.this, mealsMenu.class);
-                startActivity(me);
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
+//
+//                if(cameFrom.equals("breakfast"))
+//                    todayMenu.addBreakfast(selectedItem);
+//
+//                if(cameFrom.equals("lunch"))
+//                    todayMenu.addLunch(selectedItem);
+//
+//                if(cameFrom.equals("dinner"))
+//                    todayMenu.addDinner(selectedItem);
+//
+//                me.setClass(customSelection.this, mealsMenu.class);
+//                startActivity(me);
+//            }
+//        });
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -292,11 +292,6 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
         startActivity(me);
     }
 
-    public void sendToWorldSavedCustomSelection(){
-        me.setClass(customSelection.this, WorldSavedCustomMeals.class);
-        startActivity(me);
-    }
-
     public void initiateVideoPlayer(){
         Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.custom_selection_background_video);
         videoView.setVideoURI(uri);
@@ -395,9 +390,6 @@ public class customSelection extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
-
-        if(viewId == btSentToWorldSavedCustomMeals.getId())
-            sendToWorldSavedCustomSelection();
 
         if(viewId == btFinishCustomSelection.getId())
             returnToCustomize();

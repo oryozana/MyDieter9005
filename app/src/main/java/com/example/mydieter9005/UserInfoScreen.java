@@ -471,7 +471,7 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         super.onPostResume();
         videoView.resume();
         if(!me.getBooleanExtra("useVideos", true)){
-            findViewById(R.id.dinnerSelectionLinearLayout).setBackground(getDrawable(R.drawable.dinner_selection_background));
+            findViewById(R.id.userInfoScreenLinearLayout).setBackground(getDrawable(R.drawable.dinner_selection_background));
             videoView.stopPlayback();
         }
         else

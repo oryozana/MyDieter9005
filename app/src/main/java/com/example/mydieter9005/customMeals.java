@@ -26,7 +26,6 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.example.mydieter9005.databinding.ActivityCustomMealsBinding;
-import com.example.mydieter9005.databinding.ActivityWorldSavedCustomMealsBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -323,12 +322,12 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
             }
         });
 
-        adb.setNeutralButton("Finish", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                finishCustomize();
-            }
-        });
+//        adb.setNeutralButton("Finish", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                finishCustomize();
+//            }
+//        });
 
         adb.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
@@ -343,12 +342,6 @@ public class customMeals extends AppCompatActivity implements View.OnClickListen
 
     public void sendToCustomSelection(){
         me.setClass(customMeals.this, customSelection.class);
-        startActivity(me);
-    }
-
-    public void finishCustomize(){
-        me.setClass(customMeals.this, mealsMenu.class);
-        me.putExtra(cameFrom, customMeal);
         startActivity(me);
     }
 

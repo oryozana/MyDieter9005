@@ -121,14 +121,6 @@ public class musicMaster extends AppCompatActivity implements View.OnClickListen
         String cameToMusicMasterFrom = me.getStringExtra("cameToMusicMasterFrom");
         if(cameToMusicMasterFrom.equals("MainActivity"))
             me.setClass(musicMaster.this, MainActivity.class);
-        if(cameToMusicMasterFrom.equals("mealsMenu"))
-            me.setClass(musicMaster.this, mealsMenu.class);
-//        if(cameToMusicMasterFrom.equals("breakfastSelection"))
-//            me.setClass(musicMaster.this, breakfastSelection.class);
-        if(cameToMusicMasterFrom.equals("lunchSelection"))
-            me.setClass(musicMaster.this, lunchSelection.class);
-        if(cameToMusicMasterFrom.equals("dinnerSelection"))
-            me.setClass(musicMaster.this, dinnerSelection.class);
         if(cameToMusicMasterFrom.equals("ingredientsPickup"))
             me.setClass(musicMaster.this, ingredientsPickup.class);
         if(cameToMusicMasterFrom.equals("finishMeals"))
@@ -141,8 +133,6 @@ public class musicMaster extends AppCompatActivity implements View.OnClickListen
             me.setClass(musicMaster.this, settingsSetter.class);
         if(cameToMusicMasterFrom.equals("ingredientsSelection"))
             me.setClass(musicMaster.this, ingredientsSelection.class);
-        if(cameToMusicMasterFrom.equals("WorldSavedCustomMeals"))
-            me.setClass(musicMaster.this, WorldSavedCustomMeals.class);
         if(cameToMusicMasterFrom.equals("Register"))
             me.setClass(musicMaster.this, Register.class);
         if(cameToMusicMasterFrom.equals("Login"))
