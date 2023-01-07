@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeFragment">
+
+    <LinearLayout
+        android:id="@+id/mainActivityLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <HorizontalScrollView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvBreakfastMain"
+                android:layout_width="125pt"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4pt"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Your breakfast:                            "
+                android:textColor="@color/white" />
+        </HorizontalScrollView>
+
+        <HorizontalScrollView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvLunchMain"
+                android:layout_width="125pt"
+                android:layout_height="match_parent"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Your lunch:                                   "
+                android:textColor="@color/white" />
+        </HorizontalScrollView>
+
+        <HorizontalScrollView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvDinnerMain"
+                android:layout_width="125pt"
+                android:layout_height="match_parent"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Your dinner:                                  "
+                android:textColor="@color/white" />
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/tvTotalProteinsMain"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8pt"
+            android:text="Total proteins: "
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/tvTotalFatsMain"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Total fats: "
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/tvTotalCaloriesMain"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8pt"
+            android:text="Total calories: "
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btMealsMenu"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Meals selector" />
+
+        <Button
+            android:id="@+id/btWriteMealsToExternalFile"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Save meals on external file" />
+
+        <Button
+            android:id="@+id/btReadMealsFromExternalFile"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Load saved meals" />
+    </LinearLayout>
+</RelativeLayout>

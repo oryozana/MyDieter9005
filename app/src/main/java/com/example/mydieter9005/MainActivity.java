@@ -9,19 +9,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AnalogClock;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextClock;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -33,23 +31,22 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private VideoView videoView;
-    private MediaPlayer mediaPlayer;
     private AnalogClock analogClock;
     private TextClock textClock;
 
-    TextView tvBreakfastMain, tvLunchMain, tvDinnerMain;
-    TextView tvTotalProteinsMain, tvTotalFatsMain, tvTotalCaloriesMain;
-    Button btMealsMenu, btWriteMealsToExternalFile, btReadMealsFromExternalFile;
-    LinearLayout mainActivityLinearLayout;
-    Song activeSong;  // In this activity he get a initial value at "createTheFirstIntent".
+    BottomNavigationView bottomNavigationView;
+    HomeFragment homeFragment = new HomeFragment();
+    FoodSelectionFragment foodSelectionFragment = new FoodSelectionFragment();
+
+    private VideoView videoView;
+    private MediaPlayer mediaPlayer;
 
     DailyMenu todayMenu;
+    Song activeSong;  // In this activity he get a initial value at "createTheFirstIntent".
 
     FileOutputStream fos;
     OutputStreamWriter osw;
@@ -83,29 +80,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Calendar calendar = Calendar.getInstance();
         currentHour = calendar.get(Calendar.HOUR_OF_DAY);
 
-        videoView = (VideoView) findViewById(R.id.mainActivityVideoView);
         analogClock = (AnalogClock) findViewById(R.id.mainActivityAnalogClock);
         textClock = (TextClock) findViewById(R.id.mainActivityTextClock);
 
-        tvBreakfastMain = (TextView) findViewById(R.id.tvBreakfastMain);
-        tvBreakfastMain.setMovementMethod(new ScrollingMovementMethod());
-        tvLunchMain = (TextView) findViewById(R.id.tvLunchMain);
-        tvLunchMain.setMovementMethod(new ScrollingMovementMethod());
-        tvDinnerMain = (TextView) findViewById(R.id.tvDinnerMain);
-        tvDinnerMain.setMovementMethod(new ScrollingMovementMethod());
+        videoView = (VideoView) findViewById(R.id.mainActivityVideoView);
 
-        tvTotalCaloriesMain = (TextView) findViewById(R.id.tvTotalCaloriesMain);
-        tvTotalProteinsMain = (TextView) findViewById(R.id.tvTotalProteinsMain);
-        tvTotalFatsMain = (TextView) findViewById(R.id.tvTotalFatsMain);
+        bottomNavigationView = findViewById(R.id.bnvMain);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                int itemId = item.getItemId();
 
-        btReadMealsFromExternalFile = (Button) findViewById(R.id.btReadMealsFromExternalFile);
-        btReadMealsFromExternalFile.setOnClickListener(this);
-        btWriteMealsToExternalFile = (Button) findViewById(R.id.btWriteMealsToExternalFile);
-        btWriteMealsToExternalFile.setOnClickListener(this);
-        btMealsMenu = (Button) findViewById(R.id.btMealsMenu);
-        btMealsMenu.setOnClickListener(this);
+                analogClock.setVisibility(View.INVISIBLE);
+                textClock.setVisibility(View.INVISIBLE);
 
-        mainActivityLinearLayout = (LinearLayout) findViewById(R.id.mainActivityLinearLayout);
+                if(itemId == R.id.sendToHome) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, homeFragment).commit();
+                    analogClock.setVisibility(View.VISIBLE);
+                    textClock.setVisibility(View.VISIBLE);
+                    implementSettingsData();
+                    return true;
+                }
+
+                if(itemId == R.id.sendToFoodSelection) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, foodSelectionFragment).commit();
+                    return true;
+                }
+
+                return false;
+            }
+        });
 
         me = createTheFirstIntent(me);
         if(me.hasExtra("activeSong"))
@@ -114,20 +118,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         implementSettingsData();
         initiateMediaPlayer();
         initiateVideoPlayer();
-        updateMealsIfNeeded();
-    }
-
-    public void updateMealsIfNeeded(){
-        if(todayMenu.hasBreakfast())
-            tvBreakfastMain.setText("Your breakfast: " + todayMenu.getUnitedBreakfastName());
-        if(todayMenu.hasLunch())
-            tvLunchMain.setText("Your lunch: " + todayMenu.getUnitedLunchName());
-        if(todayMenu.hasDinner())
-            tvDinnerMain.setText("Your dinner: " + todayMenu.getUnitedDinnerName());
-
-        tvTotalProteinsMain.setText("Total Proteins: " + todayMenu.getTotalProteins() + " .");
-        tvTotalFatsMain.setText("Total Fats: " + todayMenu.getTotalFats() + " .");
-        tvTotalCaloriesMain.setText("Total calories: " + todayMenu.getTotalCalories() + " .");
     }
 
     public Intent createTheFirstIntent(Intent me){
@@ -169,129 +159,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             todayMenu = DailyMenu.getTodayMenu();
             DailyMenu.saveDailyMenuIntoFile(DailyMenu.getTodayMenu(), MainActivity.this);
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, homeFragment).commit();
         }
         return me;
     }
-
-//    public void saveDailyMenuIntoFile(DailyMenu dailyMenu){
-//        try {
-//            fos = openFileOutput("dailyMenusFile", Context.MODE_PRIVATE);
-//            osw = new OutputStreamWriter(fos);
-//            bw = new BufferedWriter(osw);
-//
-//            bw.write("Daily menus: " + "\n");
-//
-//            DailyMenu.removeDailyMenuDuplicationsAndAddAnotherOne(dailyMenu);
-//            for(int i = 0; i < DailyMenu.getDailyMenus().size(); i++)
-//                bw.write(DailyMenu.getDailyMenus().get(i).generateDailyMenuDescriptionForFiles() + "\n");
-//
-//            bw.close();
-//        }
-//        catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    public void initiateIngredientsPictures(){  // Save all the ingredients pictures IDs.
-        String customIngredientName;
-        for(Ingredient ingredient : Ingredient.getIngredientsList()) {
-            if(Ingredient.getIngredientsList().contains(ingredient)){
-                if(ingredient.getName().contains(" ")){
-                    customIngredientName = ingredient.getName().replaceAll(" ", "_");
-                    ingredient.setImgId(getResources().getIdentifier(customIngredientName, "drawable", getPackageName()));
-                }
-                else{
-                    ingredient.setImgId(getResources().getIdentifier(ingredient.getName(), "drawable", getPackageName()));
-                }
-            }
-        }
-    }
-
-    public void sendToSelected(View v) {
-        int id = v.getId();
-        if (id == btMealsMenu.getId()) {
-            me.setClass(this, mealsMenu.class);
-            startActivity(me);
-        }
-    }
-
-//    public void write(){
-//        if(me.hasExtra("meals")){
-//            try {
-//                fos = openFileOutput(todayDate, Context.MODE_PRIVATE);
-//                osw = new OutputStreamWriter(fos);
-//                bw = new BufferedWriter(osw);
-//
-//                bw.write(todayDate + "\n");
-//
-//                bw.write("Your breakfast: ");
-//                if(me.hasExtra("breakfast"))
-//                    bw.write(me.getStringExtra("breakfast"));
-//
-//                bw.write("\n" + "Your lunch: ");
-//                if(me.hasExtra("lunch"))
-//                    bw.write(me.getStringExtra("lunch"));
-//
-//                bw.write("\n" + "Your dinner: ");
-//                if(me.hasExtra("dinner"))
-//                    bw.write(me.getStringExtra("dinner"));
-//
-//                bw.write("\n" + tvTotalCaloriesMain.getText().toString() + "\n");
-//                //bw.write(tvCaloriesLeftMain.getText().toString());
-//
-//                bw.close();
-//
-//                Toast.makeText(this, todayDate + " wrote.", Toast.LENGTH_SHORT).show();
-//            }
-//            catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//            catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        else{
-//            Toast.makeText(this, "You didn't choose any meal yet.", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
-//    public void showFileData(){
-//        String[] dataParts = getFileData(todayDate).split("\n");
-//        String savedBreakfast="", savedLunch="", savedDinner="", savedTotalCalories="", savedCaloriesLeft="";
-//        String[] meals = new String[3];
-//
-//        if(dataParts[1].replaceAll(":", "").length() == dataParts[1].length() - 2)
-//            savedBreakfast = dataParts[1].split(": ")[1] + ": " + dataParts[1].split(": ")[2];
-//        if(!savedBreakfast.equals("") && !savedBreakfast.equals(" "))
-//            me.putExtra("breakfast", savedBreakfast);
-//
-//        if(dataParts[2].replaceAll(":", "").length() == dataParts[2].length() - 2)
-//            savedLunch = dataParts[2].split(": ")[1] + ": " + dataParts[2].split(": ")[2];
-//        if(!savedLunch.equals("") && !savedLunch.equals(" "))
-//            me.putExtra("lunch", savedLunch);
-//
-//        if(dataParts[3].replaceAll(":", "").length() == dataParts[3].length() - 2)
-//            savedDinner = dataParts[3].split(": ")[1] + ": " + dataParts[3].split(": ")[2];
-//        if(!savedDinner.equals("") && !savedDinner.equals(" "))
-//            me.putExtra("dinner", savedDinner);
-//
-//        savedTotalCalories = dataParts[4].split(": ")[1];
-//        if(!savedTotalCalories.equals("") && !savedTotalCalories.equals(" "))
-//            me.putExtra("totalCalories", multiUsageFunctions.getCaloriesOrMinutesOutOfString(savedTotalCalories));
-//        savedCaloriesLeft = dataParts[5].split(": ")[1];
-//        if(!savedCaloriesLeft.equals("") && !savedCaloriesLeft.equals(" "))
-//            me.putExtra("caloriesLeft", multiUsageFunctions.getCaloriesOrMinutesOutOfString(savedCaloriesLeft));
-//
-//        meals[0] = savedBreakfast.split(":")[0];
-//        meals[1] = savedLunch.split(":")[0];
-//        meals[2] = savedDinner.split(":")[0];
-//        me.putExtra("meals", meals);
-//
-//        updateMealsIfNeeded();
-//    }
 
     public String getFileData(String fileName){
         String currentLine = "", allData = "";
@@ -344,6 +215,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             me.putExtra("useVideos", useVideos);
             me.putExtra("useManuallySave", useManuallySave);
             me.putExtra("activeSong", activeSong);
+        }
+    }
+
+    public void initiateIngredientsPictures(){  // Save all the ingredients pictures IDs.
+        String customIngredientName;
+        for(Ingredient ingredient : Ingredient.getIngredientsList()) {
+            if(Ingredient.getIngredientsList().contains(ingredient)){
+                if(ingredient.getName().contains(" ")){
+                    customIngredientName = ingredient.getName().replaceAll(" ", "_");
+                    ingredient.setImgId(getResources().getIdentifier(customIngredientName, "drawable", getPackageName()));
+                }
+                else{
+                    ingredient.setImgId(getResources().getIdentifier(ingredient.getName(), "drawable", getPackageName()));
+                }
+            }
         }
     }
 
@@ -512,8 +398,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int viewId = v.getId();
 
-        if(viewId == btMealsMenu.getId())
-            sendToSelected(v);
+//        if(viewId == btMealsMenu.getId())
+//            sendToSelected(v);
 
 //        if(viewId == btWriteMealsToExternalFile.getId())
 //            write();

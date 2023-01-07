@@ -90,6 +90,11 @@ public class Meal extends Food {
     }
 
     public void updateMealInfo(){
+        this.grams = 0;
+        this.calories = 0;
+        this.proteins = 0;
+        this.fats = 0;
+
         for(int i = 0; i < this.neededIngredientsForMeal.size(); i++){
             if(this.neededIngredientsForMeal.get(i) != null) {
                 Ingredient ingredient = this.neededIngredientsForMeal.get(i);
@@ -122,6 +127,17 @@ public class Meal extends Food {
     public void addNeededIngredientsForMeal(ArrayList<Ingredient> neededIngredientsForMeal) {
         for(int i = 0; i < neededIngredientsForMeal.size(); i++)
             this.neededIngredientsForMeal.add(neededIngredientsForMeal.get(i));
+        updateMealInfo();
+    }
+
+    public void removeNeededIngredientForMeal(Ingredient ingredient){
+        boolean found = false;
+        for(int i = 0; i < this.neededIngredientsForMeal.size(); i++){
+            if(neededIngredientsForMeal.get(i).getName().equals(ingredient.getName()) && neededIngredientsForMeal.get(i).getGrams() == ingredient.getGrams() && !found){
+                this.neededIngredientsForMeal.remove(i);
+                found = true;
+            }
+        }
         updateMealInfo();
     }
 

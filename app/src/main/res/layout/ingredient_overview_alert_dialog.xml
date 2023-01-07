@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ingredient_custom_alert_dialog_background"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tvAlertDialogIngredientName"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="10pt"
+        android:textStyle="bold"
+        android:layout_marginTop="15pt"
+        android:layout_marginBottom="8pt"
+        android:text="Name: " />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivAlertDialogIngredientImage"
+        android:layout_width="100pt"
+        android:layout_height="100pt"
+        android:src="@drawable/food_time" />
+
+    <LinearLayout
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6pt"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layoutDirection="ltr">
+
+        <TextView
+            android:layout_width="35pt"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="8pt"
+            android:text="Grams: " />
+
+        <EditText
+            android:id="@+id/etAlertDialogIngredientGrams"
+            android:layout_width="65pt"
+            android:layout_height="wrap_content"
+            android:hint="Enter here: "
+            android:textSize="8pt"
+            android:maxLength="4"
+            android:textColor="@color/black"
+            android:inputType="number" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvAlertDialogIngredientCalories"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="8pt"
+        android:text="Calories: " />
+
+    <TextView
+        android:id="@+id/tvAlertDialogIngredientProteins"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="8pt"
+        android:text="Proteins: " />
+
+    <TextView
+        android:id="@+id/tvAlertDialogIngredientFats"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="8pt"
+        android:layout_marginBottom="6pt"
+        android:text="Fats: " />
+
+    <LinearLayout
+        android:id="@+id/alertDialogMealSelectionLinearLayout"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6pt"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layoutDirection="ltr">
+
+        <TextView
+            android:layout_width="50pt"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="8pt"
+            android:text="Select meal: " />
+
+        <Spinner
+            android:id="@+id/sAlertDialogSelectMeal"
+            android:layout_width="50pt"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btAlertDialogConfirmIngredient"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:text="Confirm" />
+
+    <Button
+        android:id="@+id/btAlertDialogCancelIngredient"
+        android:layout_width="100pt"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15pt"
+        android:text="Cancel" />
+</LinearLayout>

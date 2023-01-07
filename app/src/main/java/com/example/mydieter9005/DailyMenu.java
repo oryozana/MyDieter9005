@@ -436,6 +436,30 @@ public class DailyMenu {
         Toast.makeText(context, "Successfully deleted all food.", Toast.LENGTH_SHORT).show();
     }
 
+    public void addMealByMealName(String selectedMeal, Meal meal){
+        if(selectedMeal.equals("Breakfast"))
+            todayMenu.addBreakfast(meal);
+
+        if(selectedMeal.equals("Lunch"))
+            todayMenu.addLunch(meal);
+
+        if(selectedMeal.equals("Dinner"))
+            todayMenu.addDinner(meal);
+    }
+
+    public void addIngredientByMealName(String selectedMeal, Ingredient ingredient, int grams){
+        Ingredient tmpIngredient = new Ingredient(Ingredient.getIngredientByName(ingredient.getName()), grams);
+
+        if(selectedMeal.equals("Breakfast"))
+            todayMenu.addBreakfast(tmpIngredient);
+
+        if(selectedMeal.equals("Lunch"))
+            todayMenu.addLunch(tmpIngredient);
+
+        if(selectedMeal.equals("Dinner"))
+            todayMenu.addDinner(tmpIngredient);
+    }
+
     public ArrayList<Ingredient> generateAllIngredientsNeededArrayList(){
         ArrayList<Ingredient> allIngredients = new ArrayList<Ingredient>();
         ArrayList<Ingredient> tmpIngredients;

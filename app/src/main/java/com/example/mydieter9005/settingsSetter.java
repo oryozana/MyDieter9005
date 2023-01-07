@@ -196,8 +196,8 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
                 me.setClass(settingsSetter.this, MainActivity.class);
             if(cameToSettingsFrom.equals("mealsMenu"))
                 me.setClass(settingsSetter.this, mealsMenu.class);
-            if(cameToSettingsFrom.equals("breakfastSelection"))
-                me.setClass(settingsSetter.this, breakfastSelection.class);
+//            if(cameToSettingsFrom.equals("breakfastSelection"))
+//                me.setClass(settingsSetter.this, breakfastSelection.class);
             if(cameToSettingsFrom.equals("lunchSelection"))
                 me.setClass(settingsSetter.this, lunchSelection.class);
             if(cameToSettingsFrom.equals("dinnerSelection"))

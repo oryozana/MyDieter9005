@@ -1378,4 +1378,2114 @@ public class removedFunctions {
 //            return info;
 //        }
 //    }
+
+
+            // BreakfastSelection, LunchSelection and DinnerSelection:
+    //package com.example.mydieter9005;
+//
+//import androidx.annotation.NonNull;
+//import androidx.appcompat.app.AlertDialog;
+//import androidx.appcompat.app.AppCompatActivity;
+//
+//import android.content.DialogInterface;
+//import android.content.Intent;
+//import android.media.MediaPlayer;
+//import android.net.Uri;
+//import android.os.Bundle;
+//import android.text.Editable;
+//import android.text.TextWatcher;
+//import android.view.Menu;
+//import android.view.MenuInflater;
+//import android.view.MenuItem;
+//import android.view.View;
+//import android.widget.AdapterView;
+//import android.widget.ArrayAdapter;
+//import android.widget.Button;
+//import android.widget.EditText;
+//import android.widget.ListView;
+//import android.widget.VideoView;
+//
+//import java.io.BufferedReader;
+//import java.io.FileInputStream;
+//import java.io.FileNotFoundException;
+//import java.io.IOException;
+//import java.io.InputStreamReader;
+//import java.util.ArrayList;
+//
+//public class breakfastSelection extends AppCompatActivity implements View.OnClickListener {
+//
+//    private MediaPlayer mediaPlayer;
+//    private VideoView videoView;
+//
+//    Button btSendBreakfastToCustomize, btClearBreakfastSelection, btBackFromBreakfastSelect;
+//    EditText etFilterBreakfast;
+//    ListView listView;
+//
+//    DailyMenu todayMenu = DailyMenu.getTodayMenu();
+//    FileAndDatabaseHelper fileAndDatabaseHelper;
+//    Song activeSong = Song.getSongs().get(0);
+//    ArrayList<Meal> mealsList;
+//    MealListAdapter adapter;
+//
+//    Intent me;
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_breakfast_selection);
+//
+//        me = getIntent();
+//        if(me.hasExtra("activeSong"))
+//            activeSong = (Song) me.getSerializableExtra("activeSong");
+//
+//        mealsList = new ArrayList<Meal>();
+//
+//        ArrayList<Ingredient> ingredientsNeeded = new ArrayList<Ingredient>();  // For multi-ingredients meals.
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("nestle cereals"), 30));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("milk"), 200));
+//        mealsList.add(new Meal("Nestle cereals with milk", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("Chocolate flavored nestle cereals"), 30));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("milk"), 200));
+//        mealsList.add(new Meal("Chocolate flavored nestle cereals", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        mealsList.add(new Meal("Yogurt", 100));
+//        mealsList.add(new Meal("Chocolate flavored yogurt", 100));
+//        mealsList.add(new Meal("Chocolate flavored ice cream", 250));
+//
+//        listView = (ListView) findViewById(R.id.listViewBreakfast);
+//        videoView = (VideoView) findViewById(R.id.breakfastVideoView);
+//
+//        btSendBreakfastToCustomize = (Button) findViewById(R.id.btSendBreakfastToCustomize);
+//        btSendBreakfastToCustomize.setOnClickListener(this);
+//        btClearBreakfastSelection = (Button) findViewById(R.id.btClearBreakfastSelection);
+//        btClearBreakfastSelection.setOnClickListener(this);
+//        btBackFromBreakfastSelect = (Button) findViewById(R.id.btBackFromBreakfastSelect);
+//        btBackFromBreakfastSelect.setOnClickListener(this);
+//
+//        etFilterBreakfast = (EditText) findViewById(R.id.etFilterBreakfast);
+//        etFilterBreakfast.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                (breakfastSelection.this).adapter.getFilter().filter(s);
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {}
+//        });
+//
+//        fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
+//        activeSong = fileAndDatabaseHelper.implementSettingsData();
+//
+//        setListViewAdapter();
+//        initiateVideoPlayer();
+//        initiateMediaPlayer();
+//    }
+//
+//    public void setListViewAdapter(){
+//        adapter = new MealListAdapter(this, mealsList);
+//        listView.setAdapter(adapter);
+//
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
+//
+//                todayMenu.addBreakfast(selectedItem);
+//
+//                me.setClass(breakfastSelection.this, mealsMenu.class);
+//                startActivity(me);
+//            }
+//        });
+//
+//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                Meal selectedItem = (Meal) parent.getItemAtPosition(position);
+//
+//                showMealIngredientsInfo(selectedItem);
+//                return true;
+//            }
+//        });
+//    }
+//
+//    public void showMealInfo(Meal meal){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(this);
+//        adb.setTitle("Your meal nutrition: ");
+//        adb.setMessage(meal.getGrams() + " grams." + "\n" + meal.getProteins() + " proteins." + "\n" + meal.getFats() + " fats." + "\n" + meal.getCalories() + " calories.");
+//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//
+//        adb.setNegativeButton("Ingredients", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                showMealIngredientsInfo(meal);
+//            }
+//        });
+//
+//        ad = adb.create();
+//        ad.show();
+//    }
+//
+//    public void showMealIngredientsInfo(Meal meal){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(this);
+//        adb.setTitle("Your meal ingredients: ");
+//        String mealInfo = "";
+//        for(Ingredient ingredient : meal.getNeededIngredientsForMeal())
+//            mealInfo += ingredient.getName() + ": " + ingredient.getGrams() + " grams." + "\n";
+//        adb.setMessage(mealInfo);
+//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//
+//        adb.setNegativeButton("Nutrition", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                showMealInfo(meal);
+//            }
+//        });
+//
+//        ad = adb.create();
+//        ad.show();
+//    }
+//
+//    public void sendToCustomize(){
+//        me.setClass(breakfastSelection.this, customMeals.class);
+//        me.putExtra("cameFrom", "breakfast");
+//        startActivity(me);
+//    }
+//
+//    public void backToMealsMenu(){
+//        me.setClass(breakfastSelection.this, mealsMenu.class);
+//        startActivity(me);
+//    }
+//
+//    public void initiateVideoPlayer(){
+//        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.breakfast_selection_background_video);
+//        videoView.setVideoURI(uri);
+//
+//        if(me.getBooleanExtra("useVideos", true))
+//            videoView.start();
+//
+//        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mp) {
+//                mp.setLooping(true);
+//            }
+//        });
+//    }
+//
+//    public void initiateMediaPlayer(){
+//        mediaPlayer = MediaPlayer.create(breakfastSelection.this, activeSong.getId());
+//        mediaPlayer.setLooping(true);
+//        if(me.getBooleanExtra("playMusic", true)){
+//            mediaPlayer.start();
+//        }
+//    }
+//
+//    @Override
+//    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.main_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        int itemID = item.getItemId();
+//        if(itemID == R.id.sendToMusicMaster){
+//            me.setClass(breakfastSelection.this, musicMaster.class);
+//            me.putExtra("cameToMusicMasterFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//
+//        if(itemID == R.id.sendToSettings){
+//            me.setClass(breakfastSelection.this, settingsSetter.class);
+//            me.putExtra("cameToSettingsFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//
+//        if(itemID == R.id.sendToUserScreen){
+//            me.setClass(breakfastSelection.this, UserInfoScreen.class);
+//            me.putExtra("cameToUserScreenFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+//
+//    @Override
+//    protected void onPostResume() {
+//        super.onPostResume();
+//        videoView.resume();
+//        if(!me.getBooleanExtra("useVideos", true)){
+//            findViewById(R.id.breakfastSelectionLinearLayout).setBackground(getDrawable(R.drawable.breakfast_selection_background));
+//            videoView.stopPlayback();
+//        }
+//        else
+//            videoView.start();
+//    }
+//
+//    @Override
+//    protected void onRestart() {
+//        videoView.start();
+//        super.onRestart();
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        mediaPlayer.start();
+//        if(!me.getBooleanExtra("playMusic", true)){
+//            mediaPlayer.stop();
+//        }
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        videoView.suspend();
+//        mediaPlayer.pause();
+//        super.onPause();
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        videoView.stopPlayback();
+//        mediaPlayer.stop();
+//        mediaPlayer.release();
+//        super.onDestroy();
+//    }
+//
+//    @Override
+//    public void onClick(View v) {
+//        int viewId = v.getId();
+//
+//        if(viewId == btSendBreakfastToCustomize.getId())
+//            sendToCustomize();
+//
+//        if(viewId == btClearBreakfastSelection.getId())
+//            todayMenu.clearBreakfast(breakfastSelection.this);
+//
+//        if(viewId == btBackFromBreakfastSelect.getId())
+//            backToMealsMenu();
+//    }
+//}
+//
+//    <?xml version="1.0" encoding="utf-8"?>
+//<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+//    xmlns:app="http://schemas.android.com/apk/res-auto"
+//    xmlns:tools="http://schemas.android.com/tools"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    android:gravity="center"
+//    android:orientation="vertical"
+//    tools:context=".breakfastSelection">
+//
+//    <VideoView
+//    android:id="@+id/breakfastVideoView"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    android:layout_alignParentTop="true"
+//    android:layout_alignParentBottom="true"
+//    android:layout_alignParentLeft="true"
+//    android:layout_alignParentRight="true" />
+//
+//    <LinearLayout
+//    android:id="@+id/breakfastSelectionLinearLayout"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    android:orientation="vertical"
+//    android:gravity="center">
+//
+//        <TextView
+//    android:layout_width="match_parent"
+//    android:layout_height="100dp"
+//    android:padding="10pt"
+//    android:text="Choose your breakfast, from the options below:"
+//    android:textSize="10pt" />
+//
+//        <EditText
+//    android:id="@+id/etFilterBreakfast"
+//    android:layout_width="150pt"
+//    android:layout_height="wrap_content"
+//    android:ems="10"
+//    android:hint="You can search here: "
+//    android:inputType="textPersonName" />
+//
+//        <ListView
+//    android:id="@+id/listViewBreakfast"
+//    android:layout_width="match_parent"
+//    android:layout_height="375dp"
+//    android:layout_marginTop="2pt">
+//        </ListView>
+//
+//        <Button
+//    android:id="@+id/btSendBreakfastToCustomize"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginLeft="15pt"
+//    android:layout_marginTop="10pt"
+//    android:layout_marginRight="15pt"
+//    android:layout_marginBottom="2pt"
+//    android:text="Customize meal" />
+//
+//        <Button
+//    android:id="@+id/btClearBreakfastSelection"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginLeft="15pt"
+//    android:layout_marginRight="15pt"
+//    android:layout_marginBottom="2pt"
+//    android:text="Clear selection" />
+//
+//        <Button
+//    android:id="@+id/btBackFromBreakfastSelect"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginLeft="15pt"
+//    android:layout_marginRight="15pt"
+//    android:text="Back" />
+//    </LinearLayout>
+//
+//</RelativeLayout>
+
+    //package com.example.mydieter9005;
+//
+//import androidx.annotation.NonNull;
+//import androidx.appcompat.app.AlertDialog;
+//import androidx.appcompat.app.AppCompatActivity;
+//
+//import android.content.DialogInterface;
+//import android.content.Intent;
+//import android.media.MediaPlayer;
+//import android.net.Uri;
+//import android.os.Bundle;
+//import android.text.Editable;
+//import android.text.TextWatcher;
+//import android.view.Menu;
+//import android.view.MenuInflater;
+//import android.view.MenuItem;
+//import android.view.View;
+//import android.widget.AdapterView;
+//import android.widget.ArrayAdapter;
+//import android.widget.Button;
+//import android.widget.EditText;
+//import android.widget.ListView;
+//import android.widget.Toast;
+//import android.widget.VideoView;
+//
+//import java.io.BufferedReader;
+//import java.io.FileInputStream;
+//import java.io.FileNotFoundException;
+//import java.io.IOException;
+//import java.io.InputStreamReader;
+//import java.util.ArrayList;
+//
+//public class lunchSelection extends AppCompatActivity implements View.OnClickListener {
+//
+//    private MediaPlayer mediaPlayer;
+//    private VideoView videoView;
+//
+//    Button btSendLunchToCustomize, btClearLunchSelection, btBackFromLunchSelect;
+//    EditText etFilterLunch;
+//    ListView listView;
+//
+//    DailyMenu todayMenu = DailyMenu.getTodayMenu();
+//    FileAndDatabaseHelper fileAndDatabaseHelper;
+//    Song activeSong = Song.getSongs().get(0);
+//    MealListAdapter adapter;
+//    ArrayList<Meal> mealsList;
+//
+//    FileInputStream is;
+//    InputStreamReader isr;
+//    BufferedReader br;
+//    Intent me;
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_lunch_selection);
+//
+//        me = getIntent();
+//        if(me.hasExtra("activeSong"))
+//            activeSong = (Song) me.getSerializableExtra("activeSong");
+//
+//        mealsList = new ArrayList<>();
+//
+//        ArrayList<Ingredient> ingredientsNeeded = new ArrayList<Ingredient>();  // For multi-ingredients meals.
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        mealsList.add(new Meal("Toast", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("tomato"), 100));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("cucumber"), 100));
+//        mealsList.add(new Meal("Toast with tomato and cucumber", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("tomato"), 100));
+//        mealsList.add(new Meal("Toast with tomato", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("cucumber"), 100));
+//        mealsList.add(new Meal("Toast with cucumber", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("olive"), 100));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("corn"), 100));
+//        mealsList.add(new Meal("Toast with olive and corn", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("olive"), 100));
+//        mealsList.add(new Meal("Toast with olive", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("corn"), 100));
+//        mealsList.add(new Meal("Toast with corn", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        listView = (ListView) findViewById(R.id.listViewLunch);
+//        videoView = (VideoView) findViewById(R.id.lunchVideoView);
+//
+//        btSendLunchToCustomize = (Button) findViewById(R.id.btSendLunchToCustomize);
+//        btSendLunchToCustomize.setOnClickListener(this);
+//        btClearLunchSelection = (Button) findViewById(R.id.btClearLunchSelection);
+//        btClearLunchSelection.setOnClickListener(this);
+//        btBackFromLunchSelect = (Button) findViewById(R.id.btBackFromLunchSelect);
+//        btBackFromLunchSelect.setOnClickListener(this);
+//
+//        etFilterLunch = (EditText) findViewById(R.id.etFilterLunch);
+//        etFilterLunch.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                (lunchSelection.this).adapter.getFilter().filter(s);
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {}
+//        });
+//
+//        fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
+//        activeSong = fileAndDatabaseHelper.implementSettingsData();
+//
+//        setListViewAdapter();
+//        initiateVideoPlayer();
+//        initiateMediaPlayer();
+//    }
+//
+//    public void setListViewAdapter(){
+//        adapter = new MealListAdapter(this, mealsList);
+//        listView.setAdapter(adapter);
+//
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
+//
+//                todayMenu.addLunch(selectedItem);
+//
+//                me.setClass(lunchSelection.this, mealsMenu.class);
+//                startActivity(me);
+//            }
+//        });
+//
+//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                Meal selectedItem = (Meal) parent.getItemAtPosition(position);
+//
+//                showMealIngredientsInfo(selectedItem);
+//                return true;
+//            }
+//        });
+//    }
+//
+//    public void showMealInfo(Meal meal){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(this);
+//        adb.setTitle("Your meal nutrition: ");
+//        adb.setMessage(meal.getGrams() + " grams." + "\n" + meal.getProteins() + " proteins." + "\n" + meal.getFats() + " fats." + "\n" + meal.getCalories() + " calories.");
+//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//
+//        adb.setNegativeButton("Ingredients", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                showMealIngredientsInfo(meal);
+//            }
+//        });
+//
+//        ad = adb.create();
+//        ad.show();
+//    }
+//
+//    public void showMealIngredientsInfo(Meal meal){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(this);
+//        adb.setTitle("Your meal ingredients: ");
+//        String mealInfo = "";
+//        for(Ingredient ingredient : meal.getNeededIngredientsForMeal())
+//            mealInfo += ingredient.getName() + ": " + ingredient.getGrams() + " grams." + "\n";
+//        adb.setMessage(mealInfo);
+//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//
+//        adb.setNegativeButton("Nutrition", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                showMealInfo(meal);
+//            }
+//        });
+//
+//        ad = adb.create();
+//        ad.show();
+//    }
+//
+//    public void sendToCustomize(){
+//        me.setClass(lunchSelection.this, customMeals.class);
+//        me.putExtra("cameFrom", "lunch");
+//        startActivity(me);
+//    }
+//
+//    public void backToMealsMenu(){
+//        me.setClass(lunchSelection.this, mealsMenu.class);
+//        startActivity(me);
+//    }
+//
+//    public void initiateVideoPlayer(){
+//        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.lunch_selection_background_video);
+//        videoView.setVideoURI(uri);
+//
+//        if(me.getBooleanExtra("useVideos", true))
+//            videoView.start();
+//
+//        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mp) {
+//                mp.setLooping(true);
+//            }
+//        });
+//    }
+//
+//    public void initiateMediaPlayer(){
+//        mediaPlayer = MediaPlayer.create(lunchSelection.this, activeSong.getId());
+//        mediaPlayer.setLooping(true);
+//        if(me.getBooleanExtra("playMusic", true)){
+//            mediaPlayer.start();
+//        }
+//    }
+//
+//    @Override
+//    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.main_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        int itemID = item.getItemId();
+//        if(itemID == R.id.sendToMusicMaster){
+//            me.setClass(lunchSelection.this, musicMaster.class);
+//            me.putExtra("cameToMusicMasterFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//
+//        if(itemID == R.id.sendToSettings){
+//            me.setClass(lunchSelection.this, settingsSetter.class);
+//            me.putExtra("cameToSettingsFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//
+//        if(itemID == R.id.sendToUserScreen){
+//            me.setClass(lunchSelection.this, UserInfoScreen.class);
+//            me.putExtra("cameToUserScreenFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+//
+//    @Override
+//    protected void onPostResume() {
+//        super.onPostResume();
+//        videoView.resume();
+//        if(!me.getBooleanExtra("useVideos", true)){
+//            findViewById(R.id.lunchSelectionLinearLayout).setBackground(getDrawable(R.drawable.lunch_selection_background));
+//            videoView.stopPlayback();
+//        }
+//        else
+//            videoView.start();
+//    }
+//
+//    @Override
+//    protected void onRestart() {
+//        videoView.start();
+//        super.onRestart();
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        mediaPlayer.start();
+//        if(!me.getBooleanExtra("playMusic", true)){
+//            mediaPlayer.stop();
+//        }
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        videoView.suspend();
+//        mediaPlayer.pause();
+//        super.onPause();
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        videoView.stopPlayback();
+//        mediaPlayer.stop();
+//        mediaPlayer.release();
+//        super.onDestroy();
+//    }
+//
+//    @Override
+//    public void onClick(View v) {
+//        int viewId = v.getId();
+//
+//        if(viewId == btSendLunchToCustomize.getId())
+//            sendToCustomize();
+//
+//        if(viewId == btClearLunchSelection.getId())
+//            todayMenu.clearLunch(lunchSelection.this);
+//
+//        if(viewId == btBackFromLunchSelect.getId())
+//            backToMealsMenu();
+//    }
+//}
+//
+//    <?xml version="1.0" encoding="utf-8"?>
+//<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+//    xmlns:app="http://schemas.android.com/apk/res-auto"
+//    xmlns:tools="http://schemas.android.com/tools"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    android:gravity="center"
+//    android:orientation="vertical"
+//    tools:context=".lunchSelection">
+//
+//    <VideoView
+//    android:id="@+id/lunchVideoView"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    android:layout_alignParentTop="true"
+//    android:layout_alignParentBottom="true"
+//    android:layout_alignParentLeft="true"
+//    android:layout_alignParentRight="true" />
+//
+//    <LinearLayout
+//    android:id="@+id/lunchSelectionLinearLayout"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    android:orientation="vertical"
+//    android:gravity="center">
+//
+//        <TextView
+//    android:id="@+id/textView"
+//    android:layout_width="match_parent"
+//    android:layout_height="100dp"
+//    android:padding="10pt"
+//    android:text="Choose your lunch, from the options below:"
+//    android:textSize="10pt" />
+//
+//        <EditText
+//    android:id="@+id/etFilterLunch"
+//    android:layout_width="150pt"
+//    android:layout_height="wrap_content"
+//    android:ems="10"
+//    android:hint="You can search here: "
+//    android:inputType="textPersonName" />
+//
+//        <ListView
+//    android:id="@+id/listViewLunch"
+//    android:layout_width="match_parent"
+//    android:layout_height="375dp"
+//    android:layout_marginTop="2pt" >
+//        </ListView>
+//
+//        <Button
+//    android:id="@+id/btSendLunchToCustomize"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginLeft="15pt"
+//    android:layout_marginTop="10pt"
+//    android:layout_marginRight="15pt"
+//    android:layout_marginBottom="2pt"
+//    android:text="Customize meal" />
+//
+//        <Button
+//    android:id="@+id/btClearLunchSelection"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginLeft="15pt"
+//    android:layout_marginRight="15pt"
+//    android:layout_marginBottom="2pt"
+//    android:text="Clear selection" />
+//
+//        <Button
+//    android:id="@+id/btBackFromLunchSelect"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginLeft="15pt"
+//    android:layout_marginRight="15pt"
+//    android:text="Back" />
+//    </LinearLayout>
+//
+//</RelativeLayout>
+
+//    package com.example.mydieter9005;
+//
+//import androidx.annotation.NonNull;
+//import androidx.appcompat.app.AlertDialog;
+//import androidx.appcompat.app.AppCompatActivity;
+//
+//import android.content.DialogInterface;
+//import android.content.Intent;
+//import android.media.MediaPlayer;
+//import android.net.Uri;
+//import android.os.Bundle;
+//import android.text.Editable;
+//import android.text.TextWatcher;
+//import android.view.Menu;
+//import android.view.MenuInflater;
+//import android.view.MenuItem;
+//import android.view.View;
+//import android.widget.AdapterView;
+//import android.widget.ArrayAdapter;
+//import android.widget.Button;
+//import android.widget.EditText;
+//import android.widget.ListView;
+//import android.widget.VideoView;
+//
+//import java.io.BufferedReader;
+//import java.io.FileInputStream;
+//import java.io.FileNotFoundException;
+//import java.io.IOException;
+//import java.io.InputStreamReader;
+//import java.util.ArrayList;
+//
+//public class dinnerSelection extends AppCompatActivity implements View.OnClickListener {
+//
+//    private MediaPlayer mediaPlayer;
+//    private VideoView videoView;
+//
+//    Button btSendDinnerToCustomize, btClearDinnerSelection, btBackFromDinnerSelect;
+//    EditText etFilterDinner;
+//    ListView listView;
+//
+//    DailyMenu todayMenu = DailyMenu.getTodayMenu();
+//    FileAndDatabaseHelper fileAndDatabaseHelper;
+//    Song activeSong = Song.getSongs().get(0);
+//    MealListAdapter adapter;
+//    ArrayList<Meal> mealsList;
+//
+//    Intent me;
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_dinner_selection);
+//
+//        me = getIntent();
+//        if(me.hasExtra("activeSong"))
+//            activeSong = (Song) me.getSerializableExtra("activeSong");
+//
+//        mealsList = new ArrayList<>();
+//        ArrayList<Ingredient> ingredientsNeeded = new ArrayList<Ingredient>();  // For multi-ingredients meals.
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        mealsList.add(new Meal("Toast", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("tomato"), 100));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("cucumber"), 100));
+//        mealsList.add(new Meal("Toast with tomato and cucumber", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("tomato"), 100));
+//        mealsList.add(new Meal("Toast with tomato", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("cucumber"), 100));
+//        mealsList.add(new Meal("Toast with cucumber", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("olive"), 100));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("corn"), 100));
+//        mealsList.add(new Meal("Toast with olive and corn", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("olive"), 100));
+//        mealsList.add(new Meal("Toast with olive", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("corn"), 100));
+//        mealsList.add(new Meal("Toast with corn", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        listView = (ListView) findViewById(R.id.listViewDinner);
+//        videoView = (VideoView) findViewById(R.id.dinnerVideoView);
+//
+//        btSendDinnerToCustomize = (Button) findViewById(R.id.btSendDinnerToCustomize);
+//        btSendDinnerToCustomize.setOnClickListener(this);
+//        btClearDinnerSelection = (Button) findViewById(R.id.btClearDinnerSelection);
+//        btClearDinnerSelection.setOnClickListener(this);
+//        btBackFromDinnerSelect = (Button) findViewById(R.id.btBackFromDinnerSelect);
+//        btBackFromDinnerSelect.setOnClickListener(this);
+//
+//        etFilterDinner = (EditText) findViewById(R.id.etFilterDinner);
+//        etFilterDinner.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                (dinnerSelection.this).adapter.getFilter().filter(s);
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {}
+//        });
+//
+//        fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
+//        activeSong = fileAndDatabaseHelper.implementSettingsData();
+//
+//        setListViewAdapter();
+//        initiateVideoPlayer();
+//        initiateMediaPlayer();
+//    }
+//
+//    public void setListViewAdapter(){
+//        adapter = new MealListAdapter(this, mealsList);
+//        listView.setAdapter(adapter);
+//
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
+//
+//                todayMenu.addDinner(selectedItem);
+//
+//                me.setClass(dinnerSelection.this, mealsMenu.class);
+//                startActivity(me);
+//            }
+//        });
+//
+//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                Meal selectedItem = (Meal) parent.getItemAtPosition(position);
+//
+//                showMealIngredientsInfo(selectedItem);
+//                return true;
+//            }
+//        });
+//    }
+//
+//    public void showMealInfo(Meal meal){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(this);
+//        adb.setTitle("Your meal nutrition: ");
+//        adb.setMessage(meal.getGrams() + " grams." + "\n" + meal.getProteins() + " proteins." + "\n" + meal.getFats() + " fats." + "\n" + meal.getCalories() + " calories.");
+//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//
+//        adb.setNegativeButton("Ingredients", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                showMealIngredientsInfo(meal);
+//            }
+//        });
+//
+//        ad = adb.create();
+//        ad.show();
+//    }
+//
+//    public void showMealIngredientsInfo(Meal meal){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(this);
+//        adb.setTitle("Your meal ingredients: ");
+//        String mealInfo = "";
+//        for(Ingredient ingredient : meal.getNeededIngredientsForMeal())
+//            mealInfo += ingredient.getName() + ": " + ingredient.getGrams() + " grams." + "\n";
+//        adb.setMessage(mealInfo);
+//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//
+//        adb.setNegativeButton("Nutrition", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                showMealInfo(meal);
+//            }
+//        });
+//
+//        ad = adb.create();
+//        ad.show();
+//    }
+//
+//    public void sendToCustomize(){
+//        me.setClass(dinnerSelection.this, customMeals.class);
+//        me.putExtra("cameFrom", "dinner");
+//        startActivity(me);
+//    }
+//
+//    public void backToMealsMenu(){
+//        me.setClass(dinnerSelection.this, mealsMenu.class);
+//        startActivity(me);
+//    }
+//
+//    public void initiateVideoPlayer(){
+//        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.dinner_selection_background_video);
+//        videoView.setVideoURI(uri);
+//
+//        if(me.getBooleanExtra("useVideos", true))
+//            videoView.start();
+//
+//        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mp) {
+//                mp.setLooping(true);
+//            }
+//        });
+//    }
+//
+//    public void initiateMediaPlayer(){
+//        mediaPlayer = MediaPlayer.create(dinnerSelection.this, activeSong.getId());
+//        mediaPlayer.setLooping(true);
+//        if(me.getBooleanExtra("playMusic", true)){
+//            mediaPlayer.start();
+//        }
+//    }
+//
+//    @Override
+//    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.main_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        int itemID = item.getItemId();
+//        if(itemID == R.id.sendToMusicMaster){
+//            me.setClass(dinnerSelection.this, musicMaster.class);
+//            me.putExtra("cameToMusicMasterFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//
+//        if(itemID == R.id.sendToSettings){
+//            me.setClass(dinnerSelection.this, settingsSetter.class);
+//            me.putExtra("cameToSettingsFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//
+//        if(itemID == R.id.sendToUserScreen){
+//            me.setClass(dinnerSelection.this, UserInfoScreen.class);
+//            me.putExtra("cameToUserScreenFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+//
+//    @Override
+//    protected void onPostResume() {
+//        super.onPostResume();
+//        videoView.resume();
+//        if(!me.getBooleanExtra("useVideos", true)){
+//            findViewById(R.id.dinnerSelectionLinearLayout).setBackground(getDrawable(R.drawable.dinner_selection_background));
+//            videoView.stopPlayback();
+//        }
+//        else
+//            videoView.start();
+//    }
+//
+//    @Override
+//    protected void onRestart() {
+//        videoView.start();
+//        super.onRestart();
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        mediaPlayer.start();
+//        if(!me.getBooleanExtra("playMusic", true)){
+//            mediaPlayer.stop();
+//        }
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        videoView.suspend();
+//        mediaPlayer.pause();
+//        super.onPause();
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        videoView.stopPlayback();
+//        mediaPlayer.stop();
+//        mediaPlayer.release();
+//        super.onDestroy();
+//    }
+//
+//    @Override
+//    public void onClick(View v) {
+//        int viewId = v.getId();
+//
+//        if(viewId == btSendDinnerToCustomize.getId())
+//            sendToCustomize();
+//
+//        if(viewId == btClearDinnerSelection.getId())
+//            todayMenu.clearDinner(dinnerSelection.this);
+//
+//        if(viewId == btBackFromDinnerSelect.getId())
+//            backToMealsMenu();
+//    }
+//}
+//
+//    <?xml version="1.0" encoding="utf-8"?>
+//<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+//    xmlns:app="http://schemas.android.com/apk/res-auto"
+//    xmlns:tools="http://schemas.android.com/tools"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    android:gravity="center"
+//    android:orientation="vertical"
+//    tools:context=".dinnerSelection">
+//
+//    <VideoView
+//    android:id="@+id/dinnerVideoView"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    android:layout_alignParentTop="true"
+//    android:layout_alignParentBottom="true"
+//    android:layout_alignParentLeft="true"
+//    android:layout_alignParentRight="true" />
+//
+//    <LinearLayout
+//    android:id="@+id/dinnerSelectionLinearLayout"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    android:orientation="vertical"
+//    android:gravity="center">
+//
+//        <TextView
+//    android:layout_width="match_parent"
+//    android:layout_height="100dp"
+//    android:padding="10pt"
+//    android:text="Choose your dinner, from the options below:"
+//    android:textSize="10pt" />
+//
+//        <EditText
+//    android:id="@+id/etFilterDinner"
+//    android:layout_width="150pt"
+//    android:layout_height="wrap_content"
+//    android:ems="10"
+//    android:hint="You can search here: "
+//    android:inputType="textPersonName" />
+//
+//        <ListView
+//    android:id="@+id/listViewDinner"
+//    android:layout_width="match_parent"
+//    android:layout_height="375dp"
+//    android:layout_marginTop="2pt" >
+//        </ListView>
+//
+//        <Button
+//    android:id="@+id/btSendDinnerToCustomize"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginLeft="15pt"
+//    android:layout_marginTop="10pt"
+//    android:layout_marginRight="15pt"
+//    android:layout_marginBottom="2pt"
+//    android:text="Customize meal" />
+//
+//        <Button
+//    android:id="@+id/btClearDinnerSelection"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginLeft="15pt"
+//    android:layout_marginRight="15pt"
+//    android:layout_marginBottom="2pt"
+//    android:text="Clear selection" />
+//
+//        <Button
+//    android:id="@+id/btBackFromDinnerSelect"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginLeft="15pt"
+//    android:layout_marginRight="15pt"
+//    android:text="Back" />
+//    </LinearLayout>
+//
+//</RelativeLayout>
+
+//            WorldSavedCustomMeals
+//package com.example.mydieter9005;
+//
+//import androidx.annotation.NonNull;
+//import androidx.appcompat.app.AlertDialog;
+//import androidx.appcompat.app.AppCompatActivity;
+//
+//import android.content.Context;
+//import android.content.DialogInterface;
+//import android.content.Intent;
+//import android.content.IntentFilter;
+//import android.media.MediaPlayer;
+//import android.net.ConnectivityManager;
+//import android.net.Uri;
+//import android.os.Build;
+//import android.os.Bundle;
+//import android.text.Editable;
+//import android.text.TextWatcher;
+//import android.view.Menu;
+//import android.view.MenuInflater;
+//import android.view.MenuItem;
+//import android.view.View;
+//import android.widget.AdapterView;
+//import android.widget.ArrayAdapter;
+//import android.widget.Button;
+//import android.widget.EditText;
+//import android.widget.LinearLayout;
+//import android.widget.ListView;
+//import android.widget.Toast;
+//import android.widget.VideoView;
+//
+//import com.example.mydieter9005.databinding.ActivityMainBinding;
+//import com.example.mydieter9005.databinding.ActivityWorldSavedCustomMealsBinding;
+//import com.google.android.gms.tasks.OnCompleteListener;
+//import com.google.android.gms.tasks.Task;
+//import com.google.firebase.database.DataSnapshot;
+//import com.google.firebase.database.DatabaseReference;
+//import com.google.firebase.database.FirebaseDatabase;
+//
+//import java.io.BufferedReader;
+//import java.io.FileInputStream;
+//import java.io.FileNotFoundException;
+//import java.io.IOException;
+//import java.io.InputStreamReader;
+//import java.util.ArrayList;
+//
+//public class WorldSavedCustomMeals extends AppCompatActivity implements View.OnClickListener {
+//
+//    private NetworkConnectionReceiver networkConnectionReceiver;
+//
+//    private MediaPlayer mediaPlayer;
+//    private VideoView videoView;
+//
+//    Button btFinishWorldSavedCustomMeals;
+//    EditText etFilterWorldSavedCustomMeals;
+//    LinearLayout linearLayout;
+//    ListView listView;
+//
+//    ArrayList<Meal> mealsList = new ArrayList<Meal>();
+//    MealListAdapter adapter;
+//    String cameFrom;
+//
+//    DailyMenu todayMenu = DailyMenu.getTodayMenu();
+//    FileAndDatabaseHelper fileAndDatabaseHelper;
+//    Song activeSong = Song.getSongs().get(0);
+//
+//    DatabaseReference databaseReference;
+//
+//    Intent me;
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_world_saved_custom_meals);
+//
+//        me = getIntent();
+//        if(me.hasExtra("activeSong"))
+//            activeSong = (Song) me.getSerializableExtra("activeSong");
+//        cameFrom = me.getStringExtra("cameFrom");
+//
+//        listView = (ListView) findViewById(R.id.lvWorldSavedCustomMeals);
+//        videoView = (VideoView) findViewById(R.id.worldSavedCustomMealsVideoView);
+//        linearLayout = (LinearLayout) findViewById(R.id.worldSavedCustomMealsLinearLayout);
+//
+//        btFinishWorldSavedCustomMeals = (Button) findViewById(R.id.btFinishWorldSavedCustomMeals);
+//        btFinishWorldSavedCustomMeals.setOnClickListener(this);
+//
+//        etFilterWorldSavedCustomMeals = (EditText) findViewById(R.id.etFilterWorldSavedCustomMeals);
+//        etFilterWorldSavedCustomMeals.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                (WorldSavedCustomMeals.this).adapter.getFilter().filter(s);
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {}
+//        });
+//
+//        fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
+//        activeSong = fileAndDatabaseHelper.implementSettingsData();
+//
+//        setCustomNetworkConnectionReceiver();
+//        setListViewAdapter();
+//        initiateVideoPlayer();
+//        initiateMediaPlayer();
+//    }
+//
+//    public void initiateListViewFields(){
+//        mealsList.clear();
+//        databaseReference = FirebaseDatabase.getInstance().getReference("recipes");
+//        databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                ArrayList<Ingredient> ingredientsNeededInfo = new ArrayList<Ingredient>();
+//                Ingredient ingredient;
+//                String mealName, ingredientName;
+//                Double ingredientGrams;
+//
+//                if(task.isSuccessful()){
+//                    if(task.getResult().exists()){
+//                        DataSnapshot dataSnapshot = task.getResult();
+//                        for(DataSnapshot customMeal : dataSnapshot.getChildren()){
+//                            ingredientsNeededInfo.clear();
+//                            mealName = customMeal.getKey();
+//                            for(int i = 0; i < customMeal.getChildrenCount(); i++) {
+//                                ingredientName = getName(customMeal.child(i + "").getValue().toString());
+//                                ingredientGrams = getGrams(customMeal.child(i + "").getValue().toString());
+//
+//                                ingredient = new Ingredient(Ingredient.getIngredientByName(ingredientName), ingredientGrams);
+//                                ingredientsNeededInfo.add(ingredient);
+//                            }
+//
+//                            mealsList.add(new Meal(mealName, ingredientsNeededInfo));
+//                            adapter.notifyDataSetChanged();
+//                        }
+//
+//                        try{
+//                            unregisterReceiver(networkConnectionReceiver);
+//                        }
+//                        catch (IllegalArgumentException e){
+//                            e.getStackTrace();
+//                        }
+//                    }
+//                    else{
+//                        notEvenOneCustomMealAdded();
+//                    }
+//                }
+//                else{
+//                    recipesDatabaseNotFound();
+//                    Toast.makeText(WorldSavedCustomMeals.this, "Failed to load meals.", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//    }
+//
+//    public String getName(String nameAndGrams){  // Needed when get ingredient from file.
+//        return nameAndGrams.split(": ")[0];
+//    }
+//
+//    public double getGrams(String nameAndGrams){  // Needed when get ingredient from file.
+//        return Double.parseDouble((nameAndGrams.split(": ")[1]).split(" ")[0]);
+//    }
+//
+//    public void recipesDatabaseNotFound(){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(this);
+//        adb.setTitle("Custom meals not found!");
+//        adb.setMessage("We have trouble connecting our database right now, please come back later");
+//        adb.setIcon(R.drawable.ic_error_icon);
+//        adb.setCancelable(false);
+//
+//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                me.setClass(WorldSavedCustomMeals.this, customSelection.class);
+//                startActivity(me);
+//            }
+//        });
+//
+//        ad = adb.create();
+//        ad.show();
+//    }
+//
+//    public void notEvenOneCustomMealAdded(){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(this);
+//        adb.setTitle("Custom meals not found!");
+//        adb.setMessage("It's seems like no one saved any custom meal so far, you can be the first!.");
+//        adb.setIcon(R.drawable.ic_food_icon);
+//        adb.setCancelable(false);
+//
+//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                me.setClass(WorldSavedCustomMeals.this, customSelection.class);
+//                startActivity(me);
+//            }
+//        });
+//
+//        ad = adb.create();
+//        ad.show();
+//    }
+//
+//    public void setListViewAdapter(){
+//        initiateListViewFields();
+//
+//        adapter = new MealListAdapter(this, mealsList);
+//        listView.setAdapter(adapter);
+//
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
+//                selectedItem.setName(selectedItem.getName().split(" - ")[1]);
+//
+//                if(cameFrom.equals("breakfast"))
+//                    todayMenu.addBreakfast(selectedItem);
+//
+//                if(cameFrom.equals("lunch"))
+//                    todayMenu.addLunch(selectedItem);
+//
+//                if(cameFrom.equals("dinner"))
+//                    todayMenu.addDinner(selectedItem);
+//
+//                me.setClass(WorldSavedCustomMeals.this, mealsMenu.class);
+//                startActivity(me);
+//            }
+//        });
+//
+//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                Meal selectedItem = (Meal) parent.getItemAtPosition(position);
+//
+//                showMealIngredientsInfo(selectedItem);
+//                return true;
+//            }
+//        });
+//    }
+//
+//    public void showMealInfo(Meal meal){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(this);
+//        adb.setTitle("Your meal nutrition: ");
+//        adb.setMessage(meal.getGrams() + " grams." + "\n" + meal.getProteins() + " proteins." + "\n" + meal.getFats() + " fats." + "\n" + meal.getCalories() + " calories.");
+//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//
+//        adb.setNegativeButton("Ingredients", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                showMealIngredientsInfo(meal);
+//            }
+//        });
+//
+//        adb.setNeutralButton("Save", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                me.setClass(WorldSavedCustomMeals.this, customMeals.class);
+//                me.putExtra("globalCustomMealToSave", meal);
+//                startActivity(me);
+//            }
+//        });
+//
+//        ad = adb.create();
+//        ad.show();
+//    }
+//
+//    public void showMealIngredientsInfo(Meal meal){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(this);
+//        adb.setTitle("Your meal ingredients: ");
+//
+//        String mealInfo = "";
+//        for(Ingredient ingredient : meal.getNeededIngredientsForMeal())
+//            mealInfo += ingredient.getName() + ": " + ingredient.getGrams() + " grams." + "\n";
+//        adb.setMessage(mealInfo);
+//
+//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//
+//        adb.setNegativeButton("Nutrition", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                showMealInfo(meal);
+//            }
+//        });
+//
+//        adb.setNeutralButton("Save", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                me.setClass(WorldSavedCustomMeals.this, customMeals.class);
+//                me.putExtra("globalCustomMealToSave", meal);
+//                startActivity(me);
+//            }
+//        });
+//
+//        ad = adb.create();
+//        ad.show();
+//    }
+//
+//    public void exitWorldSavedCustomMeals(){
+//        me.setClass(WorldSavedCustomMeals.this, customSelection.class);
+//        startActivity(me);
+//    }
+//
+//    public void setCustomNetworkConnectionReceiver(){
+//        networkConnectionReceiver = new NetworkConnectionReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                try{
+//                    if(!isOnline(context))
+//                        noInternetAccess(context);
+//                }
+//                catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void noInternetAccess(Context context){
+//                AlertDialog ad;
+//                AlertDialog.Builder adb;
+//                adb = new AlertDialog.Builder(context);
+//                adb.setTitle("Internet connection not found!");
+//                adb.setMessage("Connect to the internet and try again.");
+//                adb.setIcon(R.drawable.ic_network_not_found);
+//                adb.setCancelable(false);
+//
+//                adb.setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        if(!isOnline(context))
+//                            noInternetAccess(context);
+//                        else
+//                            Toast.makeText(context, "Network connection available.", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//
+//                adb.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        finish();
+//                    }
+//                });
+//
+//                ad = adb.create();
+//                ad.show();
+//            }
+//        };
+//    }
+//
+//    public void initiateVideoPlayer(){
+//        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.world_saved_custom_meals_background_video);
+//        videoView.setVideoURI(uri);
+//
+//        if(me.getBooleanExtra("useVideos", true))
+//            videoView.start();
+//
+//        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mp) {
+//                mp.setLooping(true);
+//            }
+//        });
+//    }
+//
+//    public void initiateMediaPlayer(){
+//        mediaPlayer = MediaPlayer.create(WorldSavedCustomMeals.this, activeSong.getId());
+//        mediaPlayer.setLooping(true);
+//        if(me.getBooleanExtra("playMusic", true)){
+//            mediaPlayer.start();
+//        }
+//    }
+//
+//    @Override
+//    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.main_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        int itemID = item.getItemId();
+//        if(itemID == R.id.sendToMusicMaster){
+//            me.setClass(WorldSavedCustomMeals.this, musicMaster.class);
+//            me.putExtra("cameToMusicMasterFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//
+//        if(itemID == R.id.sendToSettings){
+//            me.setClass(WorldSavedCustomMeals.this, settingsSetter.class);
+//            me.putExtra("cameToSettingsFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//
+//        if(itemID == R.id.sendToUserScreen){
+//            me.setClass(WorldSavedCustomMeals.this, UserInfoScreen.class);
+//            me.putExtra("cameToUserScreenFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+//
+//    @Override
+//    protected void onPostResume() {
+//        super.onPostResume();
+//        videoView.resume();
+//        if(!me.getBooleanExtra("useVideos", true)){
+//            linearLayout.setBackground(getDrawable(R.drawable.world_saved_custom_meals_background));
+//            videoView.stopPlayback();
+//        }
+//        else
+//            videoView.start();
+//    }
+//
+//    @Override
+//    protected void onRestart() {
+//        videoView.start();
+//        super.onRestart();
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//
+//        IntentFilter networkConnectionFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+//            registerReceiver(networkConnectionReceiver, networkConnectionFilter);
+//        }
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//            registerReceiver(networkConnectionReceiver, networkConnectionFilter);
+//        }
+//
+//        mediaPlayer.start();
+//        if(!me.getBooleanExtra("playMusic", true)){
+//            mediaPlayer.stop();
+//        }
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//
+//        try{
+//            unregisterReceiver(networkConnectionReceiver);
+//        }
+//        catch (IllegalArgumentException e){
+//            e.getStackTrace();
+//        }
+//
+//        videoView.suspend();
+//        mediaPlayer.pause();
+//        super.onPause();
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        videoView.stopPlayback();
+//        mediaPlayer.stop();
+//        mediaPlayer.release();
+//        super.onDestroy();
+//    }
+//
+//    @Override
+//    public void onClick(View v) {
+//        int viewId = v.getId();
+//
+//        if(viewId == btFinishWorldSavedCustomMeals.getId())
+//            exitWorldSavedCustomMeals();
+//    }
+//}
+//
+//    <?xml version="1.0" encoding="utf-8"?>
+//<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+//    xmlns:app="http://schemas.android.com/apk/res-auto"
+//    xmlns:tools="http://schemas.android.com/tools"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    android:orientation="vertical"
+//    tools:context=".WorldSavedCustomMeals">
+//
+//    <VideoView
+//    android:id="@+id/worldSavedCustomMealsVideoView"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    android:layout_alignParentLeft="true"
+//    android:layout_alignParentTop="true"
+//    android:layout_alignParentRight="true"
+//    android:layout_alignParentBottom="true" />
+//
+//    <LinearLayout
+//    android:id="@+id/worldSavedCustomMealsLinearLayout"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    android:gravity="center"
+//    android:orientation="vertical">
+//
+//        <TextView
+//    android:layout_width="match_parent"
+//    android:layout_height="100dp"
+//    android:padding="10pt"
+//    android:text="Here are world published recipes, chose from the options below:"
+//    android:textSize="10pt" />
+//
+//        <EditText
+//    android:id="@+id/etFilterWorldSavedCustomMeals"
+//    android:layout_width="150pt"
+//    android:layout_height="wrap_content"
+//    android:ems="10"
+//    android:hint="You can search here: "
+//    android:inputType="textPersonName" />
+//
+//        <ListView
+//    android:id="@+id/lvWorldSavedCustomMeals"
+//    android:layout_width="match_parent"
+//    android:layout_height="525dp"
+//    android:layout_marginTop="2pt" />
+//
+//        <Button
+//    android:id="@+id/btFinishWorldSavedCustomMeals"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginLeft="15pt"
+//    android:layout_marginRight="15pt"
+//    android:layout_marginBottom="2pt"
+//    android:text="Finish" />
+//    </LinearLayout>
+//</RelativeLayout>
+
+            // mealsMenu
+    //package com.example.mydieter9005;
+//
+//import androidx.annotation.NonNull;
+//import androidx.appcompat.app.AlertDialog;
+//import androidx.appcompat.app.AppCompatActivity;
+//
+//import android.content.DialogInterface;
+//import android.content.Intent;
+//import android.media.MediaPlayer;
+//import android.os.Bundle;
+//import android.view.Menu;
+//import android.view.MenuInflater;
+//import android.view.MenuItem;
+//import android.view.View;
+//import android.widget.Button;
+//import android.widget.LinearLayout;
+//import android.widget.TextView;
+//import android.widget.Toast;
+//
+//import java.io.BufferedReader;
+//import java.io.FileInputStream;
+//import java.io.FileNotFoundException;
+//import java.io.IOException;
+//import java.io.InputStreamReader;
+//
+//public class mealsMenu extends AppCompatActivity implements View.OnClickListener {
+//
+//    private MediaPlayer mediaPlayer;
+//    TextView tvBreakfast, tvLunch, tvDinner;
+//    TextView tvTotalProteins, tvTotalFats, tvTotalCalories;
+//    Button btBreakfast, btLunch, btDinner, btFinish;
+//
+//    DailyMenu todayMenu = DailyMenu.getTodayMenu();
+//    FileAndDatabaseHelper fileAndDatabaseHelper;
+//    Song activeSong = Song.getSongs().get(0);
+//
+//    FileInputStream is;
+//    InputStreamReader isr;
+//    BufferedReader br;
+//    Intent me;
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_meals_menu);
+//
+//        me = getIntent();
+//        if(me.hasExtra("activeSong"))
+//            activeSong = (Song) me.getSerializableExtra("activeSong");
+//
+//        tvBreakfast = (TextView) findViewById(R.id.tvBreakfast);
+//        tvLunch = (TextView) findViewById(R.id.tvLunch);
+//        tvDinner = (TextView) findViewById(R.id.tvDinner);
+//
+//        btBreakfast = (Button) findViewById(R.id.btBreakfast);
+//        btBreakfast.setOnClickListener(this);
+//        btLunch = (Button) findViewById(R.id.btLunch);
+//        btLunch.setOnClickListener(this);
+//        btDinner = (Button) findViewById(R.id.btDinner);
+//        btDinner.setOnClickListener(this);
+//        btFinish = (Button) findViewById(R.id.btFinish);
+//        btFinish.setOnClickListener(this);
+//
+//        tvTotalProteins = (TextView) findViewById(R.id.tvTotalProteins);
+//        tvTotalFats = (TextView) findViewById(R.id.tvTotalFats);
+//        tvTotalCalories = (TextView) findViewById(R.id.tvTotalCalories);
+//
+//        DailyMenu.saveDailyMenuIntoFile(DailyMenu.getTodayMenu(), mealsMenu.this);
+//
+//        fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
+//        activeSong = fileAndDatabaseHelper.implementSettingsData();
+//
+//        initiateMediaPlayer();
+//        updateMeals();
+//    }
+//
+//    public void chooseMealType(){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(this);
+//        adb.setTitle("Choose meal type!");
+//        adb.setIcon(R.drawable.ic_food_icon);
+//
+//        LinearLayout alertDialogLinearLayout = new LinearLayout(getApplicationContext());
+//        alertDialogLinearLayout.setOrientation(LinearLayout.VERTICAL);
+//
+//        Button chooseBreakfast = new Button(getApplicationContext());
+//        chooseBreakfast.setOnClickListener(this);
+//        alertDialogLinearLayout.addView(chooseBreakfast);
+//
+//        Button chooseLunch = new Button(getApplicationContext());
+//        chooseLunch.setOnClickListener(this);
+//        alertDialogLinearLayout.addView(chooseLunch);
+//
+//        Button chooseDinner = new Button(getApplicationContext());
+//        chooseDinner.setOnClickListener(this);
+//        alertDialogLinearLayout.addView(chooseDinner);
+//
+//        Button chooseCustom = new Button(getApplicationContext());
+//        chooseCustom.setOnClickListener(this);
+//        alertDialogLinearLayout.addView(chooseCustom);
+//
+//        adb.setView(alertDialogLinearLayout);
+//
+//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//
+//        ad = adb.create();
+//        ad.show();
+//    }
+//
+//    public void updateMeals(){
+//        btBreakfast.setText("Select");
+//        btLunch.setText("Select");
+//        btDinner.setText("Select");
+//
+//        if(todayMenu.hasBreakfast()){
+//            tvBreakfast.setText("Your breakfast is: " + todayMenu.getUnitedBreakfastName() + ".");
+//            btBreakfast.setText("Reselect");
+//        }
+//
+//        if(todayMenu.hasLunch()){
+//            tvLunch.setText("Your lunch is: " + todayMenu.getUnitedLunchName() + ".");
+//            btLunch.setText("Reselect");
+//        }
+//
+//        if(todayMenu.hasDinner()){
+//            tvDinner.setText("Your dinner is: " + todayMenu.getUnitedDinnerName() + ".");
+//            btDinner.setText("Reselect");
+//        }
+//
+//        tvTotalProteins.setText("Total proteins: " + todayMenu.getTotalProteins() + " .");
+//        tvTotalFats.setText("Total fats: " + todayMenu.getTotalFats() + " .");
+//        tvTotalCalories.setText("Total calories: " + todayMenu.getTotalCalories() + " .");
+//    }
+//
+//    public void initiateMediaPlayer(){
+//        mediaPlayer = MediaPlayer.create(mealsMenu.this, activeSong.getId());
+//        mediaPlayer.setLooping(true);
+//        if(me.getBooleanExtra("playMusic", true)){
+//            mediaPlayer.start();
+//        }
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        mediaPlayer.start();
+//        if(!me.getBooleanExtra("playMusic", true)){
+//            mediaPlayer.stop();
+//        }
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        mediaPlayer.pause();
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        mediaPlayer.stop();
+//        mediaPlayer.release();
+//    }
+//
+//    @Override
+//    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.main_menu, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        int itemID = item.getItemId();
+//        if(itemID == R.id.sendToMusicMaster){
+//            me.setClass(mealsMenu.this, musicMaster.class);
+//            me.putExtra("cameToMusicMasterFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//
+//        if(itemID == R.id.sendToSettings){
+//            me.setClass(mealsMenu.this, settingsSetter.class);
+//            me.putExtra("cameToSettingsFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//
+//        if(itemID == R.id.sendToUserScreen){
+//            me.setClass(mealsMenu.this, UserInfoScreen.class);
+//            me.putExtra("cameToUserScreenFrom", getLocalClassName());
+//            startActivity(me);
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+//
+//    @Override
+//    public void onClick(View v) {
+//        int viewId = v.getId();
+//
+////        if(viewId == btBreakfast.getId()) {
+////            me.setClass(this, breakfastSelection.class);
+////            startActivity(me);
+////        }
+//
+//        if(viewId == btLunch.getId()) {
+//            me.setClass(this, lunchSelection.class);
+//            startActivity(me);
+//        }
+//
+//        if(viewId == btDinner.getId()) {
+//            me.setClass(this, dinnerSelection.class);
+//            startActivity(me);
+//        }
+//
+//        if(viewId == btFinish.getId()) {
+//            if(todayMenu.isThereAtLeastOneThing()){
+//                me.setClass(mealsMenu.this, finishMeals.class);
+//                startActivity(me);
+//            }
+//            else
+//                Toast.makeText(this, "Please pick at least one meal !", Toast.LENGTH_LONG).show();
+//        }
+//    }
+//
+//    @Override
+//    public void onBackPressed(){
+//        me.setClass(mealsMenu.this, MainActivity.class);
+//        startActivity(me);
+//    }
+//}
+
+//    <?xml version="1.0" encoding="utf-8"?>
+//<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+//    xmlns:app="http://schemas.android.com/apk/res-auto"
+//    xmlns:tools="http://schemas.android.com/tools"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    android:orientation="vertical"
+//    android:gravity="center"
+//    android:background="@drawable/meals_menu_background"
+//    tools:context=".mealsMenu">
+//
+//    <TextView
+//    android:id="@+id/tvBreakfast"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:text="Set Breakfast: "
+//    android:textColor="@color/black"/>
+//
+//    <Button
+//    android:id="@+id/btBreakfast"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:text="Select" />
+//
+//    <TextView
+//    android:id="@+id/tvLunch"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:text="Set Lunch: "
+//    android:textColor="@color/black"/>
+//
+//    <Button
+//    android:id="@+id/btLunch"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:text="Select" />
+//
+//    <TextView
+//    android:id="@+id/tvDinner"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:text="Set Dinner: "
+//    android:textColor="@color/black"/>
+//
+//    <Button
+//    android:id="@+id/btDinner"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:text="Select" />
+//
+//    <TextView
+//    android:id="@+id/tvTotalProteins"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginTop="7pt"
+//    android:textSize="8pt"
+//    android:text="Total proteins: 0."
+//    android:textColor="@color/black"/>
+//
+//    <TextView
+//    android:id="@+id/tvTotalFats"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:textSize="8pt"
+//    android:text="Total fats: 0."
+//    android:textColor="@color/black"/>
+//
+//    <TextView
+//    android:id="@+id/tvTotalCalories"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginBottom="7pt"
+//    android:textSize="8pt"
+//    android:text="Total Calories: 0."
+//    android:textColor="@color/black"/>
+//
+//    <Button
+//    android:id="@+id/btFinish"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:text="Finish" />
+//
+//</LinearLayout>
 }

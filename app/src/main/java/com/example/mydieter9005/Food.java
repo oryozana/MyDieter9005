@@ -44,9 +44,10 @@ public class Food implements Serializable {
     }
 
     public void setGrams(double grams) {
-        this.calories /= this.grams;
-        this.proteins /= this.grams;
-        this.fats /= this.grams;
+        Ingredient tmpIngredient = new Ingredient(Ingredient.getIngredientByName(this.name), 1);
+        this.calories = tmpIngredient.getCalories();
+        this.proteins = tmpIngredient.getProteins();
+        this.fats = tmpIngredient.getFats();
         this.grams = grams;
         this.calories *= this.grams;
         this.proteins *= this.grams;

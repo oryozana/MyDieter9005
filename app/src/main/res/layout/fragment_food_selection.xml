@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context=".FoodSelectionFragment">
+
+    <LinearLayout
+        android:id="@+id/loadingWorldSavedCustomMealsLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20pt"
+            android:gravity="center"
+            android:layout_marginBottom="10pt"
+            android:text="Loading..." />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="150pt"
+            android:layout_height="150pt" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/foodSelectionLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:padding="10pt"
+            android:text="Choose your food, from the options below:"
+            android:textSize="10pt" />
+
+        <EditText
+            android:id="@+id/etFilterFood"
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="You can search here: "
+            android:inputType="textPersonName" />
+
+        <ListView
+            android:id="@+id/listViewFood"
+            android:layout_width="match_parent"
+            android:layout_height="375dp"
+            android:layout_marginTop="5pt"/>
+
+        <Button
+            android:id="@+id/btSwitchBetweenMealAndIngredients"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15pt"
+            android:layout_marginTop="10pt"
+            android:layout_marginRight="15pt"
+            android:text="Choose from meals" />
+
+        <Button
+            android:id="@+id/btSwitchBetweenLocalAndGlobalFood"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15pt"
+            android:layout_marginRight="15pt"
+            android:layout_marginBottom="2pt"
+            android:text="Choose from Internet" />
+    </LinearLayout>
+
+</RelativeLayout>

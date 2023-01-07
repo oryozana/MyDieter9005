@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/ingredient_custom_alert_dialog_background"
+    tools:context=".MealOverviewFragment">
+
+    <TextView
+        android:id="@+id/tvMealOverviewMealName"
+        android:layout_width="150pt"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="10pt"
+        android:textStyle="bold"
+        android:layout_marginTop="15pt"
+        android:layout_marginBottom="8pt"
+        android:text="Name: " />
+
+    <TextView
+        android:layout_width="150pt"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="8pt"
+        android:layout_marginTop="5pt"
+        android:text="The meal ingredients: " />
+
+    <ListView
+        android:id="@+id/lvMealOverviewIngredients"
+        android:layout_width="150pt"
+        android:layout_height="85pt"
+        android:layout_marginTop="4pt"
+        android:layout_marginBottom="10pt"/>
+
+    <TextView
+        android:id="@+id/tvMealOverviewMealGrams"
+        android:layout_width="150pt"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="8pt"
+        android:text="Grams: " />
+
+    <TextView
+        android:id="@+id/tvMealOverviewMealCalories"
+        android:layout_width="150pt"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="8pt"
+        android:text="Calories: " />
+
+    <TextView
+        android:id="@+id/tvMealOverviewMealProteins"
+        android:layout_width="150pt"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="8pt"
+        android:text="Proteins: " />
+
+    <TextView
+        android:id="@+id/tvMealOverviewMealFats"
+        android:layout_width="150pt"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="8pt"
+        android:layout_marginBottom="6pt"
+        android:text="Fats: " />
+
+    <LinearLayout
+        android:layout_width="150pt"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6pt"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layoutDirection="ltr">
+
+        <TextView
+            android:layout_width="50pt"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="8pt"
+            android:text="Select meal: " />
+
+        <Spinner
+            android:id="@+id/sMealOverviewSelectMeal"
+            android:layout_width="100pt"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btMealOverviewConfirmMeal"
+        android:layout_width="125pt"
+        android:layout_height="wrap_content"
+        android:text="Confirm" />
+
+    <Button
+        android:id="@+id/btMealOverviewCancelMeal"
+        android:layout_width="125pt"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15pt"
+        android:text="Cancel" />
+</LinearLayout>
