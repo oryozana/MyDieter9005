@@ -1,101 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     tools:context=".HomeFragment">
 
-    <LinearLayout
-        android:id="@+id/mainActivityLinearLayout"
+    <Space
+        android:id="@+id/mainSpace"
+        android:layout_width="match_parent"
+        android:layout_height="80pt" />
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:layout_below="@id/mainSpace">
 
-        <HorizontalScrollView
-            android:layout_width="125pt"
-            android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/mainActivityLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:id="@+id/breakfastLinearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="15pt"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="175pt"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layoutDirection="ltr"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="17pt"
+                        android:layout_height="17pt"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_circle_icon" />
+
+                    <TextView
+                        android:layout_width="155pt"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3pt"
+                        android:text="Breakfast: "
+                        android:textColor="@color/white"
+                        android:textSize="12pt"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <ListView
+                    android:id="@+id/lvBreakfastMeals"
+                    android:layout_width="match_parent"
+                    android:nestedScrollingEnabled="true"
+                    android:layout_height="100pt" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lunchLinearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="15pt"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="175pt"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layoutDirection="ltr"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="17pt"
+                        android:layout_height="17pt"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_circle_icon" />
+
+                    <TextView
+                        android:layout_width="155pt"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3pt"
+                        android:text="Lunch: "
+                        android:textColor="@color/white"
+                        android:textSize="12pt"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <ListView
+                    android:id="@+id/lvLunchMeals"
+                    android:nestedScrollingEnabled="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="100pt" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/dinnerLinearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="175pt"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layoutDirection="ltr"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="17pt"
+                        android:layout_height="17pt"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_circle_icon" />
+
+                    <TextView
+                        android:layout_width="155pt"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3pt"
+                        android:text="Dinner: "
+                        android:textColor="@color/white"
+                        android:textSize="12pt"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <ListView
+                    android:id="@+id/lvDinnerMeals"
+                    android:layout_width="match_parent"
+                    android:nestedScrollingEnabled="true"
+                    android:layout_height="100pt" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tvBreakfastMain"
+                android:id="@+id/tvTotalProteinsMain"
                 android:layout_width="125pt"
-                android:layout_height="match_parent"
-                android:layout_marginTop="4pt"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="Your breakfast:                            "
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8pt"
+                android:text="Total proteins: "
                 android:textColor="@color/white" />
-        </HorizontalScrollView>
-
-        <HorizontalScrollView
-            android:layout_width="125pt"
-            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tvLunchMain"
+                android:id="@+id/tvTotalFatsMain"
                 android:layout_width="125pt"
-                android:layout_height="match_parent"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="Your lunch:                                   "
+                android:layout_height="wrap_content"
+                android:text="Total fats: "
                 android:textColor="@color/white" />
-        </HorizontalScrollView>
-
-        <HorizontalScrollView
-            android:layout_width="125pt"
-            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tvDinnerMain"
+                android:id="@+id/tvTotalCaloriesMain"
                 android:layout_width="125pt"
-                android:layout_height="match_parent"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="Your dinner:                                  "
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8pt"
+                android:text="Total calories: "
                 android:textColor="@color/white" />
-        </HorizontalScrollView>
 
-        <TextView
-            android:id="@+id/tvTotalProteinsMain"
-            android:layout_width="125pt"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8pt"
-            android:text="Total proteins: "
-            android:textColor="@color/white" />
+            <Button
+                android:id="@+id/btMealsMenu"
+                android:layout_width="125pt"
+                android:layout_height="wrap_content"
+                android:text="Meals selector" />
 
-        <TextView
-            android:id="@+id/tvTotalFatsMain"
-            android:layout_width="125pt"
-            android:layout_height="wrap_content"
-            android:text="Total fats: "
-            android:textColor="@color/white" />
+            <Button
+                android:id="@+id/btWriteMealsToExternalFile"
+                android:layout_width="125pt"
+                android:layout_height="wrap_content"
+                android:text="Save meals on external file"
+                android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/tvTotalCaloriesMain"
-            android:layout_width="125pt"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8pt"
-            android:text="Total calories: "
-            android:textColor="@color/white" />
+            <Button
+                android:id="@+id/btReadMealsFromExternalFile"
+                android:layout_width="125pt"
+                android:layout_height="wrap_content"
+                android:text="Load saved meals"
+                android:visibility="gone" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        <Button
-            android:id="@+id/btMealsMenu"
-            android:layout_width="125pt"
-            android:layout_height="wrap_content"
-            android:text="Meals selector" />
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/btWriteMealsToExternalFile"
-            android:layout_width="125pt"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="Save meals on external file" />
-
-        <Button
-            android:id="@+id/btReadMealsFromExternalFile"
-            android:layout_width="125pt"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="Load saved meals" />
-    </LinearLayout>
 </RelativeLayout>

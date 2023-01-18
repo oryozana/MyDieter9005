@@ -1,14 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".customMealsFragment">
+    tools:context=".CustomMealsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/customMealsLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:gravity="center|top"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <LinearLayout
+            android:id="@+id/customMealsAdditionsLinearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10pt"
+            android:layout_marginTop="10pt"
+            android:layout_marginRight="10pt"
+            android:layoutDirection="ltr"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etCustomMeal"
+                android:layout_width="125pt"
+                android:layout_height="wrap_content"
+                android:hint="Enter custom meal name: "
+                android:inputType="textPersonName" />
+
+            <ImageButton
+                android:id="@+id/ibtAddIngredient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2pt"
+                android:layout_marginRight="2pt"
+                android:src="@drawable/ic_add_icon" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvCustomSelection"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:padding="10pt"
+            android:visibility="gone"
+            android:text="Choose your custom meal, from the options below:"
+            android:textSize="10pt" />
+
+        <ListView
+            android:id="@+id/lvCustomMealIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_marginTop="10pt"
+            android:layout_marginBottom="10pt" />
+
+        <Button
+            android:id="@+id/btSendToCustomSelection"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Choose from saved" />
+
+        <Button
+            android:id="@+id/btShowMealInfo"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Show meal info" />
+
+        <Button
+            android:id="@+id/btSaveCustomMeal"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Save meal" />
+    </LinearLayout>
+</RelativeLayout>

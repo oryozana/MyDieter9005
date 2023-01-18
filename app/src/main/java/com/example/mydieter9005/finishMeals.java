@@ -167,23 +167,23 @@ public class finishMeals extends AppCompatActivity implements View.OnClickListen
     }
 
     public void initiateIngredientListsAndSetMealsNames(){
-        breakfastIngredientsList = new ArrayList<Ingredient>();
-        if(todayMenu.hasBreakfast()) {
-            tvBreakfastInfo.setText("Breakfast: " + todayMenu.getUnitedBreakfastName() + " .");
-            breakfastIngredientsList = todayMenu.generateBreakfastIngredientsArray();
-        }
-
-        lunchIngredientsList = new ArrayList<Ingredient>();
-        if(todayMenu.hasLunch()) {
-            tvLunchInfo.setText("Lunch: " + todayMenu.getUnitedLunchName() + " .");
-            lunchIngredientsList = todayMenu.generateLunchIngredientsArray();
-        }
-
-        dinnerIngredientsList = new ArrayList<Ingredient>();
-        if(todayMenu.hasDinner()) {
-            tvDinnerInfo.setText("Dinner: " + todayMenu.getUnitedDinnerName() + " .");
-            dinnerIngredientsList = todayMenu.generateDinnerIngredientsArray();
-        }
+//        breakfastIngredientsList = new ArrayList<Ingredient>();
+//        if(todayMenu.hasBreakfast()) {
+//            tvBreakfastInfo.setText("Breakfast: " + todayMenu.getUnitedBreakfastName() + " .");
+//            breakfastIngredientsList = todayMenu.generateBreakfastIngredientsArray();
+//        }
+//
+//        lunchIngredientsList = new ArrayList<Ingredient>();
+//        if(todayMenu.hasLunch()) {
+//            tvLunchInfo.setText("Lunch: " + todayMenu.getUnitedLunchName() + " .");
+//            lunchIngredientsList = todayMenu.generateLunchIngredientsArray();
+//        }
+//
+//        dinnerIngredientsList = new ArrayList<Ingredient>();
+//        if(todayMenu.hasDinner()) {
+//            tvDinnerInfo.setText("Dinner: " + todayMenu.getUnitedDinnerName() + " .");
+//            dinnerIngredientsList = todayMenu.generateDinnerIngredientsArray();
+//        }
     }
 
     public void sendToSeeAllIngredients(){

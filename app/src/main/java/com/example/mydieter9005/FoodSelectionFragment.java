@@ -42,6 +42,7 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
 
     private NetworkConnectionReceiver networkConnectionReceiver;
 
+    CustomMealsFragment customMealsFragment = new CustomMealsFragment();
     MealOverviewFragment mealOverviewFragment;
 
     LinearLayout linearLayout, loadingWorldSavedCustomMealsLinearLayout;
@@ -61,6 +62,16 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
     boolean isOnLocalMode = true;
 
     DatabaseReference databaseReference;
+
+    String cameFrom;
+
+    public FoodSelectionFragment(){
+        cameFrom = "";
+    }
+
+    public FoodSelectionFragment(String fromWhere){
+        cameFrom = fromWhere;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -183,6 +194,11 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
             public void afterTextChanged(Editable s) {}
         });
 
+        if(cameFrom.equals("CustomMealsFragment")){
+            btSwitchBetweenLocalAndGlobalFood.setVisibility(View.INVISIBLE);
+            btSwitchBetweenMealAndIngredients.setVisibility(View.INVISIBLE);
+        }
+
         isOnMealsMode = false;
         isOnLocalMode = true;
 
@@ -213,7 +229,7 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
 
-                mealOverviewFragment = new MealOverviewFragment(selectedItem);
+                mealOverviewFragment = new MealOverviewFragment("FoodSelectionFragment", selectedItem);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, mealOverviewFragment).commit();
             }
         });
@@ -231,7 +247,7 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
                 Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
                 selectedItem.setName(selectedItem.getName().split(" - ")[1]);
 
-                mealOverviewFragment = new MealOverviewFragment(selectedItem);
+                mealOverviewFragment = new MealOverviewFragment("FoodSelectionFragment", selectedItem);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, mealOverviewFragment).commit();
             }
         });
@@ -345,6 +361,8 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
         AlertDialog.Builder adb;
         adb = new AlertDialog.Builder(getActivity());
 
+        Ingredient tmpIngredient = new Ingredient(ingredient);
+
         View customAlertDialog = LayoutInflater.from(getActivity()).inflate(R.layout.ingredient_overview_alert_dialog, null);
         TextView tvAlertDialogIngredientName = (TextView) customAlertDialog.findViewById(R.id.tvAlertDialogIngredientName);
         tvAlertDialogIngredientName.setText("Name: " + ingredient.getName());
@@ -363,6 +381,9 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
         ArrayAdapter<String> alertDialogSelectedMealAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, selectMealOptions);
         sAlertDialogSelectMeal.setAdapter(alertDialogSelectedMealAdapter);
 
+        if(cameFrom.equals("CustomMealsFragment"))
+            sAlertDialogSelectMeal.setVisibility(View.INVISIBLE);
+
         EditText etAlertDialogIngredientGrams = customAlertDialog.findViewById(R.id.etAlertDialogIngredientGrams);
         etAlertDialogIngredientGrams.setText("100");
         etAlertDialogIngredientGrams.addTextChangedListener(new TextWatcher() {
@@ -372,10 +393,10 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!etAlertDialogIngredientGrams.getText().toString().equals("")){
-                    ingredient.setGrams(Integer.parseInt(etAlertDialogIngredientGrams.getText().toString()));
-                    tvAlertDialogIngredientCalories.setText("Calories: " + ingredient.getCalories());
-                    tvAlertDialogIngredientProteins.setText("Proteins: " + ingredient.getProteins());
-                    tvAlertDialogIngredientFats.setText("Fats: " + ingredient.getFats());
+                    tmpIngredient.setGrams(Integer.parseInt(etAlertDialogIngredientGrams.getText().toString()));
+                    tvAlertDialogIngredientCalories.setText("Calories: " + tmpIngredient.getCalories());
+                    tvAlertDialogIngredientProteins.setText("Proteins: " + tmpIngredient.getProteins());
+                    tvAlertDialogIngredientFats.setText("Fats: " + tmpIngredient.getFats());
                 }
                 else{
                     tvAlertDialogIngredientCalories.setText("Calories: 0");
@@ -416,7 +437,14 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
 
                     String selectedMeal = sAlertDialogSelectMeal.getSelectedItem().toString();
                     int grams = Integer.parseInt(etAlertDialogIngredientGrams.getText().toString());
-                    todayMenu.addIngredientByMealName(selectedMeal, ingredient, grams);
+
+                    if(cameFrom.equals("CustomMealsFragment")) {
+                        DailyMenu.getCustomMeal().addNeededIngredientForMeal(new Ingredient(Ingredient.getIngredientByName(ingredient.getName()), grams));
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, customMealsFragment).commit();
+                    }
+                    else
+                        todayMenu.addIngredientByMealName(selectedMeal, ingredient, grams);
+
                     DailyMenu.saveDailyMenuIntoFile(todayMenu, getActivity());
 
                     ad.cancel();

@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     BottomNavigationView bottomNavigationView;
     HomeFragment homeFragment = new HomeFragment();
     FoodSelectionFragment foodSelectionFragment = new FoodSelectionFragment();
+    CustomMealsFragment customMealsFragment = new CustomMealsFragment();
 
     private VideoView videoView;
     private MediaPlayer mediaPlayer;
@@ -104,6 +105,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 if(itemId == R.id.sendToFoodSelection) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, foodSelectionFragment).commit();
+                    return true;
+                }
+
+                if(itemId == R.id.sendToCustomMeals) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, customMealsFragment).commit();
                     return true;
                 }
 

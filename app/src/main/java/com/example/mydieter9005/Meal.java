@@ -119,6 +119,13 @@ public class Meal extends Food {
         return this.neededIngredientsForMeal;
     }
 
+    public ArrayList<Ingredient> getNeededIngredientsForMeal2(){
+        ArrayList<Ingredient> tmpIngredients = new ArrayList<Ingredient>();
+        for(int i = 0; i < this.neededIngredientsForMeal.size(); i++)
+            tmpIngredients.add(new Ingredient(this.neededIngredientsForMeal.get(i)));
+        return tmpIngredients;
+    }
+
     public void addNeededIngredientForMeal(Ingredient ingredient){
         this.neededIngredientsForMeal.add(ingredient);
         updateMealInfo();

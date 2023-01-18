@@ -21,8 +21,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.example.mydieter9005.databinding.ActivityCustomMealsBinding;
-import com.example.mydieter9005.databinding.ActivityCustomSelectionBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;

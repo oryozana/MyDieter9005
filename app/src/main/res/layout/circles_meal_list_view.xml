@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"
+        android:layoutDirection="ltr"
+        android:gravity="center|left"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="12pt"
+            android:layout_height="12pt"
+            android:layout_marginLeft="3pt"
+            app:srcCompat="@drawable/ic_circle_icon" />
+
+        <LinearLayout
+            android:layout_width="130pt"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layoutDirection="ltr"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvCircleListMealName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="9pt"
+                android:textColor="@color/white"
+                android:text="Meal name"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvCircleListMealDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="7pt"
+                android:textColor="@color/white"
+                android:text="Meal description" />
+        </LinearLayout>
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/ibtDeleteMeal"-->
+<!--            android:layout_width="10pt"-->
+<!--            android:layout_height="10pt"-->
+<!--            android:layout_marginLeft="6pt"-->
+<!--            android:focusable="false"-->
+<!--            app:srcCompat="@drawable/ic_delete_icon" />-->
+    </LinearLayout>
+</LinearLayout>

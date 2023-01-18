@@ -1,7 +1,6 @@
 package com.example.mydieter9005;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 public class DailyMenu {
     private static ArrayList<DailyMenu> dailyMenus;
     private static DailyMenu todayMenu;
+    private static Meal newCustomMeal;
     private ArrayList<Food> breakfast;
     private ArrayList<Food> lunch;
     private ArrayList<Food> dinner;
@@ -381,46 +381,55 @@ public class DailyMenu {
         return ingredients;
     }
 
-    public String getUnitedBreakfastName(){
-        if(breakfast.size() == 0)
-            return "null";
+    public ArrayList<Meal> getBreakfastAsMealsTypeOnly(){
+        ArrayList<Ingredient> tmpIngredientList = new ArrayList<Ingredient>();
+        ArrayList<Meal> breakfastMeals = new ArrayList<Meal>();
 
-        String unitedName = breakfast.get(0).name;
-        for(int i = 1; i < breakfast.size(); i++){
-            if(i == breakfast.size() - 1)
-                unitedName += " and " + breakfast.get(i).name;
-            else
-                unitedName += breakfast.get(i).name + ".";
+        for(int i = 0; i < todayMenu.breakfast.size(); i++){
+            Food food = todayMenu.breakfast.get(i);
+            if(food instanceof Ingredient){
+                tmpIngredientList.add((Ingredient) food);
+                breakfastMeals.add(new Meal(food.getName(), tmpIngredientList));
+            }
+            if(food instanceof Meal)
+                breakfastMeals.add((Meal) food);
+            tmpIngredientList.clear();
         }
-        return unitedName;
+        return breakfastMeals;
     }
 
-    public String getUnitedLunchName(){
-        if(lunch.size() == 0)
-            return "null";
+    public ArrayList<Meal> getLunchAsMealsTypeOnly(){
+        ArrayList<Ingredient> tmpIngredientList = new ArrayList<Ingredient>();
+        ArrayList<Meal> lunchMeals = new ArrayList<Meal>();
 
-        String unitedName = lunch.get(0).name;
-        for(int i = 1; i < lunch.size(); i++){
-            if(i == lunch.size() - 1)
-                unitedName += " and " + lunch.get(i).name;
-            else
-                unitedName += " " + lunch.get(i).name + ".";
+        for(int i = 0; i < todayMenu.lunch.size(); i++){
+            Food food = todayMenu.lunch.get(i);
+            if(food instanceof Ingredient){
+                tmpIngredientList.add((Ingredient) food);
+                lunchMeals.add(new Meal(food.getName(), tmpIngredientList));
+            }
+            if(food instanceof Meal)
+                lunchMeals.add((Meal) food);
+            tmpIngredientList.clear();
         }
-        return unitedName;
+        return lunchMeals;
     }
 
-    public String getUnitedDinnerName(){
-        if(dinner.size() == 0)
-            return "";
+    public ArrayList<Meal> getDinnerAsMealsTypeOnly(){
+        ArrayList<Ingredient> tmpIngredientList = new ArrayList<Ingredient>();
+        ArrayList<Meal> dinnerMeals = new ArrayList<Meal>();
 
-        String unitedName = dinner.get(0).name;
-        for(int i = 1; i < dinner.size(); i++){
-            if(i == dinner.size() - 1)
-                unitedName += " and " + dinner.get(i).name;
-            else
-                unitedName += dinner.get(i).name + ".";
+        for(int i = 0; i < todayMenu.dinner.size(); i++){
+            Food food = todayMenu.dinner.get(i);
+            if(food instanceof Ingredient){
+                tmpIngredientList.add((Ingredient) food);
+                dinnerMeals.add(new Meal(food.getName(), tmpIngredientList));
+            }
+            if(food instanceof Meal)
+                dinnerMeals.add((Meal) food);
+            tmpIngredientList.clear();
         }
-        return unitedName;
+        return dinnerMeals;
     }
 
     public void clearAllFood(Context context){
@@ -479,6 +488,41 @@ public class DailyMenu {
         return allIngredients;
     }
 
+    public void replaceMeal(Meal meal, String mealType){
+        if(mealType.equals("Breakfast")){
+            removeBreakfast(meal.getName());
+            addBreakfast(meal);
+        }
+
+        if(mealType.equals("Lunch")){
+            removeLunch(meal.getName());
+            addLunch(meal);
+        }
+
+        if(mealType.equals("Dinner")){
+            removeDinner(meal.getName());
+            addDinner(meal);
+        }
+    }
+
+    public void correctNutritiousValues(){
+        totalCalories = 0;
+        totalProteins = 0;
+        totalFats = 0;
+
+        if(isThereAtLeastOneThing()){
+            Ingredient tmpIngredient;
+            ArrayList<Ingredient> tmpIngredients = generateAllIngredientsNeededArrayList();
+            for(int i = 0; i < tmpIngredients.size(); i++){
+                tmpIngredient = tmpIngredients.get(i);
+                totalCalories += tmpIngredient.getCalories();
+                totalProteins += tmpIngredient.getProteins();
+                totalFats += tmpIngredient.getFats();
+            }
+            roundNutritionalValues();
+        }
+    }
+
     public static boolean hasTodayMenuInsideAllDailyMenus(String currentDate){
         for(int i = 0; i < dailyMenus.size(); i++){
             if(dailyMenus.get(i).getDate().equals(currentDate))
@@ -532,6 +576,18 @@ public class DailyMenu {
 
         tmpDailyMenus.add(dailyMenu);
         dailyMenus = tmpDailyMenus;
+    }
+
+    public static boolean hasCustomMeal(){
+        return newCustomMeal != null;
+    }
+
+    public static Meal getCustomMeal() {
+        return newCustomMeal;
+    }
+
+    public static void saveCustomMeal(Meal newCustomMeal) {
+        DailyMenu.newCustomMeal = newCustomMeal;
     }
 
     public static void saveDailyMenuIntoFile(DailyMenu dailyMenu, Context context){

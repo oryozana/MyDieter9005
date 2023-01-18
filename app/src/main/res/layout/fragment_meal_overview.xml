@@ -68,6 +68,7 @@
         android:text="Fats: " />
 
     <LinearLayout
+        android:id="@+id/mealOverviewMealSelectorLinearLayout"
         android:layout_width="150pt"
         android:layout_height="wrap_content"
         android:layout_marginBottom="6pt"

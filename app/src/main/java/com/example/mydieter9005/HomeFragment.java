@@ -8,13 +8,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.PrecomputedText;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AnalogClock;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,16 +33,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.ParameterizedType;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
-    TextView tvBreakfastMain, tvLunchMain, tvDinnerMain;
     TextView tvTotalProteinsMain, tvTotalFatsMain, tvTotalCaloriesMain;
     Button btMealsMenu, btWriteMealsToExternalFile, btReadMealsFromExternalFile;
+    LinearLayout breakfastLinearLayout, lunchLinearLayout, dinnerLinearLayout;
     LinearLayout mainActivityLinearLayout;
+
+    MealOverviewFragment mealOverviewFragment;
+
+    MealCirclesListAdapter breakfastMealListAdapter, lunchMealListAdapter, dinnerMealListAdapter;
+    ListView lvBreakfastMeals, lvLunchMeals, lvDinnerMeals;
 
     DailyMenu todayMenu = DailyMenu.getTodayMenu();
 
@@ -53,16 +63,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tvBreakfastMain = (TextView) view.findViewById(R.id.tvBreakfastMain);
-        tvBreakfastMain.setMovementMethod(new ScrollingMovementMethod());
-        tvLunchMain = (TextView) view.findViewById(R.id.tvLunchMain);
-        tvLunchMain.setMovementMethod(new ScrollingMovementMethod());
-        tvDinnerMain = (TextView) view.findViewById(R.id.tvDinnerMain);
-        tvDinnerMain.setMovementMethod(new ScrollingMovementMethod());
+//        tvBreakfastMain = (TextView) view.findViewById(R.id.tvBreakfastMain);
+//        tvBreakfastMain.setMovementMethod(new ScrollingMovementMethod());
+//        tvLunchMain = (TextView) view.findViewById(R.id.tvLunchMain);
+//        tvLunchMain.setMovementMethod(new ScrollingMovementMethod());
+//        tvDinnerMain = (TextView) view.findViewById(R.id.tvDinnerMain);
+//        tvDinnerMain.setMovementMethod(new ScrollingMovementMethod());
 
         tvTotalCaloriesMain = (TextView) view.findViewById(R.id.tvTotalCaloriesMain);
         tvTotalProteinsMain = (TextView) view.findViewById(R.id.tvTotalProteinsMain);
@@ -77,23 +88,151 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         mainActivityLinearLayout = (LinearLayout) view.findViewById(R.id.mainActivityLinearLayout);
 
+        lvBreakfastMeals = (ListView) view.findViewById(R.id.lvBreakfastMeals);
+        lvLunchMeals = (ListView) view.findViewById(R.id.lvLunchMeals);
+        lvDinnerMeals = (ListView) view.findViewById(R.id.lvDinnerMeals);
+
+        updateMealsIfNeeded();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
         updateMealsIfNeeded();
     }
 
     public void updateMealsIfNeeded(){
-        if(todayMenu.hasBreakfast())
-            tvBreakfastMain.setText("Your breakfast: " + todayMenu.getUnitedBreakfastName());
-        if(todayMenu.hasLunch())
-            tvLunchMain.setText("Your lunch: " + todayMenu.getUnitedLunchName());
-        if(todayMenu.hasDinner())
-            tvDinnerMain.setText("Your dinner: " + todayMenu.getUnitedDinnerName());
+        int totalHeight;
+        int mealsAmount;
+
+        todayMenu = DailyMenu.getTodayMenu();
+        todayMenu.correctNutritiousValues();
+
+        if(todayMenu.hasBreakfast()) {
+            lvBreakfastMeals.setVisibility(View.VISIBLE);
+            breakfastMealListAdapter = new MealCirclesListAdapter(getActivity(), todayMenu.getBreakfastAsMealsTypeOnly());
+            lvBreakfastMeals.setAdapter(breakfastMealListAdapter);
+
+            lvBreakfastMeals.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
+
+                    mealOverviewFragment = new MealOverviewFragment(selectedItem, "Breakfast");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, mealOverviewFragment).commit();
+                }
+            });
+
+            totalHeight = 0;
+            mealsAmount = todayMenu.getBreakfast().size();
+
+            ViewGroup.LayoutParams params = lvBreakfastMeals.getLayoutParams();
+            if(mealsAmount < 3) {
+                for (int i = 0; i < mealsAmount; i++) {
+                    View listItem = breakfastMealListAdapter.getView(i, null, lvBreakfastMeals);
+                    listItem.measure(0, 0);
+                    totalHeight += listItem.getMeasuredHeight();
+                }
+                params.height = (totalHeight + (lvBreakfastMeals.getDividerHeight() * (mealsAmount)));
+            }
+            else {
+                for (int i = 0; i < 3; i++) {
+                    View listItem = breakfastMealListAdapter.getView(i, null, lvBreakfastMeals);
+                    listItem.measure(0, 0);
+                    totalHeight += listItem.getMeasuredHeight();
+                }
+                params.height = (totalHeight + (lvBreakfastMeals.getDividerHeight() * 3));
+            }
+            lvBreakfastMeals.setLayoutParams(params);
+        }
+        else
+            lvBreakfastMeals.setVisibility(View.GONE);
+
+        if(todayMenu.hasLunch()){
+            lvLunchMeals.setVisibility(View.VISIBLE);
+            lunchMealListAdapter = new MealCirclesListAdapter(getActivity(), todayMenu.getLunchAsMealsTypeOnly());
+            lvLunchMeals.setAdapter(lunchMealListAdapter);
+
+            lvLunchMeals.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
+
+                    mealOverviewFragment = new MealOverviewFragment(selectedItem, "Lunch");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, mealOverviewFragment).commit();
+                }
+            });
+
+            totalHeight = 0;
+            mealsAmount = todayMenu.getLunch().size();
+
+            ViewGroup.LayoutParams params = lvLunchMeals.getLayoutParams();
+            if(mealsAmount < 3) {
+                for (int i = 0; i < mealsAmount; i++) {
+                    View listItem = lunchMealListAdapter.getView(i, null, lvLunchMeals);
+                    listItem.measure(0, 0);
+                    totalHeight += listItem.getMeasuredHeight();
+                }
+                params.height = (totalHeight + (lvLunchMeals.getDividerHeight() * (mealsAmount)));
+            }
+            else {
+                for (int i = 0; i < 3; i++) {
+                    View listItem = lunchMealListAdapter.getView(i, null, lvLunchMeals);
+                    listItem.measure(0, 0);
+                    totalHeight += listItem.getMeasuredHeight();
+                }
+                params.height = (totalHeight + (lvLunchMeals.getDividerHeight() * 3));
+            }
+            lvLunchMeals.setLayoutParams(params);
+        }
+        else
+            lvLunchMeals.setVisibility(View.GONE);
+
+        if(todayMenu.hasDinner()){
+            lvDinnerMeals.setVisibility(View.VISIBLE);
+            dinnerMealListAdapter = new MealCirclesListAdapter(getActivity(), todayMenu.getDinnerAsMealsTypeOnly());
+            lvDinnerMeals.setAdapter(dinnerMealListAdapter);
+
+            lvDinnerMeals.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
+
+                    mealOverviewFragment = new MealOverviewFragment(selectedItem, "Dinner");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, mealOverviewFragment).commit();
+                }
+            });
+
+            totalHeight = 0;
+            mealsAmount = todayMenu.getDinner().size();
+
+            ViewGroup.LayoutParams params = lvDinnerMeals.getLayoutParams();
+            if(mealsAmount < 3) {
+                for (int i = 0; i < mealsAmount; i++) {
+                    View listItem = dinnerMealListAdapter.getView(i, null, lvDinnerMeals);
+                    listItem.measure(0, 0);
+                    totalHeight += listItem.getMeasuredHeight();
+                }
+                params.height = (totalHeight + (lvDinnerMeals.getDividerHeight() * (mealsAmount)));
+            }
+            else {
+                for (int i = 0; i < 3; i++) {
+                    View listItem = dinnerMealListAdapter.getView(i, null, lvDinnerMeals);
+                    listItem.measure(0, 0);
+                    totalHeight += listItem.getMeasuredHeight();
+                }
+                params.height = (totalHeight + (lvDinnerMeals.getDividerHeight() * 3));
+            }
+            lvDinnerMeals.setLayoutParams(params);
+        }
+        else
+            lvDinnerMeals.setVisibility(View.GONE);
 
         tvTotalProteinsMain.setText("Total Proteins: " + todayMenu.getTotalProteins() + " .");
         tvTotalFatsMain.setText("Total Fats: " + todayMenu.getTotalFats() + " .");
         tvTotalCaloriesMain.setText("Total calories: " + todayMenu.getTotalCalories() + " .");
     }
-
-
 
 //    public void saveDailyMenuIntoFile(DailyMenu dailyMenu){
 //        try {
@@ -117,104 +256,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 //        }
 //    }
 
-
-
-//    public void sendToSelected(View v) {
-//        int id = v.getId();
-//        if (id == btMealsMenu.getId()) {
-//            me.setClass(this, mealsMenu.class);
-//            startActivity(me);
-//        }
-//    }
-
-//    public void write(){
-//        if(me.hasExtra("meals")){
-//            try {
-//                fos = openFileOutput(todayDate, Context.MODE_PRIVATE);
-//                osw = new OutputStreamWriter(fos);
-//                bw = new BufferedWriter(osw);
-//
-//                bw.write(todayDate + "\n");
-//
-//                bw.write("Your breakfast: ");
-//                if(me.hasExtra("breakfast"))
-//                    bw.write(me.getStringExtra("breakfast"));
-//
-//                bw.write("\n" + "Your lunch: ");
-//                if(me.hasExtra("lunch"))
-//                    bw.write(me.getStringExtra("lunch"));
-//
-//                bw.write("\n" + "Your dinner: ");
-//                if(me.hasExtra("dinner"))
-//                    bw.write(me.getStringExtra("dinner"));
-//
-//                bw.write("\n" + tvTotalCaloriesMain.getText().toString() + "\n");
-//                //bw.write(tvCaloriesLeftMain.getText().toString());
-//
-//                bw.close();
-//
-//                Toast.makeText(this, todayDate + " wrote.", Toast.LENGTH_SHORT).show();
-//            }
-//            catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//            catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        else{
-//            Toast.makeText(this, "You didn't choose any meal yet.", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
-//    public void showFileData(){
-//        String[] dataParts = getFileData(todayDate).split("\n");
-//        String savedBreakfast="", savedLunch="", savedDinner="", savedTotalCalories="", savedCaloriesLeft="";
-//        String[] meals = new String[3];
-//
-//        if(dataParts[1].replaceAll(":", "").length() == dataParts[1].length() - 2)
-//            savedBreakfast = dataParts[1].split(": ")[1] + ": " + dataParts[1].split(": ")[2];
-//        if(!savedBreakfast.equals("") && !savedBreakfast.equals(" "))
-//            me.putExtra("breakfast", savedBreakfast);
-//
-//        if(dataParts[2].replaceAll(":", "").length() == dataParts[2].length() - 2)
-//            savedLunch = dataParts[2].split(": ")[1] + ": " + dataParts[2].split(": ")[2];
-//        if(!savedLunch.equals("") && !savedLunch.equals(" "))
-//            me.putExtra("lunch", savedLunch);
-//
-//        if(dataParts[3].replaceAll(":", "").length() == dataParts[3].length() - 2)
-//            savedDinner = dataParts[3].split(": ")[1] + ": " + dataParts[3].split(": ")[2];
-//        if(!savedDinner.equals("") && !savedDinner.equals(" "))
-//            me.putExtra("dinner", savedDinner);
-//
-//        savedTotalCalories = dataParts[4].split(": ")[1];
-//        if(!savedTotalCalories.equals("") && !savedTotalCalories.equals(" "))
-//            me.putExtra("totalCalories", multiUsageFunctions.getCaloriesOrMinutesOutOfString(savedTotalCalories));
-//        savedCaloriesLeft = dataParts[5].split(": ")[1];
-//        if(!savedCaloriesLeft.equals("") && !savedCaloriesLeft.equals(" "))
-//            me.putExtra("caloriesLeft", multiUsageFunctions.getCaloriesOrMinutesOutOfString(savedCaloriesLeft));
-//
-//        meals[0] = savedBreakfast.split(":")[0];
-//        meals[1] = savedLunch.split(":")[0];
-//        meals[2] = savedDinner.split(":")[0];
-//        me.putExtra("meals", meals);
-//
-//        updateMealsIfNeeded();
-//    }
-
-
-
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
-//
-//        if(viewId == btMealsMenu.getId())
-//            sendToSelected(v);
-//
-//        if(viewId == btWriteMealsToExternalFile.getId())
-//            write();
-//
-//        if(viewId == btReadMealsFromExternalFile.getId())
-//            showFileData();
     }
 }

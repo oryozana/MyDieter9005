@@ -27,9 +27,14 @@ import java.util.ArrayList;
 
 public class MealOverviewFragment extends Fragment implements View.OnClickListener {
 
-    private Meal meal;
+    private String fromWhere;
+    private Meal meal, tmpMeal;
 
+    LinearLayout mealOverviewMealSelectorLinearLayout;
+
+    HomeFragment homeFragment = new HomeFragment();
     FoodSelectionFragment foodSelectionFragment = new FoodSelectionFragment();
+    CustomMealsFragment customMealsFragment = new CustomMealsFragment();
 
     TextView tvMealOverviewMealName, tvMealOverviewMealGrams;
     TextView tvMealOverviewMealCalories, tvMealOverviewMealProteins, tvMealOverviewMealFats;
@@ -41,8 +46,27 @@ public class MealOverviewFragment extends Fragment implements View.OnClickListen
 
     Spinner sMealOverviewSelectMeal;
 
-    public MealOverviewFragment(Meal meal){
+    String mealType;
+    boolean actNormal = true;
+
+    public MealOverviewFragment(String fromWhere, Meal meal){
+        this.fromWhere = fromWhere;
+        this.tmpMeal = new Meal(meal.getName(), meal.getNeededIngredientsForMeal2());
         this.meal = meal;
+    }
+
+    public MealOverviewFragment(Meal meal, String mealType){
+        fromWhere = "HomeFragment";
+        this.mealType = mealType;
+        this.tmpMeal = new Meal(meal.getName(), meal.getNeededIngredientsForMeal2());
+        this.meal = meal;
+    }
+
+    public MealOverviewFragment(Meal customMeal){
+        fromWhere = "CustomMealsFragment";
+        this.tmpMeal = new Meal(customMeal.getName(), customMeal.getNeededIngredientsForMeal2());
+        this.meal = customMeal;
+        actNormal = false;
     }
 
     @Override
@@ -60,19 +84,19 @@ public class MealOverviewFragment extends Fragment implements View.OnClickListen
         super.onViewCreated(view, savedInstanceState);
 
         tvMealOverviewMealName = (TextView) view.findViewById(R.id.tvMealOverviewMealName);
-        tvMealOverviewMealName.setText("Name: " + meal.getName());
+        tvMealOverviewMealName.setText("Name: " + tmpMeal.getName());
 
         tvMealOverviewMealGrams = (TextView) view.findViewById(R.id.tvMealOverviewMealGrams);
-        tvMealOverviewMealGrams.setText("Grams: " + meal.getGrams());
+        tvMealOverviewMealGrams.setText("Grams: " + tmpMeal.getGrams());
 
         tvMealOverviewMealCalories = (TextView) view.findViewById(R.id.tvMealOverviewMealCalories);
-        tvMealOverviewMealCalories.setText("Calories: " + meal.getCalories());
+        tvMealOverviewMealCalories.setText("Calories: " + tmpMeal.getCalories());
 
         tvMealOverviewMealProteins = (TextView) view.findViewById(R.id.tvMealOverviewMealProteins);
-        tvMealOverviewMealProteins.setText("Proteins: " + meal.getProteins());
+        tvMealOverviewMealProteins.setText("Proteins: " + tmpMeal.getProteins());
 
         tvMealOverviewMealFats = (TextView) view.findViewById(R.id.tvMealOverviewMealFats);
-        tvMealOverviewMealFats.setText("Fats: " + meal.getFats());
+        tvMealOverviewMealFats.setText("Fats: " + tmpMeal.getFats());
 
         btMealOverviewConfirmMeal = (Button) view.findViewById(R.id.btMealOverviewConfirmMeal);
         btMealOverviewConfirmMeal.setOnClickListener(this);
@@ -80,6 +104,12 @@ public class MealOverviewFragment extends Fragment implements View.OnClickListen
         btMealOverviewCancelMeal.setOnClickListener(this);
 
         lvMealOverviewIngredients = (ListView) view.findViewById(R.id.lvMealOverviewIngredients);
+
+        mealOverviewMealSelectorLinearLayout = (LinearLayout) view.findViewById(R.id.mealOverviewMealSelectorLinearLayout);
+        if(fromWhere.equals("CustomMealsFragment") && actNormal)
+            mealOverviewMealSelectorLinearLayout.setVisibility(View.INVISIBLE);
+        if(fromWhere.equals("HomeFragment"))
+            mealOverviewMealSelectorLinearLayout.setVisibility(View.INVISIBLE);
 
         sMealOverviewSelectMeal = (Spinner) view.findViewById(R.id.sMealOverviewSelectMeal);
         String[] selectMealOptions = new String[]{"Breakfast", "Lunch", "Dinner"};
@@ -94,7 +124,7 @@ public class MealOverviewFragment extends Fragment implements View.OnClickListen
 //        for(int i = 0; i < meal.getNeededIngredientsForMeal().size(); i++)
 //            neededIngredients.add(new Ingredient(meal.getNeededIngredientsForMeal().get(i)));
 
-        ingredientsAdapter = new IngredientListAdapter(getActivity(), meal.getNeededIngredientsForMeal());
+        ingredientsAdapter = new IngredientListAdapter(getActivity(), tmpMeal.getNeededIngredientsForMeal());
         lvMealOverviewIngredients.setAdapter(ingredientsAdapter);
         lvMealOverviewIngredients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -110,6 +140,8 @@ public class MealOverviewFragment extends Fragment implements View.OnClickListen
         AlertDialog ad;
         AlertDialog.Builder adb;
         adb = new AlertDialog.Builder(getActivity());
+
+        Ingredient tmpIngredient = new Ingredient(ingredient);
 
         View customAlertDialog = LayoutInflater.from(getActivity()).inflate(R.layout.ingredient_overview_alert_dialog, null);
         TextView tvAlertDialogIngredientName = (TextView) customAlertDialog.findViewById(R.id.tvAlertDialogIngredientName);
@@ -136,10 +168,10 @@ public class MealOverviewFragment extends Fragment implements View.OnClickListen
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!etAlertDialogIngredientGrams.getText().toString().equals("")){
-                    ingredient.setGrams(Integer.parseInt(etAlertDialogIngredientGrams.getText().toString()));
-                    tvAlertDialogIngredientCalories.setText("Calories: " + ingredient.getCalories());
-                    tvAlertDialogIngredientProteins.setText("Proteins: " + ingredient.getProteins());
-                    tvAlertDialogIngredientFats.setText("Fats: " + ingredient.getFats());
+                    tmpIngredient.setGrams(Integer.parseInt(etAlertDialogIngredientGrams.getText().toString()));
+                    tvAlertDialogIngredientCalories.setText("Calories: " + tmpIngredient.getCalories());
+                    tvAlertDialogIngredientProteins.setText("Proteins: " + tmpIngredient.getProteins());
+                    tvAlertDialogIngredientFats.setText("Fats: " + tmpIngredient.getFats());
                 }
                 else{
                     tvAlertDialogIngredientCalories.setText("Calories: 0");
@@ -173,15 +205,16 @@ public class MealOverviewFragment extends Fragment implements View.OnClickListen
                 if(passTests){
                     Toast.makeText(getActivity(), "Ingredient successfully changed.", Toast.LENGTH_SHORT).show();
 
+                    ingredient.setGrams(tmpIngredient.getGrams());
                     int grams = Integer.parseInt(etAlertDialogIngredientGrams.getText().toString());
                     Ingredient tmpIngredient = new Ingredient(Ingredient.getIngredientByName(ingredient.getName()), grams);
-                    meal.removeNeededIngredientForMeal(ingredient);
-                    meal.addNeededIngredientForMeal(tmpIngredient);
+                    tmpMeal.removeNeededIngredientForMeal(ingredient);
+                    tmpMeal.addNeededIngredientForMeal(tmpIngredient);
 
-                    tvMealOverviewMealGrams.setText("Grams: " + meal.getGrams());
-                    tvMealOverviewMealCalories.setText("Calories: " + meal.getCalories());
-                    tvMealOverviewMealProteins.setText("Proteins: " + meal.getProteins());
-                    tvMealOverviewMealFats.setText("Fats: " + meal.getFats());
+                    tvMealOverviewMealGrams.setText("Grams: " + tmpMeal.getGrams());
+                    tvMealOverviewMealCalories.setText("Calories: " + tmpMeal.getCalories());
+                    tvMealOverviewMealProteins.setText("Proteins: " + tmpMeal.getProteins());
+                    tvMealOverviewMealFats.setText("Fats: " + tmpMeal.getFats());
                     ingredientsAdapter.notifyDataSetChanged();
 
                     ad.cancel();
@@ -211,10 +244,30 @@ public class MealOverviewFragment extends Fragment implements View.OnClickListen
         if(passTests){
             Toast.makeText(getActivity(), "Meal successfully added.", Toast.LENGTH_SHORT).show();
             String selectedMeal = sMealOverviewSelectMeal.getSelectedItem().toString();
-            DailyMenu.getTodayMenu().addMealByMealName(selectedMeal, meal);
+            DailyMenu.getTodayMenu().addMealByMealName(selectedMeal, tmpMeal);
             DailyMenu.saveDailyMenuIntoFile(DailyMenu.getTodayMenu(), getActivity());
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, foodSelectionFragment).commit();
         }
+    }
+
+    public void updateMeal(){
+        Toast.makeText(getActivity(), "Meal successfully changed.", Toast.LENGTH_SHORT).show();
+        DailyMenu.getTodayMenu().replaceMeal(tmpMeal, mealType);
+        DailyMenu.saveDailyMenuIntoFile(DailyMenu.getTodayMenu(), getActivity());
+    }
+
+    public void updateCustomMeal(){
+        Toast.makeText(getActivity(), "Meal successfully changed.", Toast.LENGTH_SHORT).show();
+        DailyMenu.saveCustomMeal(tmpMeal);
+        DailyMenu.saveDailyMenuIntoFile(DailyMenu.getTodayMenu(), getActivity());
+    }
+
+    public void exitMealOverview(){
+        if(fromWhere.equals("HomeFragment"))
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, homeFragment).commit();
+        if(fromWhere.equals("FoodSelectionFragment"))
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, foodSelectionFragment).commit();
+        if(fromWhere.equals("CustomMealsFragment"))
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, customMealsFragment).commit();
     }
 
     @Override
@@ -222,9 +275,21 @@ public class MealOverviewFragment extends Fragment implements View.OnClickListen
         int viewId = v.getId();
 
         if(viewId == btMealOverviewCancelMeal.getId())
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, foodSelectionFragment).commit();
+            exitMealOverview();
 
-        if(viewId == btMealOverviewConfirmMeal.getId())
-            addMealIntoTodayMenu();
+        if(viewId == btMealOverviewConfirmMeal.getId()){
+            if(fromWhere.equals("HomeFragment"))
+                updateMeal();
+            if(fromWhere.equals("FoodSelectionFragment"))
+                addMealIntoTodayMenu();
+
+            if(fromWhere.equals("CustomMealsFragment")){
+                if(actNormal)
+                    updateCustomMeal();
+                else
+                    addMealIntoTodayMenu();
+            }
+            exitMealOverview();
+        }
     }
 }
