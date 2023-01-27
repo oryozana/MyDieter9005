@@ -8,10 +8,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 public class FileAndDatabaseHelper {
     private static SQLiteDatabase sqdb;
@@ -70,6 +73,39 @@ public class FileAndDatabaseHelper {
             return activeSong;
         }
         return activeSong;
+    }
+
+    public User getPrimaryUser(ArrayList<User> users){
+        String[] dataParts = getFileData("primary_user").split("\n");
+
+        String username = dataParts[0].split(": ")[1];
+        String password = dataParts[1].split(": ")[1];
+
+        if(username.replaceAll(" ", "").equals(""))
+            return null;
+
+        if(password.replaceAll(" ", "").equals(""))
+            return null;
+
+        for(int i = 0; i < users.size(); i++){
+            if(users.get(i).getUsername().equals(username)){
+                if(users.get(i).getPassword().equals(password))
+                    return users.get(i);
+                else
+                    Toast.makeText(context, "Password has changed, login again.", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public String getPrimaryUserName(){
+        String[] dataParts = getFileData("primary_user").split("\n");
+        String username = dataParts[0].split(": ")[1];
+
+        if(username.replaceAll(" ", "").equals(""))
+            return "";
+        return username;
     }
 
     public void updateUserPasswordInLocalDatabase(User user, String newPassword){

@@ -5303,4 +5303,22 @@ public class removedFunctions {
 //    android:text="Finish" />
 //
 //</LinearLayout>
+
+    //      From: musicMaster and SettingsSetter
+//            if(cameToMusicMasterFrom.equals("finishMeals"))
+//                    me.setClass(musicMaster.this, finishMeals.class);
+//        if(cameToMusicMasterFrom.equals("customMeals"))
+//                me.setClass(musicMaster.this, customMeals.class);
+//        if(cameToMusicMasterFrom.equals("customSelection"))
+//                me.setClass(musicMaster.this, customSelection.class);
+//            if(cameToMusicMasterFrom.equals("ingredientsSelection"))
+//                    me.setClass(musicMaster.this, ingredientsSelection.class);
+//                if(cameToSettingsFrom.equals("finishMeals"))
+//                        me.setClass(settingsSetter.this, finishMeals.class);
+//            if(cameToSettingsFrom.equals("customMeals"))
+//                    me.setClass(settingsSetter.this, customMeals.class);
+//            if(cameToSettingsFrom.equals("customSelection"))
+//                    me.setClass(settingsSetter.this, customSelection.class);
+//                        if(cameToSettingsFrom.equals("ingredientsSelection"))
+//                                me.setClass(settingsSetter.this, ingredientsSelection.class);
 }

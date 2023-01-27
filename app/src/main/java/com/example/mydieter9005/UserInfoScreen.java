@@ -35,10 +35,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 public class UserInfoScreen extends AppCompatActivity implements View.OnClickListener {
 
@@ -47,7 +50,8 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    Button btSendToProfilePictureSelection, btChangePassword, btShareUserByCode, btLogoutUser, btDeleteUser;
+    Button btSendToProfilePictureSelection, btChangePassword, btShareUserByCode;
+    Button btSetPrimaryUser, btRemovePrimaryUser, btLogoutUser, btDeleteUser;
     EditText etGetOldPassword, etGetNewPassword;
     TextView tvUsernameDisplay;
     ImageView ivProfilePicture;
@@ -68,6 +72,10 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
 
     FirebaseDatabase usersDb;
     DatabaseReference databaseReference;
+
+    FileOutputStream fos;
+    OutputStreamWriter osw;
+    BufferedWriter bw;
 
     SQLiteDatabase sqdb;
     DBHelper my_db;
@@ -98,6 +106,10 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         btChangePassword.setOnClickListener(this);
         btShareUserByCode = (Button) findViewById(R.id.btShareUserByCode);
         btShareUserByCode.setOnClickListener(this);
+        btRemovePrimaryUser = (Button) findViewById(R.id.btRemovePrimaryUser);
+        btRemovePrimaryUser.setOnClickListener(this);
+        btSetPrimaryUser = (Button) findViewById(R.id.btSetPrimaryUser);
+        btSetPrimaryUser.setOnClickListener(this);
         btLogoutUser = (Button) findViewById(R.id.btLogoutUser);
         btLogoutUser.setOnClickListener(this);
         btDeleteUser = (Button) findViewById(R.id.btDeleteUser);
@@ -128,6 +140,15 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
 
         fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
         activeSong = fileAndDatabaseHelper.implementSettingsData();
+
+        if(fileAndDatabaseHelper.getPrimaryUserName().equals(user.getUsername())) {
+            btRemovePrimaryUser.setVisibility(View.VISIBLE);
+            btSetPrimaryUser.setVisibility(View.GONE);
+        }
+        else {
+            btRemovePrimaryUser.setVisibility(View.GONE);
+            btSetPrimaryUser.setVisibility(View.VISIBLE);
+        }
 
         nextPicture();
         setCustomNetworkConnectionReceiver();
@@ -350,6 +371,52 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         ad = adb.create();
         ad.show();
     }
+
+    public void setPrimaryUser(){
+        Toast.makeText(this, "Primary user selected.", Toast.LENGTH_SHORT).show();
+        btRemovePrimaryUser.setVisibility(View.VISIBLE);
+        btSetPrimaryUser.setVisibility(View.GONE);
+
+        try {
+            fos = openFileOutput("primary_user", Context.MODE_PRIVATE);
+            osw = new OutputStreamWriter(fos);
+            bw = new BufferedWriter(osw);
+
+            bw.write("Username: " + user.getUsername() + "\n");
+            bw.write("Password: " + user.getPassword());
+
+            bw.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removePrimaryUser(){
+        Toast.makeText(this, "Primary user deselected.", Toast.LENGTH_SHORT).show();
+        btRemovePrimaryUser.setVisibility(View.GONE);
+        btSetPrimaryUser.setVisibility(View.VISIBLE);
+
+        try {
+            fos = openFileOutput("primary_user", Context.MODE_PRIVATE);
+            osw = new OutputStreamWriter(fos);
+            bw = new BufferedWriter(osw);
+
+            bw.write("Username: " + " " + "\n");
+            bw.write("Password: " + " ");
+
+            bw.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     
     public void deleteUser(){
         if(internetConnection){
@@ -359,6 +426,9 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
             sqdb = my_db.getWritableDatabase();
             sqdb.delete(DBHelper.TABLE_NAME, DBHelper.USERNAME + "=?", new String[]{user.getUsername()});
             sqdb.close();
+
+            if(fileAndDatabaseHelper.getPrimaryUserName().equals(user.getUsername()))
+                removePrimaryUser();
 
             Toast.makeText(this, "User deleted successfully.", Toast.LENGTH_SHORT).show();
             logoutUser();
@@ -370,6 +440,7 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
     public void logoutUser(){
         User.setCurrentUser(null);
         me.setClass(UserInfoScreen.this, LocalUserSelection.class);
+        me.putExtra("cameFromLogout", true);
         startActivity(me);
     }
 
@@ -540,6 +611,12 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
 
         if(viewId == btShareUserByCode.getId())
             showCodeGenerator();
+
+        if(viewId == btRemovePrimaryUser.getId())
+            removePrimaryUser();
+
+        if(viewId == btSetPrimaryUser.getId())
+            setPrimaryUser();
     }
 
     @Override

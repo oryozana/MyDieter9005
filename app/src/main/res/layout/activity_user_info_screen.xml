@@ -139,6 +139,21 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/btSetPrimaryUser"
+                android:layout_width="125pt"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2pt"
+                android:text="Set primary user" />
+
+            <Button
+                android:id="@+id/btRemovePrimaryUser"
+                android:layout_width="125pt"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2pt"
+                android:visibility="gone"
+                android:text="Remove primary user" />
+
+            <Button
                 android:id="@+id/btLogoutUser"
                 android:layout_width="125pt"
                 android:layout_height="wrap_content"

@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public Intent createTheFirstIntent(Intent me){
         if(!me.hasExtra("exists")){
-            me = new Intent(this, finishMeals.class);
+            me = new Intent(this, UserInfoScreen.class);
             me.putExtra("exists", true);
 
             me.putExtra("playMusic", true);

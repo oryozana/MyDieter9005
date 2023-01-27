@@ -130,7 +130,7 @@ public class ingredientsPickup extends AppCompatActivity implements View.OnClick
     }
 
     public void finishIngredientsPickup(){
-        me.setClass(this, finishMeals.class);
+        me.setClass(this, MainActivity.class);
         startActivity(me);
     }
 

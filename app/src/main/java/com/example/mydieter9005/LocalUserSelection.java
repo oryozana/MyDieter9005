@@ -45,10 +45,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -94,6 +97,10 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
 
     FirebaseDatabase codesDb;
     DatabaseReference databaseReference;
+
+    FileOutputStream fos;
+    OutputStreamWriter osw;
+    BufferedWriter bw;
 
     SQLiteDatabase sqdb;
     DBHelper my_db;
@@ -279,6 +286,16 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         groupsAmount = (int) Math.round(Math.floor(localUsers.size() / ivUsers.length));
         if(localUsers.size() % ivUsers.length != 0)
             groupsAmount++;
+
+        checkIfPrimaryUserExists();
+    }
+
+    public void checkIfPrimaryUserExists(){
+        if(!me.hasExtra("cameFromLogout")){
+            if(fileAndDatabaseHelper.getPrimaryUser(localUsers) != null)
+                userChosen(fileAndDatabaseHelper.getPrimaryUser(localUsers));
+            me.removeExtra("cameFromLogout");
+        }
     }
 
     private int localUsersSavedOnDatabaseAmount() {
@@ -328,6 +345,9 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
                 sqdb.delete(DBHelper.TABLE_NAME, DBHelper.USERNAME + "=?", new String[]{user.getUsername()});
                 sqdb.close();
 
+                if(fileAndDatabaseHelper.getPrimaryUserName().equals(user.getUsername()))
+                    removePrimaryUser();
+
                 me.setClass(LocalUserSelection.this, LocalUserSelection.class);
                 startActivity(me);
 
@@ -337,6 +357,25 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
 
         ad = adb.create();
         ad.show();
+    }
+
+    public void removePrimaryUser(){
+        try {
+            fos = openFileOutput("primary_user", Context.MODE_PRIVATE);
+            osw = new OutputStreamWriter(fos);
+            bw = new BufferedWriter(osw);
+
+            bw.write("Username: " + " " + "\n");
+            bw.write("Password: " + " ");
+
+            bw.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void userChosen(User user){
