@@ -75,37 +75,31 @@ public class FileAndDatabaseHelper {
         return activeSong;
     }
 
-    public User getPrimaryUser(ArrayList<User> users){
+    public void obtainAndSetPrimaryUser(){
         String[] dataParts = getFileData("primary_user").split("\n");
 
         String username = dataParts[0].split(": ")[1];
         String password = dataParts[1].split(": ")[1];
+        ArrayList<User> users = User.obtainLocalUsers();
+        boolean found = false;
 
-        if(username.replaceAll(" ", "").equals(""))
-            return null;
-
-        if(password.replaceAll(" ", "").equals(""))
-            return null;
-
-        for(int i = 0; i < users.size(); i++){
-            if(users.get(i).getUsername().equals(username)){
-                if(users.get(i).getPassword().equals(password))
-                    return users.get(i);
-                else
-                    Toast.makeText(context, "Password has changed, login again.", Toast.LENGTH_SHORT).show();
-                return null;
+        if(username.replaceAll(" ", "").equals("") || password.replaceAll(" ", "").equals(""))
+            User.setPrimaryUser(null);
+        else{
+            for(int i = 0; i < users.size() && !found; i++){
+                if(users.get(i).getUsername().equals(username)){
+                    if(users.get(i).getPassword().equals(password)) {
+                        User.setPrimaryUser(users.get(i));
+                        found = true;
+                    }
+                    else
+                        Toast.makeText(context, "Password has changed, login again.", Toast.LENGTH_SHORT).show();
+                }
             }
         }
-        return null;
-    }
 
-    public String getPrimaryUserName(){
-        String[] dataParts = getFileData("primary_user").split("\n");
-        String username = dataParts[0].split(": ")[1];
-
-        if(username.replaceAll(" ", "").equals(""))
-            return "";
-        return username;
+        if(!found)
+            User.setPrimaryUser(null);
     }
 
     public void updateUserPasswordInLocalDatabase(User user, String newPassword){

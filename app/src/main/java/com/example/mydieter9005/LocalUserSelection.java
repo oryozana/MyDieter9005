@@ -287,13 +287,15 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         if(localUsers.size() % ivUsers.length != 0)
             groupsAmount++;
 
+        User.setLocalUsers(localUsers);
         checkIfPrimaryUserExists();
     }
 
     public void checkIfPrimaryUserExists(){
+        fileAndDatabaseHelper.obtainAndSetPrimaryUser();
         if(!me.hasExtra("cameFromLogout")){
-            if(fileAndDatabaseHelper.getPrimaryUser(localUsers) != null)
-                userChosen(fileAndDatabaseHelper.getPrimaryUser(localUsers));
+            if(User.obtainPrimaryUser() != null)
+                userChosen(User.obtainPrimaryUser());
             me.removeExtra("cameFromLogout");
         }
     }
@@ -345,7 +347,7 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
                 sqdb.delete(DBHelper.TABLE_NAME, DBHelper.USERNAME + "=?", new String[]{user.getUsername()});
                 sqdb.close();
 
-                if(fileAndDatabaseHelper.getPrimaryUserName().equals(user.getUsername()))
+                if(User.obtainPrimaryUser().getUsername().equals(user.getUsername()))
                     removePrimaryUser();
 
                 me.setClass(LocalUserSelection.this, LocalUserSelection.class);

@@ -5321,4 +5321,38 @@ public class removedFunctions {
 //                    me.setClass(settingsSetter.this, customSelection.class);
 //                        if(cameToSettingsFrom.equals("ingredientsSelection"))
 //                                me.setClass(settingsSetter.this, ingredientsSelection.class);
+
+    //      From: FileAndDatabaseHelper:
+//    public User getPrimaryUser(ArrayList<User> users){
+//        String[] dataParts = getFileData("primary_user").split("\n");
+//
+//        String username = dataParts[0].split(": ")[1];
+//        String password = dataParts[1].split(": ")[1];
+//
+//        if(username.replaceAll(" ", "").equals(""))
+//            return null;
+//
+//        if(password.replaceAll(" ", "").equals(""))
+//            return null;
+//
+//        for(int i = 0; i < users.size(); i++){
+//            if(users.get(i).getUsername().equals(username)){
+//                if(users.get(i).getPassword().equals(password))
+//                    return users.get(i);
+//                else
+//                    Toast.makeText(context, "Password has changed, login again.", Toast.LENGTH_SHORT).show();
+//                return null;
+//            }
+//        }
+//        return null;
+//    }
+//
+//    public String getPrimaryUserName(){
+//        String[] dataParts = getFileData("primary_user").split("\n");
+//        String username = dataParts[0].split(": ")[1];
+//
+//        if(username.replaceAll(" ", "").equals(""))
+//            return "";
+//        return username;
+//    }
 }

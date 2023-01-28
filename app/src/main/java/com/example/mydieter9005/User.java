@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class User implements Serializable {
+    private static ArrayList<User> localUsers;
+    private static User PrimaryUser;
     private static User currentUser;
     private String username;
     private String password;
@@ -86,6 +88,22 @@ public class User implements Serializable {
 
     public void setProfilePictureId(int profilePictureId) {
         this.profilePictureId = profilePictureId;
+    }
+
+    public static ArrayList<User> obtainLocalUsers() {
+        return localUsers;
+    }
+
+    public static void setLocalUsers(ArrayList<User> localUsers) {
+        User.localUsers = localUsers;
+    }
+
+    public static User obtainPrimaryUser() {
+        return PrimaryUser;
+    }
+
+    public static void setPrimaryUser(User primaryUser) {
+        PrimaryUser = primaryUser;
     }
 
     public static User getCurrentUser() {

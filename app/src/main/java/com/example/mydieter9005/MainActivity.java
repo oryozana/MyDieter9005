@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 firstInitiateSettingsFile();
                 firstInitiateCustomMealsNamesFile();
                 firstInitiateLocalUsersDatabase();
+                firstInitiatePrimaryUserFile();
                 firstInitiateDailyMenusFile();
                 implementSettingsData();
             }
@@ -383,6 +384,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bw = new BufferedWriter(osw);
 
             bw.write("Daily menus: " + "\n");
+
+            bw.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void firstInitiatePrimaryUserFile(){
+        try {
+            fos = openFileOutput("primary_user", Context.MODE_PRIVATE);
+            osw = new OutputStreamWriter(fos);
+            bw = new BufferedWriter(osw);
+
+            bw.write("Username: " + " " + "\n");
+            bw.write("Password: " + " ");
 
             bw.close();
         }

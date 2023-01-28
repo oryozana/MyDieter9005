@@ -141,9 +141,15 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
         activeSong = fileAndDatabaseHelper.implementSettingsData();
 
-        if(fileAndDatabaseHelper.getPrimaryUserName().equals(user.getUsername())) {
-            btRemovePrimaryUser.setVisibility(View.VISIBLE);
-            btSetPrimaryUser.setVisibility(View.GONE);
+        if(User.obtainPrimaryUser() != null) {
+            if(User.obtainPrimaryUser().getUsername().equals(user.getUsername())){
+                btRemovePrimaryUser.setVisibility(View.VISIBLE);
+                btSetPrimaryUser.setVisibility(View.GONE);
+            }
+            else {
+                btRemovePrimaryUser.setVisibility(View.GONE);
+                btSetPrimaryUser.setVisibility(View.VISIBLE);
+            }
         }
         else {
             btRemovePrimaryUser.setVisibility(View.GONE);
@@ -376,6 +382,7 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         Toast.makeText(this, "Primary user selected.", Toast.LENGTH_SHORT).show();
         btRemovePrimaryUser.setVisibility(View.VISIBLE);
         btSetPrimaryUser.setVisibility(View.GONE);
+        User.setPrimaryUser(user);
 
         try {
             fos = openFileOutput("primary_user", Context.MODE_PRIVATE);
@@ -399,6 +406,7 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         Toast.makeText(this, "Primary user deselected.", Toast.LENGTH_SHORT).show();
         btRemovePrimaryUser.setVisibility(View.GONE);
         btSetPrimaryUser.setVisibility(View.VISIBLE);
+        User.setPrimaryUser(null);
 
         try {
             fos = openFileOutput("primary_user", Context.MODE_PRIVATE);
@@ -427,8 +435,10 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
             sqdb.delete(DBHelper.TABLE_NAME, DBHelper.USERNAME + "=?", new String[]{user.getUsername()});
             sqdb.close();
 
-            if(fileAndDatabaseHelper.getPrimaryUserName().equals(user.getUsername()))
-                removePrimaryUser();
+            if(User.obtainPrimaryUser() != null){
+                if(User.obtainPrimaryUser().getUsername().equals(user.getUsername()))
+                    removePrimaryUser();
+            }
 
             Toast.makeText(this, "User deleted successfully.", Toast.LENGTH_SHORT).show();
             logoutUser();
