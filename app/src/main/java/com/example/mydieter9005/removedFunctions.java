@@ -5355,4 +5355,559 @@ public class removedFunctions {
 //            return "";
 //        return username;
 //    }
+
+    //      From: Code, TemporaryCode and UserRandomCode:
+    //package com.example.mydieter9005;
+//
+//public class Code {
+//    final int codeMaximumLength = 8;
+//    protected String code;
+//    protected String type;
+//
+//    public Code(String code) {
+//        this.code = code;
+//        this.type = "Code";
+//    }
+//
+//    public String getCode() {
+//        return code;
+//    }
+//
+//    public void setCode(String code) {
+//        this.code = code;
+//    }
+//
+//    public String getType() {
+//        return type;
+//    }
+//
+//    public void setType(String type) {
+//        this.type = type;
+//    }
+//}
+//
+//class TemporaryCode extends Code {
+//    protected String expirationTime;
+//
+//    public TemporaryCode(String code, String expirationTime) {
+//        super(code);
+//        this.expirationTime = expirationTime.replaceAll("\\.", "*");
+//        this.type= "TemporaryCode";
+//    }
+//
+//    public String getExpirationTime() {
+//        return expirationTime;
+//    }
+//
+//    public void setExpirationTime(String expirationTime) {
+//        this.expirationTime = expirationTime;
+//    }
+//}
+//package com.example.mydieter9005;
+//
+//import java.util.ArrayList;
+//
+//    public class UserRandomCode extends TemporaryCode {
+//        private ArrayList<User> users;
+//
+//        public UserRandomCode(ArrayList<User> users, String expirationTime) {
+//            super(null, expirationTime);
+//            super.code = this.generateRandomCode();
+//            this.users = users;
+//            this.type = "UserRandomCode";
+//        }
+//
+//        public String generateRandomCode(){
+//            String allLettersAndDigits = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvxyz0123456789";
+//
+//            String randomCode = "";
+//            for(int i = 0; i < codeMaximumLength; i++)
+//                randomCode += allLettersAndDigits.charAt((int)(Math.random() * allLettersAndDigits.length()));
+//
+//            return randomCode;
+//        }
+//
+//        public ArrayList<User> getUsers() {
+//            return users;
+//        }
+//
+//        public void setUsers(ArrayList<User> users) {
+//            this.users = users;
+//        }
+//    }
+
+            // From: CustomMealsFragment:
+
+//    public Meal getMealByCodeFromFirebase(String code){
+//        Meal tmpMeal = null;
+//        databaseReference = FirebaseDatabase.getInstance().getReference("codes");
+//        databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                databaseReference = FirebaseDatabase.getInstance().getReference("codes");
+//                databaseReference.child(code).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                        if (isAdded() && isVisible() && getUserVisibleHint()) {
+//                            if (task.isSuccessful()) {
+//                                if (task.getResult().exists()) {
+//                                    DataSnapshot dataSnapshot = task.getResult();
+//
+//                                    LocalDateTime expirationTime = LocalDateTime.parse(String.valueOf(dataSnapshot.child("expirationTime").getValue()).replaceAll("\\*", "\\."));
+//                                    boolean isExpired = LocalDateTime.now(ZoneId.of("Asia/Jerusalem")).isAfter(expirationTime);
+//
+//                                    Meal tmpMeal = new Meal("");
+//
+//                                    if (!isExpired) {
+//                                        DataSnapshot customMealInfo = dataSnapshot.child("meal");
+//                                        tmpMeal.setName(customMealInfo.child("name").getValue().toString());
+//                                        DataSnapshot customMealIngredients = customMealInfo.child("neededIngredientsForMeal");
+//
+//                                        Ingredient tmpIngredient;
+//                                        String ingredientName;
+//                                        int ingredientGrams;
+//
+//                                        for (int i = 0; i < customMealIngredients.getChildrenCount(); i++) {
+//                                            ingredientName = (customMealIngredients.child(i + "").child("name").getValue().toString());
+//                                            ingredientGrams = Integer.parseInt((customMealIngredients.child(i + "").child("grams").getValue().toString()));
+//
+//                                            tmpIngredient = new Ingredient(Ingredient.getIngredientByName(ingredientName), ingredientGrams);
+//                                            tmpMeal.addNeededIngredientForMeal(tmpIngredient);
+//                                        }
+//
+//                                        Toast.makeText(getActivity(), "Meal successfully found!.", Toast.LENGTH_SHORT).show();
+//
+////                                            me.setClass(getActivity(), LocalUserSelection.class);
+////                                            startActivity(me);
+//                                    }
+//                                    else
+//                                        Toast.makeText(getActivity(), "Code expired.", Toast.LENGTH_SHORT).show();
+//                                }
+//                                else
+//                                    Toast.makeText(getActivity(), "Code incorrect.", Toast.LENGTH_SHORT).show();
+//                            }
+//                            else
+//                                Toast.makeText(getActivity(), "Code incorrect.", Toast.LENGTH_SHORT).show();
+//
+//                            .setVisibility(View.GONE);
+//                            useOrGenerateCodesLinearLayout.setVisibility(View.VISIBLE);
+//                        }
+//                    }
+//                });
+//            }
+//        });
+//
+//        return tmpMeal;
+//    }
+
+//    public void recipeCodeAlertDialog(Meal targetMeal){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(getActivity());
+//
+//        View customAlertDialog = LayoutInflater.from(getActivity()).inflate(R.layout.recipe_code_alert_dialog, null);
+//        LinearLayout useOrGenerateCodesLinearLayout = (LinearLayout) customAlertDialog.findViewById(R.id.useOrGenerateCodesLinearLayout);
+//        LinearLayout loadingLinearLayout = (LinearLayout) customAlertDialog.findViewById(R.id.loadingLinearLayout);
+//
+//        TextView tvTimeBeforeExpiration = (TextView) customAlertDialog.findViewById(R.id.tvTimeBeforeExpiration);
+//        TextView tvChooseCodeDuration = (TextView) customAlertDialog.findViewById(R.id.tvChooseCodeDuration);
+//        TextView tvShowGeneratedCode = (TextView) customAlertDialog.findViewById(R.id.tvShowGeneratedCode);
+//        TextView tvCodeState = (TextView) customAlertDialog.findViewById(R.id.tvCodeState);
+//
+//        EditText etEnterCode = (EditText) customAlertDialog.findViewById(R.id.etEnterCode);
+//
+//        Button btGenerateCode = (Button) customAlertDialog.findViewById(R.id.btGenerateCode);
+//        Button btAcceptDuration = (Button) customAlertDialog.findViewById(R.id.btAcceptDuration);
+//
+//        Button btUseCode = (Button) customAlertDialog.findViewById(R.id.btUseCode);
+//        Button btCheckCode = (Button) customAlertDialog.findViewById(R.id.btCheckCode);
+//
+//        Button btBack = (Button) customAlertDialog.findViewById(R.id.btBack);
+//        btBack.setOnClickListener(this);
+//
+//        ImageButton ibtShowCopyCodeOption = (ImageButton) customAlertDialog.findViewById(R.id.ibtShowCopyCodeOption);
+//        ibtShowCopyCodeOption.setOnClickListener(this);
+//
+//        RadioGroup rgChooseDuration = (RadioGroup) customAlertDialog.findViewById(R.id.rgChooseDuration);
+//        RadioButton rbOneHour = (RadioButton) customAlertDialog.findViewById(R.id.rbOneHour);
+//        RadioButton rbEightHours = (RadioButton) customAlertDialog.findViewById(R.id.rbEightHours);
+//        RadioButton rbOneDay = (RadioButton) customAlertDialog.findViewById(R.id.rbOneDay);
+//        RadioButton rbOneWeek = (RadioButton) customAlertDialog.findViewById(R.id.rbOneWeek);
+//        RadioButton rbUnlimited = (RadioButton) customAlertDialog.findViewById(R.id.rbUnlimited);
+//
+//        adb.setView(customAlertDialog);
+//        ad = adb.create();
+//
+//
+//        btCheckCode.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String code = etEnterCode.getText().toString();
+//                if(internetConnection){
+//                    boolean passTests = true;
+//                    int normalCodeLength = 8;
+//
+//                    if(code.replaceAll(" ", "").equals("")){
+//                        Toast.makeText(getActivity(), "Can't left the field 'code' empty.", Toast.LENGTH_SHORT).show();
+//                        passTests = false;
+//                    }
+//
+//                    if(code.length() != normalCodeLength && passTests){
+//                        Toast.makeText(getActivity(), "Codes should be 8 characters long.", Toast.LENGTH_SHORT).show();
+//                        passTests = false;
+//                    }
+//
+//                    if(passTests){
+//                        useOrGenerateCodesLinearLayout.setVisibility(View.GONE);
+//                        loadingLinearLayout.setVisibility(View.VISIBLE);
+//
+//                        databaseReference = FirebaseDatabase.getInstance().getReference("codes");
+//                        databaseReference.child(code).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                                if(task.isSuccessful()){
+//                                    if(task.getResult().exists()){
+//                                        DataSnapshot dataSnapshot = task.getResult();
+//
+//                                        LocalDateTime expirationTime = LocalDateTime.parse(String.valueOf(dataSnapshot.child("expirationTime").getValue()).replaceAll("\\*", "\\."));
+//                                        boolean isExpired = LocalDateTime.now(ZoneId.of("Asia/Jerusalem")).isAfter(expirationTime);
+//
+//                                        Meal tmpMeal = new Meal("");
+//
+//                                        if(!isExpired){
+//                                            tmpMeal.setName(dataSnapshot.getKey());
+//                                            String ingredientName;
+//                                            int ingredientGrams;
+//
+//                                            for (int i = 0; i < dataSnapshot.getChildrenCount(); i++) {
+//                                                ingredientName = (dataSnapshot.child(i + "").getValue().toString()).split(": ")[0];;
+//                                                ingredientGrams = Integer.parseInt((dataSnapshot.child(i + "").getValue().toString().split(": "))[1].split(" ")[0]);
+//                                                tmpMeal.addNeededIngredientForMeal(new Ingredient(Ingredient.getIngredientByName(ingredientName), ingredientGrams));
+//                                            }
+//
+//                                            Toast.makeText(getActivity(), "Meal successfully found!.", Toast.LENGTH_SHORT).show();
+//
+////                                            me.setClass(getActivity(), LocalUserSelection.class);
+////                                            startActivity(me);
+//                                        }
+//                                        else
+//                                            Toast.makeText(getActivity(), "Code expired.", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                    else
+//                                        Toast.makeText(getActivity(), "Code incorrect.", Toast.LENGTH_SHORT).show();
+//                                }
+//                                else
+//                                    Toast.makeText(getActivity(), "Code incorrect.", Toast.LENGTH_SHORT).show();
+//
+//                                loadingLinearLayout.setVisibility(View.GONE);
+//                                useOrGenerateCodesLinearLayout.setVisibility(View.VISIBLE);
+//                            }
+//                        });
+//                    }
+//                }
+//                else
+//                    Toast.makeText(getActivity(), "No internet connection, can't use codes.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        btUseCode.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                btGenerateCode.setVisibility(View.GONE);
+//                btUseCode.setVisibility(View.GONE);
+//
+//                tvCodeState.setText("Enter your code in here:");
+//                etEnterCode.setVisibility(View.VISIBLE);
+//                btCheckCode.setVisibility(View.VISIBLE);
+//                btBack.setVisibility(View.VISIBLE);
+//            }
+//        });
+//
+//        ibtShowCopyCodeOption.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+//                ClipData clip = ClipData.newPlainText("TextView", tvShowGeneratedCode.getText().toString());
+//                clipboard.setPrimaryClip(clip);
+//                clip.getDescription();
+//                Toast.makeText(getActivity(), "Copied.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        btGenerateCode.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                btGenerateCode.setVisibility(View.GONE);
+//                btUseCode.setVisibility(View.GONE);
+//
+//                tvCodeState.setText("Choose your code duration:");
+//                btAcceptDuration.setVisibility(View.VISIBLE);
+//                rgChooseDuration.setVisibility(View.VISIBLE);
+//                btBack.setVisibility(View.VISIBLE);
+//            }
+//        });
+//
+//        btAcceptDuration.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(internetConnection){
+//                    LocalDateTime expirationDate = LocalDateTime.now(ZoneId.of("Asia/Jerusalem"));
+//
+//                    int checkedRadioButtonId = rgChooseDuration.getCheckedRadioButtonId();
+//                    if(checkedRadioButtonId == rbOneHour.getId())
+//                        expirationDate = expirationDate.plusHours(1);
+//
+//                    if(checkedRadioButtonId == rbEightHours.getId())
+//                        expirationDate = expirationDate.plusHours(8);
+//
+//                    if(checkedRadioButtonId == rbOneDay.getId())
+//                        expirationDate = expirationDate.plusDays(1);
+//
+//                    if(checkedRadioButtonId == rbOneWeek.getId())
+//                        expirationDate = expirationDate.plusWeeks(1);
+//
+//                    if(checkedRadioButtonId == rbUnlimited.getId())  // A lot of time but not really unlimited.
+//                        expirationDate = expirationDate.plusYears(10);
+//
+//                    RecipeCode recipeCode = new RecipeCode(new FirebaseMeal(targetMeal), expirationDate.toString());
+//                   // String date = expirationDate.format(DateTimeFormatter.ofPattern("dd_MM_yyyy"));
+//
+//                    tvCodeState.setText("Your code is: ");
+//                    tvShowGeneratedCode.setVisibility(View.VISIBLE);
+//                    tvShowGeneratedCode.setText(recipeCode.getCode());
+//                    tvTimeBeforeExpiration.setVisibility(View.VISIBLE);
+//                    ibtShowCopyCodeOption.setVisibility(View.VISIBLE);
+//
+//                //    tvTimeBeforeExpiration.setText("You have until: " + date + " to use this code.");
+//
+//                    useOrGenerateCodesLinearLayout.setVisibility(View.GONE);
+//                    loadingLinearLayout.setVisibility(View.VISIBLE);
+//
+//                    codesDb = FirebaseDatabase.getInstance();
+//                    databaseReference = codesDb.getReference("codes");
+//                    databaseReference.child(recipeCode.getCode()).setValue(recipeCode).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            Toast.makeText(getActivity(), "Code successfully created.", Toast.LENGTH_SHORT).show();
+//
+//                            loadingLinearLayout.setVisibility(View.GONE);
+//                            useOrGenerateCodesLinearLayout.setVisibility(View.VISIBLE);
+//                        }
+//                    });
+//                }
+//                else
+//                    Toast.makeText(getActivity(), "No internet connection, can't generate code.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        btBack.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                btGenerateCode.setVisibility(View.VISIBLE);
+//                btUseCode.setVisibility(View.VISIBLE);
+//
+//                tvCodeState.setText("What are you intending to do?");
+//
+//                btCheckCode.setVisibility(View.GONE);
+//
+//                tvChooseCodeDuration.setVisibility(View.GONE);
+//                btAcceptDuration.setVisibility(View.GONE);
+//                rgChooseDuration.setVisibility(View.GONE);
+//
+//                tvTimeBeforeExpiration.setVisibility(View.GONE);
+//                etEnterCode.setVisibility(View.GONE);
+//                btCheckCode.setVisibility(View.GONE);
+//                tvShowGeneratedCode.setVisibility(View.GONE);
+//                ibtShowCopyCodeOption.setVisibility(View.GONE);
+//
+//                btBack.setVisibility(View.GONE);
+//            }
+//        });
+//
+////        Button btAlertDialogCancelIngredient = (Button) customAlertDialog.findViewById(R.id.btAlertDialogCancelIngredient);
+////        btAlertDialogCancelIngredient.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View v) {
+////                ad.cancel();
+////            }
+////        });
+//
+//        ad.show();
+//    }
+
+            // From: recipe_code_alert_dialog:
+//    <?xml version="1.0" encoding="utf-8"?>
+//<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    xmlns:app="http://schemas.android.com/apk/res-auto"
+//    android:orientation="vertical"
+//    android:gravity="center">
+//
+//    <LinearLayout
+//    android:id="@+id/useOrGenerateCodesLinearLayout"
+//    android:layout_width="160pt"
+//    android:layout_height="wrap_content"
+//    android:orientation="vertical"
+//    android:gravity="center|top">
+//
+//        <TextView
+//    android:id="@+id/tvCodeState"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:gravity="center"
+//    android:textSize="16pt"
+//    android:layout_margin="10pt"
+//    android:text="What are you intending to do?"/>
+//
+//        <Button
+//    android:id="@+id/btUseCode"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:layout_margin="2pt"
+//    android:text="Use Code" />
+//
+//        <EditText
+//    android:id="@+id/etEnterCode"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:ems="10"
+//    android:inputType="textPersonName"
+//    android:visibility="gone"
+//    android:hint="Code: " />
+//
+//        <LinearLayout
+//    android:layout_width="wrap_content"
+//    android:layout_height="wrap_content"
+//    android:orientation="horizontal"
+//    android:gravity="center"
+//    android:layoutDirection="ltr">
+//
+//            <TextView
+//    android:id="@+id/tvShowGeneratedCode"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:textSize="14pt"
+//    android:visibility="gone" />
+//
+//            <ImageButton
+//    android:id="@+id/ibtShowCopyCodeOption"
+//    android:layout_width="25pt"
+//    android:layout_height="fill_parent"
+//    android:visibility="gone"
+//    android:background="@null"
+//    app:srcCompat="@drawable/ic_copy_icon" />
+//
+//        </LinearLayout>
+//
+//        <Button
+//    android:id="@+id/btCheckCode"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:visibility="gone"
+//    android:text="Check code" />
+//
+//        <Button
+//    android:id="@+id/btGenerateCode"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginBottom="10pt"
+//    android:text="Generate Code" />
+//
+//        <TextView
+//    android:id="@+id/tvChooseCodeDuration"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:textSize="16pt"
+//    android:layout_marginBottom="6pt"
+//    android:gravity="center"
+//    android:visibility="gone"
+//    android:text="Choose your code duration:" />
+//
+//        <RadioGroup
+//    android:id="@+id/rgChooseDuration"
+//    android:layout_width="125pt"
+//    android:visibility="gone"
+//    android:layout_height="wrap_content" >
+//
+//            <RadioButton
+//    android:id="@+id/rbOneHour"
+//    android:layout_width="match_parent"
+//    android:layout_height="wrap_content"
+//    android:checked="true"
+//    android:text="One Hour." />
+//
+//            <RadioButton
+//    android:id="@+id/rbEightHours"
+//    android:layout_width="match_parent"
+//    android:layout_height="wrap_content"
+//    android:text="Eight hours." />
+//
+//            <RadioButton
+//    android:id="@+id/rbOneDay"
+//    android:layout_width="match_parent"
+//    android:layout_height="wrap_content"
+//    android:text="One day." />
+//
+//            <RadioButton
+//    android:id="@+id/rbOneWeek"
+//    android:layout_width="match_parent"
+//    android:layout_height="wrap_content"
+//    android:text="One week." />
+//
+//            <RadioButton
+//    android:id="@+id/rbUnlimited"
+//    android:layout_width="match_parent"
+//    android:layout_height="wrap_content"
+//    android:text="Unlimited." />
+//        </RadioGroup>
+//
+//        <Button
+//    android:id="@+id/btAcceptDuration"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:visibility="gone"
+//    android:layout_marginTop="5pt"
+//    android:text="Continue" />
+//
+//        <Button
+//    android:id="@+id/btBack"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:visibility="gone"
+//    android:layout_margin="5pt"
+//    android:text="Back" />
+//
+//        <TextView
+//    android:id="@+id/tvTimeBeforeExpiration"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:visibility="gone"
+//    android:gravity="center" />
+//    </LinearLayout>
+//
+//    <LinearLayout
+//    android:id="@+id/loadingLinearLayout"
+//    android:layout_width="160pt"
+//    android:layout_height="160pt"
+//    android:orientation="vertical"
+//    android:visibility="gone"
+//    android:gravity="center|top">
+//
+//        <TextView
+//    android:layout_width="150pt"
+//    android:layout_height="wrap_content"
+//    android:textSize="20pt"
+//    android:gravity="center"
+//    android:layout_margin="10pt"
+//    android:text="Please wait..." />
+//
+//        <ProgressBar
+//    style="?android:attr/progressBarStyle"
+//    android:layout_width="150pt"
+//    android:layout_height="150pt" />
+//
+//    </LinearLayout>
+//</LinearLayout>
+
+
 }

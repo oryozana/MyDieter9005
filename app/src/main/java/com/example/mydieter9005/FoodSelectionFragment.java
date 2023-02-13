@@ -1,5 +1,6 @@
 package com.example.mydieter9005;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,9 +24,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +40,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class FoodSelectionFragment extends Fragment implements View.OnClickListener {
@@ -61,6 +68,7 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
     boolean isOnMealsMode = false;
     boolean isOnLocalMode = true;
 
+    FirebaseDatabase codesDb;
     DatabaseReference databaseReference;
 
     String cameFrom;
@@ -283,8 +291,8 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
                                 ingredientsNeededInfo.clear();
                                 mealName = customMeal.getKey();
                                 for (int i = 0; i < customMeal.getChildrenCount(); i++) {
-                                    ingredientName = (customMeal.child(i + "").getValue().toString()).split(": ")[0];;
-                                    ingredientGrams = Double.parseDouble((customMeal.child(i + "").getValue().toString().split(": "))[1].split(" ")[0]);
+                                    ingredientName = (customMeal.child(i + "").child("name").getValue().toString());
+                                    ingredientGrams = Double.parseDouble((customMeal.child(i + "").child("grams").getValue().toString()));
 
                                     ingredient = new Ingredient(Ingredient.getIngredientByName(ingredientName), ingredientGrams);
                                     ingredientsNeededInfo.add(ingredient);
@@ -381,8 +389,12 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
         ArrayAdapter<String> alertDialogSelectedMealAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, selectMealOptions);
         sAlertDialogSelectMeal.setAdapter(alertDialogSelectedMealAdapter);
 
-        if(cameFrom.equals("CustomMealsFragment"))
+        LinearLayout alertDialogMealSelectionLinearLayout = (LinearLayout) customAlertDialog.findViewById(R.id.alertDialogMealSelectionLinearLayout);
+
+        if(cameFrom.equals("CustomMealsFragment")) {
+            alertDialogMealSelectionLinearLayout.setVisibility(View.INVISIBLE);
             sAlertDialogSelectMeal.setVisibility(View.INVISIBLE);
+        }
 
         EditText etAlertDialogIngredientGrams = customAlertDialog.findViewById(R.id.etAlertDialogIngredientGrams);
         etAlertDialogIngredientGrams.setText("100");

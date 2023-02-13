@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/enterCodeLinearLayout"
+        android:layout_width="160pt"
+        android:layout_height="140pt"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16pt"
+            android:layout_marginBottom="10pt"
+            android:text="Enter the recipe code here:"/>
+
+        <EditText
+            android:id="@+id/etEnterCode"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Code: " />
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:textSize="6pt"
+            android:layout_marginTop="4pt"
+            android:text="*You will have control of what to do with the meal from the code." />
+
+        <Button
+            android:id="@+id/btTestEnteredCode"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10pt"
+            android:text="Continue" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/showCodeMealLinearLayout"
+        android:layout_width="160pt"
+        android:layout_height="225pt"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16pt"
+            android:layout_margin="10pt"
+            android:text="The meal has found !"/>
+
+        <TextView
+            android:id="@+id/tvShowCodeMealName"
+            android:layout_width="125pt"
+            android:textSize="10pt"
+            android:layout_marginTop="4pt"
+            android:gravity="center"
+            android:layout_height="wrap_content" />
+
+        <ListView
+            android:id="@+id/lvCodeMealIngredients"
+            android:layout_width="125pt"
+            android:layout_height="100pt"
+            android:layout_marginBottom="6pt"
+            android:layout_marginTop="6pt"/>
+
+        <LinearLayout
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layoutDirection="ltr"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btCancelMealCode"
+                android:layout_width="57pt"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="2pt"
+                android:layout_marginStart="3pt"
+                android:text="Cancel" />
+
+            <Button
+                android:id="@+id/btContinueMealCode"
+                android:layout_width="57pt"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="3pt"
+                android:layout_marginStart="2pt"
+                android:text="Continue" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/whatToDoWithCodeMealLinearLayout"
+        android:layout_width="160pt"
+        android:layout_height="200pt"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16pt"
+            android:layout_margin="10pt"
+            android:text="What do you wish to do?"/>
+
+        <Button
+            android:id="@+id/btSaveCodeMeal"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Save meal" />
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="8pt"
+            android:layout_marginTop="10pt"
+            android:layout_marginBottom="4pt"
+            android:text="Or you can also single use it here: " />
+
+        <Spinner
+            android:id="@+id/sCodeMealSelectMealType"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"/>
+
+        <Button
+            android:id="@+id/btAddIntoMealType"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4pt"
+            android:text="Single use" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/anotherCustomMealExistsLinearLayout"
+        android:layout_width="160pt"
+        android:layout_height="160pt"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16pt"
+            android:layout_marginBottom="6pt"
+            android:text="What are you want to do ?" />
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:textSize="8pt"
+            android:layout_marginBottom="6pt"
+            android:layout_marginTop="6pt"
+            android:text="Another Custom meal have the same name..." />
+
+        <Button
+            android:id="@+id/btReplaceMeal"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Replace meal" />
+
+        <Button
+            android:id="@+id/btRenameMeal"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Rename meal" />
+
+        <Button
+            android:id="@+id/btCancel"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/renameCodeMealLinearLayout"
+        android:layout_width="160pt"
+        android:layout_height="160pt"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16pt"
+            android:layout_marginBottom="6pt"
+            android:text="Rename this meal here:" />
+
+        <EditText
+            android:id="@+id/etCodeMealRename"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="New meal name: " />
+
+        <TextView
+            android:id="@+id/tvShowRenameAttempt"
+            android:layout_width="125pt"
+            android:layout_height="20pt"
+            android:textSize="8pt"
+            android:layout_marginBottom="6pt"
+            android:layout_marginTop="6pt" />
+
+        <Button
+            android:id="@+id/btRenameMealAttempt"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Rename meal" />
+
+        <Button
+            android:id="@+id/btBackFromRename"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Back" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loadingLinearLayout"
+        android:layout_width="160pt"
+        android:layout_height="200pt"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center|top">
+
+        <TextView
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:textSize="20pt"
+            android:gravity="center"
+            android:layout_margin="10pt"
+            android:text="Please wait..." />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="150pt"
+            android:layout_height="150pt" />
+    </LinearLayout>
+</LinearLayout>

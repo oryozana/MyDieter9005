@@ -579,7 +579,17 @@ public class DailyMenu {
     }
 
     public static boolean hasCustomMeal(){
-        return newCustomMeal != null;
+        if(newCustomMeal != null){
+            if(newCustomMeal.getName().replaceAll(" ", "").equals("")){
+                if(newCustomMeal.getNeededIngredientsForMeal().size() == 0)
+                    return false;
+                else
+                    return true;
+            }
+            else
+                return true;
+        }
+        return false;
     }
 
     public static Meal getCustomMeal() {

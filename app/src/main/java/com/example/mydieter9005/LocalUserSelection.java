@@ -95,9 +95,6 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
     int groupsAmount = 0;
     int groupIndex = 1;
 
-    FirebaseDatabase codesDb;
-    DatabaseReference databaseReference;
-
     FileOutputStream fos;
     OutputStreamWriter osw;
     BufferedWriter bw;
@@ -120,7 +117,6 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
 
         localUserSelectionLoadingLinearLayout = (LinearLayout) findViewById(R.id.localUserSelectionLoadingLinearLayout);
         groupSelectorGridLayout = (androidx.gridlayout.widget.GridLayout) findViewById(R.id.groupSelectorGridLayout);
-        useOrGenerateCodesLinearLayout = (LinearLayout) findViewById(R.id.useOrGenerateCodesLinearLayout);
         localUsersLinearLayout = (LinearLayout) findViewById(R.id.localUsersLinearLayout);
         linearLayout = (LinearLayout) findViewById(R.id.localUserSelectionLinearLayout);
         videoView = (VideoView) findViewById(R.id.localUserSelectionVideoView);
@@ -138,8 +134,6 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         tvUser4 = (TextView) findViewById(R.id.tvUser4);
         tvUsers = new TextView[]{tvUser1, tvUser2, tvUser3, tvUser4};
 
-        ibtShowCopyCodeOption = (ImageButton) findViewById(R.id.ibtShowCopyCodeOption);
-        ibtShowCopyCodeOption.setOnClickListener(this);
         ibtPreviousGroup = (ImageButton) findViewById(R.id.ibtPreviousGroup);
         ibtPreviousGroup.setOnClickListener(this);
         ibtNextGroup = (ImageButton) findViewById(R.id.ibtNextGroup);
@@ -153,21 +147,6 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         btUseOrGenerateCode.setOnClickListener(this);
 
         tvLocalUserSelectionMainTextView = (TextView) findViewById(R.id.tvLocalUserSelectionMainTextView);
-        tvTimeBeforeExpiration = (TextView) findViewById(R.id.tvTimeBeforeExpiration);
-        tvShowGeneratedCode = (TextView) findViewById(R.id.tvShowGeneratedCode);
-        tvCodeState = (TextView) findViewById(R.id.tvCodeState);
-
-        etEnterCode = (EditText) findViewById(R.id.etEnterCode);
-
-        btGenerateCode = (Button) findViewById(R.id.btGenerateCode);
-        btGenerateCode.setOnClickListener(this);
-        btUseCode = (Button) findViewById(R.id.btUseCode);
-        btUseCode.setOnClickListener(this);
-
-        btCheckCode = (Button) findViewById(R.id.btCheckCode);
-        btCheckCode.setOnClickListener(this);
-        btBack = (Button) findViewById(R.id.btBack);
-        btBack.setOnClickListener(this);
 
         fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
         activeSong = fileAndDatabaseHelper.implementSettingsData();
@@ -293,9 +272,11 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
 
     public void checkIfPrimaryUserExists(){
         fileAndDatabaseHelper.obtainAndSetPrimaryUser();
+        User primaryUser = User.obtainPrimaryUser();
+
         if(!me.hasExtra("cameFromLogout")){
-            if(User.obtainPrimaryUser() != null)
-                userChosen(User.obtainPrimaryUser());
+            if(primaryUser != null)
+                userChosen(primaryUser);
             me.removeExtra("cameFromLogout");
         }
     }
@@ -430,105 +411,6 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         btBack.setVisibility(View.VISIBLE);
     }
 
-    public void useCode(){
-        String code = etEnterCode.getText().toString();
-        if(internetConnection){
-            if(passCodeTests(code))
-                getUsersFromFirebaseDatabaseByCode(code);
-        }
-        else
-            Toast.makeText(this, "No internet connection, can't use codes.", Toast.LENGTH_SHORT).show();
-    }
-
-    public boolean passCodeTests(String code){
-        boolean passTests = true;
-        int normalCodeLength = 8;
-
-        if(code.replaceAll(" ", "").equals("") && passTests){
-            Toast.makeText(this, "Can't left the field 'code' empty.", Toast.LENGTH_SHORT).show();
-            passTests = false;
-        }
-
-        if(code.length() != normalCodeLength && passTests){
-            Toast.makeText(this, "Codes should be 8 characters long.", Toast.LENGTH_SHORT).show();
-            passTests = false;
-        }
-
-        return passTests;
-    }
-
-    public void getUsersFromFirebaseDatabaseByCode(String code){
-        linearLayout.setVisibility(View.GONE);
-        localUserSelectionLoadingLinearLayout.setVisibility(View.VISIBLE);
-
-        databaseReference = FirebaseDatabase.getInstance().getReference("codes");
-        databaseReference.child(code).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    if(task.getResult().exists()){
-                        DataSnapshot dataSnapshot = task.getResult();
-                        String codeType = String.valueOf(dataSnapshot.child("type").getValue());
-
-                        if(codeType.equals("UserRandomCode")){
-                            LocalDateTime expirationTime = LocalDateTime.parse(String.valueOf(dataSnapshot.child("expirationTime").getValue()).replaceAll("\\*", "\\."));
-                            boolean isExpired = LocalDateTime.now(ZoneId.of("Asia/Jerusalem")).isAfter(expirationTime);
-
-                            DataSnapshot users = dataSnapshot.child("users");
-
-                            if(!isExpired){
-                                localUsers.clear();
-
-                                for(DataSnapshot user : users.getChildren()){
-                                    String username = String.valueOf(user.child("username").getValue());
-                                    String password = String.valueOf(user.child("password").getValue());
-                                    String email = String.valueOf(user.child("email").getValue());
-                                    double startingWeight = Double.parseDouble(String.valueOf(user.child("startingWeight").getValue()));
-
-                                    double targetCalories = Double.parseDouble(String.valueOf(user.child("currentPlan").child("targetCalories").getValue()));
-                                    double targetProteins = Double.parseDouble(String.valueOf(user.child("currentPlan").child("targetProteins").getValue()));
-                                    double targetFats = Double.parseDouble(String.valueOf(user.child("currentPlan").child("targetFats").getValue()));
-                                    Plan plan = new Plan(targetCalories, targetProteins, targetFats);
-
-                                    int profilePictureId = Integer.parseInt(String.valueOf(user.child("profilePictureId").getValue()));
-
-                                    if(!fileAndDatabaseHelper.isUserAlreadyExists(username)) {
-                                        User tmpUser = new User(username, password, email, startingWeight, plan, profilePictureId);
-                                        fileAndDatabaseHelper.addLoggedUserIntoLocalDatabase(tmpUser);
-                                        localUsers.add(tmpUser);
-                                    }
-                                }
-                                Toast.makeText(LocalUserSelection.this, "Users successfully added.", Toast.LENGTH_SHORT).show();
-
-                                me.setClass(LocalUserSelection.this, LocalUserSelection.class);
-                                startActivity(me);
-                            }
-                            else
-                                Toast.makeText(LocalUserSelection.this, "Code expired.", Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                            Toast.makeText(LocalUserSelection.this, "Unrecognized code.", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                        Toast.makeText(LocalUserSelection.this, "Code incorrect.", Toast.LENGTH_SHORT).show();
-                }
-                else
-                    Toast.makeText(LocalUserSelection.this, "Code incorrect.", Toast.LENGTH_SHORT).show();
-
-                localUserSelectionLoadingLinearLayout.setVisibility(View.GONE);
-                linearLayout.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-
-    public void copyCodeOption(){
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("TextView", tvShowGeneratedCode.getText().toString());
-        clipboard.setPrimaryClip(clip);
-        clip.getDescription();
-        Toast.makeText(this, "Copied.", Toast.LENGTH_SHORT).show();
-    }
-
     public void backToChoosing(){
         btGenerateCode.setVisibility(View.VISIBLE);
         btUseCode.setVisibility(View.VISIBLE);
@@ -544,45 +426,6 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         ibtShowCopyCodeOption.setVisibility(View.GONE);
 
         btBack.setVisibility(View.GONE);
-    }
-
-    public void generateCodeAndExpirationDate() {
-        if(internetConnection){
-            LocalDateTime expirationDate = LocalDateTime.now(ZoneId.of("Asia/Jerusalem")).plusMinutes(10);
-
-            UserRandomCode userRandomCode = new UserRandomCode(localUsers, expirationDate.toString());
-
-            btGenerateCode.setVisibility(View.GONE);
-            btUseCode.setVisibility(View.GONE);
-
-            tvCodeState.setText("Your code is: ");
-            tvShowGeneratedCode.setVisibility(View.VISIBLE);
-            tvShowGeneratedCode.setText(userRandomCode.getCode());
-            tvTimeBeforeExpiration.setVisibility(View.VISIBLE);
-            ibtShowCopyCodeOption.setVisibility(View.VISIBLE);
-            btBack.setVisibility(View.VISIBLE);
-
-            linearLayout.setVisibility(View.GONE);
-            localUserSelectionLoadingLinearLayout.setVisibility(View.VISIBLE);
-
-            saveUsersCodeInFirebase(userRandomCode);
-        }
-        else
-            Toast.makeText(this, "No internet connection, can't generate code.", Toast.LENGTH_SHORT).show();
-    }
-
-    public void saveUsersCodeInFirebase(UserRandomCode userRandomCode){
-        codesDb = FirebaseDatabase.getInstance();
-        databaseReference = codesDb.getReference("codes");
-        databaseReference.child(userRandomCode.getCode()).setValue(userRandomCode).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(LocalUserSelection.this, "Code successfully created.", Toast.LENGTH_SHORT).show();
-
-                localUserSelectionLoadingLinearLayout.setVisibility(View.GONE);
-                linearLayout.setVisibility(View.VISIBLE);
-            }
-        });
     }
 
     public void changeLocalUsersScreenMode(){
@@ -730,23 +573,23 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         if(viewId == ibtPreviousGroup.getId())
             previousGroup();
 
-        if(viewId == btUseOrGenerateCode.getId())
-            changeLocalUsersScreenMode();
-
-        if(viewId == btGenerateCode.getId())
-            generateCodeAndExpirationDate();
-
-        if(viewId == btUseCode.getId())
-            useCodeMode();
-
-        if(viewId == btCheckCode.getId())
-            useCode();
-
-        if(viewId == btBack.getId())
-            backToChoosing();
-
-        if(viewId == ibtShowCopyCodeOption.getId())
-            copyCodeOption();
+//        if(viewId == btUseOrGenerateCode.getId())
+//            changeLocalUsersScreenMode();
+//
+//        if(viewId == btGenerateCode.getId())
+//            generateCodeAndExpirationDate();
+//
+//        if(viewId == btUseCode.getId())
+//            useCodeMode();
+//
+//        if(viewId == btCheckCode.getId())
+//            useCode();
+//
+//        if(viewId == btBack.getId())
+//            backToChoosing();
+//
+//        if(viewId == ibtShowCopyCodeOption.getId())
+//            copyCodeOption();
     }
 
     @Override

@@ -72,5 +72,12 @@
             android:layout_width="125pt"
             android:layout_height="wrap_content"
             android:text="Save meal" />
+
+        <Button
+            android:id="@+id/btUseCodeAlertDialog"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Use shared code" />
     </LinearLayout>
 </RelativeLayout>

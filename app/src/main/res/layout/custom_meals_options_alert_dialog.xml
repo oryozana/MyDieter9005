@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/customMealsOptionsLinearLayout"
+        android:layout_width="160pt"
+        android:layout_height="160pt"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16pt"
+            android:layout_marginBottom="6pt"
+            android:text="What are you intending to do ?" />
+
+        <Button
+            android:id="@+id/btPublishCustomMeal"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Publish custom meal" />
+
+        <Button
+            android:id="@+id/btShareCustomMeal"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Share custom meal" />
+
+        <Button
+            android:id="@+id/btModifyCustomMeal"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Modify custom meal" />
+
+        <Button
+            android:id="@+id/btRemoveCustomMeal"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Remove custom meal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/chooseCodeDurationLinearLayout"
+        android:layout_width="160pt"
+        android:layout_height="250pt"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:textSize="16pt"
+            android:layout_marginBottom="6pt"
+            android:gravity="center"
+            android:text="Choose your code duration:" />
+
+        <RadioGroup
+            android:id="@+id/rgChooseDuration"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content" >
+
+            <RadioButton
+                android:id="@+id/rbOneHour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="One Hour." />
+
+            <RadioButton
+                android:id="@+id/rbEightHours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Eight hours." />
+
+            <RadioButton
+                android:id="@+id/rbOneDay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="One day." />
+
+            <RadioButton
+                android:id="@+id/rbOneWeek"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="One week." />
+
+            <RadioButton
+                android:id="@+id/rbUnlimited"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Unlimited." />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btAcceptDuration"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5pt"
+            android:text="Continue" />
+
+        <Button
+            android:id="@+id/btBackFromDuration"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_margin="5pt"
+            android:text="Back" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/showCodeLinearLayout"
+        android:layout_width="160pt"
+        android:layout_height="125pt"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16pt"
+            android:layout_marginTop="6pt"
+            android:layout_marginBottom="6pt"
+            android:text="Your code is:"/>
+
+        <LinearLayout
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layoutDirection="ltr"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvShowGeneratedCode"
+                android:layout_width="100pt"
+                android:layout_height="wrap_content"
+                android:textSize="14pt" />
+
+            <ImageButton
+                android:id="@+id/ibtShowCopyCodeOption"
+                android:layout_width="25pt"
+                android:layout_height="fill_parent"
+                android:background="@null"
+                app:srcCompat="@drawable/ic_copy_icon" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvShowExpirationDate"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6pt"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/btBackFromGenerated"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_margin="5pt"
+            android:text="Back" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loadingLinearLayout"
+        android:layout_width="160pt"
+        android:layout_height="200pt"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center|top">
+
+        <TextView
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:textSize="20pt"
+            android:gravity="center"
+            android:layout_margin="10pt"
+            android:text="Please wait..." />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="150pt"
+            android:layout_height="150pt" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/anotherCustomMealExistsLinearLayout"
+        android:layout_width="160pt"
+        android:layout_height="160pt"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16pt"
+            android:layout_marginBottom="6pt"
+            android:text="What are you want to do ?" />
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:textSize="8pt"
+            android:layout_marginBottom="6pt"
+            android:layout_marginTop="6pt"
+            android:text="Another Custom meal is in making process..." />
+
+        <Button
+            android:id="@+id/btReplaceMeal"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Replace meal" />
+
+        <Button
+            android:id="@+id/btCancel"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
+    </LinearLayout>
+</LinearLayout>
