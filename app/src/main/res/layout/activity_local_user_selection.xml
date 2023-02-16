@@ -199,13 +199,6 @@
             android:layout_width="125pt"
             android:layout_height="wrap_content"
             android:text="Register" />
-
-        <Button
-            android:id="@+id/btUseOrGenerateCode"
-            android:layout_width="125pt"
-            android:layout_height="wrap_content"
-            android:text="Use / Generate Code" />
-
     </LinearLayout>
 
     <LinearLayout

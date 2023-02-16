@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -5908,6 +5910,255 @@ public class removedFunctions {
 //
 //    </LinearLayout>
 //</LinearLayout>
+
+        // From: Login:
+//        public void forgotPasswordAlertDialog(){
+//            AlertDialog ad;
+//            AlertDialog.Builder adb;
+//            adb = new AlertDialog.Builder(this);
+//            adb.setTitle("Enter your username and email:");
+//            adb.setIcon(R.drawable.ic_account_icon);
+//            adb.setCancelable(false);
+//
+//            loginLoadingLinearLayout.setVisibility(View.GONE);
+//            linearLayout.setVisibility(View.GONE);
+//
+//            LinearLayout layout = new LinearLayout(this);
+//            layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+//            layout.setOrientation(LinearLayout.VERTICAL);
+//            layout.setGravity(Gravity.CENTER);
+//
+//            final EditText etUsername = new EditText(this);
+//            etUsername.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+//            etUsername.setHint("Username: ");
+//            layout.addView(etUsername);
+//
+//            final EditText etEmail = new EditText(this);
+//            etEmail.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+//            etEmail.setHint("Email: ");
+//            layout.addView(etEmail);
+//
+//            adb.setView(layout);
+//
+//            adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    String username = etUsername.getText().toString();
+//                    String email = etEmail.getText().toString();
+//
+//                    if(!username.replaceAll(" ", "").equals("") && !email.replaceAll(" ", "").equals("")) {
+//                        loginLoadingLinearLayout.setVisibility(View.VISIBLE);
+//                        checkUserInfoByFirebaseDatabase(username, email);
+//                    }
+//                    else {
+//                        Toast.makeText(Login.this, "One or more of the fields were empty.", Toast.LENGTH_SHORT).show();
+//                        forgotPasswordAlertDialog();
+//                    }
+//                }
+//            });
+//
+//            adb.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    linearLayout.setVisibility(View.VISIBLE);
+//                }
+//            });
+//
+//            ad = adb.create();
+//            ad.show();
+//        }
+//
+//    public void newPasswordAlertDialog(User user){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(this);
+//        adb.setTitle("Enter your new password:");
+//        adb.setIcon(R.drawable.ic_account_icon);
+//        adb.setCancelable(false);
+//
+//        loginLoadingLinearLayout.setVisibility(View.GONE);
+//        linearLayout.setVisibility(View.GONE);
+//
+//        LinearLayout layout = new LinearLayout(Login.this);
+//        layout.setOrientation(LinearLayout.VERTICAL);
+//        layout.setGravity(Gravity.CENTER);
+//
+//        EditText etNewPassword1 = new EditText(Login.this);
+//        etNewPassword1.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//        etNewPassword1.setHint("Enter Password: ");
+//        layout.addView(etNewPassword1);
+//
+//        EditText etNewPassword2 = new EditText(Login.this);
+//        etNewPassword2.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//        etNewPassword2.setHint("Enter Password again: ");
+//        layout.addView(etNewPassword2);
+//
+//        adb.setView(layout);
+//
+//        adb.setPositiveButton("Change password", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                String newPassword1 = etNewPassword1.getText().toString();
+//                String newPassword2 = etNewPassword2.getText().toString();
+//
+//                if(!newPassword1.replaceAll(" ", "").equals("") && !newPassword2.replaceAll(" ", "").equals("")){
+//                    if(newPassword1.equals(newPassword2)) {
+//                        loginLoadingLinearLayout.setVisibility(View.VISIBLE);
+//                        changePassword(user, newPassword1);
+//                    }
+//                    else{
+//                        Toast.makeText(Login.this, "Passwords doesn't match.", Toast.LENGTH_SHORT).show();
+//                        newPasswordAlertDialog(user);
+//                    }
+//                }
+//                else{
+//                    Toast.makeText(Login.this, "One or more fields were empty.", Toast.LENGTH_SHORT).show();
+//                    newPasswordAlertDialog(user);
+//                }
+//            }
+//        });
+//
+//        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                linearLayout.setVisibility(View.VISIBLE);
+//            }
+//        });
+//
+//        ad = adb.create();
+//        ad.show();
+//    }
+//
+//    public void checkUserInfoByFirebaseDatabase(String username, String enteredEmail){
+//        databaseReference = FirebaseDatabase.getInstance().getReference("users");
+//        databaseReference.child(username).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if(task.isSuccessful()){
+//                    if(task.getResult().exists()){
+//                        DataSnapshot dataSnapshot = task.getResult();
+//                        String username = dataSnapshot.getKey();
+//                        String email = String.valueOf(dataSnapshot.child("email").getValue());
+//
+//                        if(email.equals(enteredEmail)){
+//                            double targetCalories = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetCalories").getValue()));
+//                            double targetProteins = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetProteins").getValue()));
+//                            double targetFats = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetFats").getValue()));
+//                            Plan plan = new Plan(targetCalories, targetProteins, targetFats);
+//
+//                            String password = String.valueOf(dataSnapshot.child("password").getValue());
+//                            double startingWeight = Double.parseDouble(String.valueOf(dataSnapshot.child("startingWeight").getValue()));
+//                            int profilePictureId = Integer.parseInt(String.valueOf(dataSnapshot.child("profilePictureId").getValue()));
+//                            User tmpUser = new User(username, password, email, startingWeight, plan, profilePictureId);
+//
+//                            newPasswordAlertDialog(tmpUser);
+//                        }
+//                        else {
+//                            Toast.makeText(Login.this, "Username or email incorrect.", Toast.LENGTH_SHORT).show();
+//                            forgotPasswordAlertDialog();
+//                        }
+//                    }
+//                    else {
+//                        Toast.makeText(Login.this, "Username or email incorrect.", Toast.LENGTH_SHORT).show();
+//                        forgotPasswordAlertDialog();
+//                    }
+//                }
+//                else {
+//                    Toast.makeText(Login.this, "Username or email incorrect.", Toast.LENGTH_SHORT).show();
+//                    forgotPasswordAlertDialog();
+//                }
+//            }
+//        });
+//    }
+
+            // From: LocalUserSelection:
+//            <Button
+//    android:id="@+id/btUseOrGenerateCode"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:text="Use / Generate Code" />
+
+//    btUseOrGenerateCode = (Button) findViewById(R.id.btUseOrGenerateCode);
+//        btUseOrGenerateCode.setOnClickListener(this);
+//        Button btUseOrGenerateCode, btUseCode, btGenerateCode, btCheckCode, btBack;
+//        TextView tvCodeState, tvTimeBeforeExpiration, tvShowGeneratedCode;
+//        LinearLayout useOrGenerateCodesLinearLayout;
+//        ImageButton ibtShowCopyCodeOption;
+//        EditText etEnterCode;
+//        boolean showUserMode = true;
+//        FileOutputStream fos;
+//    OutputStreamWriter osw;
+//    BufferedWriter bw;
+//
+//public void useCodeMode(){
+//    btGenerateCode.setVisibility(View.GONE);
+//    btUseCode.setVisibility(View.GONE);
+//
+//    tvCodeState.setText("Enter your code in here: ");
+//    etEnterCode.setVisibility(View.VISIBLE);
+//    btCheckCode.setVisibility(View.VISIBLE);
+//    btBack.setVisibility(View.VISIBLE);
+//}
+//
+//    public void backToChoosing(){
+//        btGenerateCode.setVisibility(View.VISIBLE);
+//        btUseCode.setVisibility(View.VISIBLE);
+//
+//        tvCodeState.setText("What are you intending to do?");
+//
+//        btCheckCode.setVisibility(View.GONE);
+//
+//        tvTimeBeforeExpiration.setVisibility(View.GONE);
+//        etEnterCode.setVisibility(View.GONE);
+//        btCheckCode.setVisibility(View.GONE);
+//        tvShowGeneratedCode.setVisibility(View.GONE);
+//        ibtShowCopyCodeOption.setVisibility(View.GONE);
+//
+//        btBack.setVisibility(View.GONE);
+//    }
+//
+//    public void changeLocalUsersScreenMode(){
+//        showUserMode = !showUserMode;
+//
+//        if(showUserMode) {
+//            tvLocalUserSelectionMainTextView.setVisibility(View.VISIBLE);
+//
+//            if(groupsAmount > 1)
+//                groupSelectorGridLayout.setVisibility(View.VISIBLE);
+//
+//            useOrGenerateCodesLinearLayout.setVisibility(View.GONE);
+//            localUsersLinearLayout.setVisibility(View.VISIBLE);
+//            btUseOrGenerateCode.setText("Use / Generate Code");
+//        }
+//        else{
+//            tvLocalUserSelectionMainTextView.setVisibility(View.INVISIBLE);
+//            groupSelectorGridLayout.setVisibility(View.INVISIBLE);
+//
+//            localUsersLinearLayout.setVisibility(View.GONE);
+//            useOrGenerateCodesLinearLayout.setVisibility(View.VISIBLE);
+//            btUseOrGenerateCode.setText("Show local users");
+//        }
+//    }
+//            if(viewId == btUseOrGenerateCode.getId())
+//            changeLocalUsersScreenMode();
+//
+//        if(viewId == btGenerateCode.getId())
+//            generateCodeAndExpirationDate();
+//
+//        if(viewId == btUseCode.getId())
+//            useCodeMode();
+//
+//        if(viewId == btCheckCode.getId())
+//            useCode();
+//
+//        if(viewId == btBack.getId())
+//            backToChoosing();
+//
+//        if(viewId == ibtShowCopyCodeOption.getId())
+//            copyCodeOption();
+
+
+
 
 
 }

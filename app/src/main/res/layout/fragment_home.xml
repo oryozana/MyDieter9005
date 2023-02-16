@@ -24,7 +24,6 @@
             android:gravity="center"
             android:orientation="vertical">
 
-
             <LinearLayout
                 android:id="@+id/breakfastLinearLayout"
                 android:layout_width="wrap_content"

@@ -280,16 +280,10 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         databaseReference.child(user.getUsername()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                User.setCurrentUser(user);
-
-                sqdb=my_db.getWritableDatabase();
-                ContentValues cv = new ContentValues();
-                cv.put(DBHelper.PASSWORD, etGetNewPassword.getText().toString());
-
-                sqdb.update(DBHelper.TABLE_NAME, cv,DBHelper.USERNAME+"=?", new String[]{User.getCurrentUser().getUsername()});
-                sqdb.close();
-
                 Toast.makeText(UserInfoScreen.this, "Password successfully changed.", Toast.LENGTH_SHORT).show();
+                fileAndDatabaseHelper.updateUserPasswordInLocalDatabase(user, etGetNewPassword.getText().toString());
+                etGetOldPassword.setText("");
+                etGetNewPassword.setText("");
             }
         });
     }
@@ -382,48 +376,14 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         Toast.makeText(this, "Primary user selected.", Toast.LENGTH_SHORT).show();
         btRemovePrimaryUser.setVisibility(View.VISIBLE);
         btSetPrimaryUser.setVisibility(View.GONE);
-        User.setPrimaryUser(user);
-
-        try {
-            fos = openFileOutput("primary_user", Context.MODE_PRIVATE);
-            osw = new OutputStreamWriter(fos);
-            bw = new BufferedWriter(osw);
-
-            bw.write("Username: " + user.getUsername() + "\n");
-            bw.write("Password: " + user.getPassword());
-
-            bw.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        fileAndDatabaseHelper.setPrimaryUser(user);
     }
 
     public void removePrimaryUser(){
         Toast.makeText(this, "Primary user deselected.", Toast.LENGTH_SHORT).show();
         btRemovePrimaryUser.setVisibility(View.GONE);
         btSetPrimaryUser.setVisibility(View.VISIBLE);
-        User.setPrimaryUser(null);
-
-        try {
-            fos = openFileOutput("primary_user", Context.MODE_PRIVATE);
-            osw = new OutputStreamWriter(fos);
-            bw = new BufferedWriter(osw);
-
-            bw.write("Username: " + " " + "\n");
-            bw.write("Password: " + " ");
-
-            bw.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        fileAndDatabaseHelper.removePrimaryUser();
     }
     
     public void deleteUser(){

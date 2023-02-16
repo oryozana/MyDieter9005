@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.view.View;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -25,6 +27,10 @@ public class FileAndDatabaseHelper {
     private FileInputStream is;
     private InputStreamReader isr;
     private BufferedReader br;
+
+    private FileOutputStream fos;
+    private OutputStreamWriter osw;
+    private BufferedWriter bw;
 
     public FileAndDatabaseHelper(Context context, Intent me){
         FileAndDatabaseHelper.my_db = new DBHelper(context);
@@ -92,8 +98,10 @@ public class FileAndDatabaseHelper {
                         User.setPrimaryUser(users.get(i));
                         found = true;
                     }
-                    else
-                        Toast.makeText(context, "Password has changed, login again.", Toast.LENGTH_SHORT).show();
+                    else {
+                        Toast.makeText(context, "Password has changed, primary user deselected.", Toast.LENGTH_SHORT).show();
+                        removePrimaryUser();
+                    }
                 }
             }
         }
@@ -112,7 +120,58 @@ public class FileAndDatabaseHelper {
         sqdb.update(DBHelper.TABLE_NAME, cv,DBHelper.USERNAME+"=?", new String[]{user.getUsername()});
         sqdb.close();
 
+        String[] dataParts = getFileData("primary_user").split("\n");
+        String username = dataParts[0].split(": ")[1];
+
+        if(username.equals(user.getUsername())) {
+            User.obtainPrimaryUser().setPassword(newPassword);
+            setPrimaryUser(User.obtainPrimaryUser());
+            obtainAndSetPrimaryUser();
+        }
+
         Toast.makeText(context, "Password successfully changed.", Toast.LENGTH_SHORT).show();
+    }
+
+    public void setPrimaryUser(User user){
+        User.setPrimaryUser(user);
+
+        try {
+            fos = context.openFileOutput("primary_user", Context.MODE_PRIVATE);
+            osw = new OutputStreamWriter(fos);
+            bw = new BufferedWriter(osw);
+
+            bw.write("Username: " + user.getUsername() + "\n");
+            bw.write("Password: " + user.getPassword());
+
+            bw.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removePrimaryUser(){
+        User.setPrimaryUser(null);
+
+        try {
+            fos = context.openFileOutput("primary_user", Context.MODE_PRIVATE);
+            osw = new OutputStreamWriter(fos);
+            bw = new BufferedWriter(osw);
+
+            bw.write("Username: " + " " + "\n");
+            bw.write("Password: " + " ");
+
+            bw.close();
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void addLoggedUserIntoLocalDatabase(User user){

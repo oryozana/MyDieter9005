@@ -19,15 +19,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -39,10 +43,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
@@ -60,6 +66,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     FileAndDatabaseHelper fileAndDatabaseHelper;
     Song activeSong = Song.getSongs().get(0);
+
+    User forgotUser;
 
     FirebaseDatabase usersDb;
     DatabaseReference databaseReference;
@@ -156,171 +164,141 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         });
     }
 
-    public void checkUserInfoByFirebaseDatabase(String username, String enteredEmail){
-        databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        databaseReference.child(username).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    if(task.getResult().exists()){
-                        DataSnapshot dataSnapshot = task.getResult();
-                        String username = dataSnapshot.getKey();
-                        String email = String.valueOf(dataSnapshot.child("email").getValue());
-
-                        if(email.equals(enteredEmail)){
-                            double targetCalories = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetCalories").getValue()));
-                            double targetProteins = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetProteins").getValue()));
-                            double targetFats = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetFats").getValue()));
-                            Plan plan = new Plan(targetCalories, targetProteins, targetFats);
-
-                            String password = String.valueOf(dataSnapshot.child("password").getValue());
-                            double startingWeight = Double.parseDouble(String.valueOf(dataSnapshot.child("startingWeight").getValue()));
-                            int profilePictureId = Integer.parseInt(String.valueOf(dataSnapshot.child("profilePictureId").getValue()));
-                            User tmpUser = new User(username, password, email, startingWeight, plan, profilePictureId);
-
-                            newPasswordAlertDialog(tmpUser);
-                        }
-                        else {
-                            Toast.makeText(Login.this, "Username or email incorrect.", Toast.LENGTH_SHORT).show();
-                            forgotPasswordAlertDialog();
-                        }
-                    }
-                    else {
-                        Toast.makeText(Login.this, "Username or email incorrect.", Toast.LENGTH_SHORT).show();
-                        forgotPasswordAlertDialog();
-                    }
-                }
-                else {
-                    Toast.makeText(Login.this, "Username or email incorrect.", Toast.LENGTH_SHORT).show();
-                    forgotPasswordAlertDialog();
-                }
-            }
-        });
-    }
-
-    public void forgotPasswordAlertDialog(){
+    public void forgotPasswordAlertDialog() {
         AlertDialog ad;
         AlertDialog.Builder adb;
-        adb = new AlertDialog.Builder(this);
-        adb.setTitle("Enter your username and email:");
-        adb.setIcon(R.drawable.ic_account_icon);
-        adb.setCancelable(false);
+        adb = new AlertDialog.Builder(Login.this);
 
-        loginLoadingLinearLayout.setVisibility(View.GONE);
-        linearLayout.setVisibility(View.GONE);
+        View customAlertDialog = LayoutInflater.from(Login.this).inflate(R.layout.forgot_password_alert_dialog, null);
 
-        LinearLayout layout = new LinearLayout(this);
-        layout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setGravity(Gravity.CENTER);
+        LinearLayout forgotPasswordLinearLayout = (LinearLayout) customAlertDialog.findViewById(R.id.forgotPasswordLinearLayout);
+        EditText etGetUsernameForgot = (EditText) customAlertDialog.findViewById(R.id.etGetUsernameForgot);
+        EditText etGetEmailForgot = (EditText) customAlertDialog.findViewById(R.id.etGetEmailForgot);
+        Button btCancelAndExitForgot = (Button) customAlertDialog.findViewById(R.id.btCancelAndExitForgot);
+        Button btContinueForgot = (Button) customAlertDialog.findViewById(R.id.btContinueForgot);
 
-        final EditText etUsername = new EditText(this);
-        etUsername.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
-        etUsername.setHint("Username: ");
-        layout.addView(etUsername);
+        LinearLayout newPasswordLinearLayout = (LinearLayout) customAlertDialog.findViewById(R.id.newPasswordLinearLayout);
+        EditText etNewPassword1 = (EditText) customAlertDialog.findViewById(R.id.etNewPassword1);
+        EditText etNewPassword2 = (EditText) customAlertDialog.findViewById(R.id.etNewPassword2);
+        Button btBackForgot = (Button) customAlertDialog.findViewById(R.id.btBackForgot);
+        Button btChangeForgot = (Button) customAlertDialog.findViewById(R.id.btChangeForgot);
 
-        final EditText etEmail = new EditText(this);
-        etEmail.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
-        etEmail.setHint("Email: ");
-        layout.addView(etEmail);
+        LinearLayout loadingLinearLayout = (LinearLayout) customAlertDialog.findViewById(R.id.loadingLinearLayout);
 
-        adb.setView(layout);
+        adb.setView(customAlertDialog);
+        ad = adb.create();
 
-        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        btCancelAndExitForgot.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                String username = etUsername.getText().toString();
-                String email = etEmail.getText().toString();
+            public void onClick(View v) {
+                ad.cancel();
+            }
+        });
 
-                if(!username.replaceAll(" ", "").equals("") && !email.replaceAll(" ", "").equals("")) {
-                    loginLoadingLinearLayout.setVisibility(View.VISIBLE);
-                    checkUserInfoByFirebaseDatabase(username, email);
+        btContinueForgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String enteredUsername = etGetUsernameForgot.getText().toString();
+                String enteredEmail = etGetEmailForgot.getText().toString();
+
+                if(!enteredUsername.replaceAll(" ", "").equals("") && !enteredEmail.replaceAll(" ", "").equals("")) {
+                    forgotPasswordLinearLayout.setVisibility(View.GONE);
+                    loadingLinearLayout.setVisibility(View.VISIBLE);
+
+                    databaseReference = FirebaseDatabase.getInstance().getReference("users");
+                    databaseReference.child(enteredUsername).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            if(task.isSuccessful()){
+                                if(task.getResult().exists()){
+                                    DataSnapshot dataSnapshot = task.getResult();
+                                    String username = dataSnapshot.getKey();
+                                    String email = String.valueOf(dataSnapshot.child("email").getValue());
+
+                                    String enteredEmail = etGetEmailForgot.getText().toString();
+
+                                    if(email.equals(enteredEmail)){
+                                        double targetCalories = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetCalories").getValue()));
+                                        double targetProteins = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetProteins").getValue()));
+                                        double targetFats = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetFats").getValue()));
+                                        Plan plan = new Plan(targetCalories, targetProteins, targetFats);
+
+                                        String password = String.valueOf(dataSnapshot.child("password").getValue());
+                                        double startingWeight = Double.parseDouble(String.valueOf(dataSnapshot.child("startingWeight").getValue()));
+                                        int profilePictureId = Integer.parseInt(String.valueOf(dataSnapshot.child("profilePictureId").getValue()));
+                                        forgotUser = new User(username, password, email, startingWeight, plan, profilePictureId);
+
+                                        loadingLinearLayout.setVisibility(View.GONE);
+                                        newPasswordLinearLayout.setVisibility(View.VISIBLE);
+                                        Toast.makeText(Login.this, "User found successfully.", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
+                                        Toast.makeText(Login.this, "Username or email incorrect.", Toast.LENGTH_SHORT).show();
+                                        loadingLinearLayout.setVisibility(View.GONE);
+                                        forgotPasswordLinearLayout.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                                else {
+                                    Toast.makeText(Login.this, "Username or email incorrect.", Toast.LENGTH_SHORT).show();
+                                    loadingLinearLayout.setVisibility(View.GONE);
+                                    forgotPasswordLinearLayout.setVisibility(View.VISIBLE);
+                                }
+                            }
+                            else {
+                                Toast.makeText(Login.this, "Username or email incorrect.", Toast.LENGTH_SHORT).show();
+                                loadingLinearLayout.setVisibility(View.GONE);
+                                forgotPasswordLinearLayout.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
                 }
                 else {
                     Toast.makeText(Login.this, "One or more of the fields were empty.", Toast.LENGTH_SHORT).show();
-                    forgotPasswordAlertDialog();
+                    loadingLinearLayout.setVisibility(View.GONE);
+                    forgotPasswordLinearLayout.setVisibility(View.VISIBLE);
                 }
             }
         });
 
-        adb.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+        btBackForgot.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                linearLayout.setVisibility(View.VISIBLE);
+            public void onClick(View v) {
+                forgotUser = null;
+
+                newPasswordLinearLayout.setVisibility(View.GONE);
+                forgotPasswordLinearLayout.setVisibility(View.VISIBLE);
             }
         });
 
-        ad = adb.create();
-        ad.show();
-    }
-
-    public void newPasswordAlertDialog(User user){
-        AlertDialog ad;
-        AlertDialog.Builder adb;
-        adb = new AlertDialog.Builder(this);
-        adb.setTitle("Enter your new password:");
-        adb.setIcon(R.drawable.ic_account_icon);
-        adb.setCancelable(false);
-
-        loginLoadingLinearLayout.setVisibility(View.GONE);
-        linearLayout.setVisibility(View.GONE);
-
-        LinearLayout layout = new LinearLayout(Login.this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setGravity(Gravity.CENTER);
-
-        EditText etNewPassword1 = new EditText(Login.this);
-        etNewPassword1.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        etNewPassword1.setHint("Enter Password: ");
-        layout.addView(etNewPassword1);
-
-        EditText etNewPassword2 = new EditText(Login.this);
-        etNewPassword2.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        etNewPassword2.setHint("Enter Password again: ");
-        layout.addView(etNewPassword2);
-
-        adb.setView(layout);
-
-        adb.setPositiveButton("Change password", new DialogInterface.OnClickListener() {
+        btChangeForgot.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(View v) {
                 String newPassword1 = etNewPassword1.getText().toString();
                 String newPassword2 = etNewPassword2.getText().toString();
 
                 if(!newPassword1.replaceAll(" ", "").equals("") && !newPassword2.replaceAll(" ", "").equals("")){
                     if(newPassword1.equals(newPassword2)) {
-                        loginLoadingLinearLayout.setVisibility(View.VISIBLE);
-                        changePassword(user, newPassword1);
+                        newPasswordLinearLayout.setVisibility(View.GONE);
+                        loadingLinearLayout.setVisibility(View.VISIBLE);
+                        changePassword(newPassword1);
                     }
-                    else{
+                    else
                         Toast.makeText(Login.this, "Passwords doesn't match.", Toast.LENGTH_SHORT).show();
-                        newPasswordAlertDialog(user);
-                    }
                 }
-                else{
+                else
                     Toast.makeText(Login.this, "One or more fields were empty.", Toast.LENGTH_SHORT).show();
-                    newPasswordAlertDialog(user);
-                }
             }
         });
 
-        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                linearLayout.setVisibility(View.VISIBLE);
-            }
-        });
-
-        ad = adb.create();
         ad.show();
     }
 
-    public void changePassword(User user, String newPassword){
+    public void changePassword(String newPassword){
         boolean passTests = passChangePasswordTests(newPassword);
 
         if(passTests){
-            user.setPassword(newPassword);
-            updateUserPasswordInFirebaseAndInLocalDatabase(user, newPassword);
+            forgotUser.setPassword(newPassword);
+            updateUserPasswordInFirebaseAndInLocalDatabase(newPassword);
         }
         else{
             loginLoadingLinearLayout.setVisibility(View.GONE);
@@ -339,15 +317,15 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         return passTests;
     }
 
-    public void updateUserPasswordInFirebaseAndInLocalDatabase(User user, String newPassword){
+    public void updateUserPasswordInFirebaseAndInLocalDatabase(String newPassword){
         usersDb = FirebaseDatabase.getInstance();
         databaseReference = usersDb.getReference("users");
-        databaseReference.child(user.getUsername()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+        databaseReference.child(forgotUser.getUsername()).setValue(forgotUser).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                User.setCurrentUser(user);
+                User.setCurrentUser(forgotUser);
 
-                fileAndDatabaseHelper.updateUserPasswordInLocalDatabase(user, newPassword);
+                fileAndDatabaseHelper.updateUserPasswordInLocalDatabase(forgotUser, newPassword);
 
                 me.setClass(Login.this, MainActivity.class);
                 startActivity(me);

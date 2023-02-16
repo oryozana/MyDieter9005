@@ -71,15 +71,13 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
     private MediaPlayer mediaPlayer;
     private VideoView videoView;
 
-    TextView tvGroupNumberOutOf, tvCodeState, tvTimeBeforeExpiration, tvLocalUserSelectionMainTextView, tvShowGeneratedCode;
-    Button btUseOrGenerateCode, btUseCode, btGenerateCode, btCheckCode, btBack;
-    ImageButton ibtPreviousGroup, ibtNextGroup, ibtShowCopyCodeOption;
+    TextView tvGroupNumberOutOf, tvLocalUserSelectionMainTextView;
     Button btLoginAnotherUser, btRegisterAnotherUser;
     ImageView ivUser1, ivUser2, ivUser3, ivUser4;
     TextView tvUser1, tvUser2, tvUser3, tvUser4;
-    EditText etEnterCode;
+    ImageButton ibtPreviousGroup, ibtNextGroup;
 
-    LinearLayout linearLayout, localUserSelectionLoadingLinearLayout, localUsersLinearLayout, useOrGenerateCodesLinearLayout;
+    LinearLayout linearLayout, localUserSelectionLoadingLinearLayout, localUsersLinearLayout;
     androidx.gridlayout.widget.GridLayout groupSelectorGridLayout;
 
     User[] presentedLocalUsers;
@@ -91,13 +89,8 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
     ArrayList<User> localUsers;
 
     boolean internetConnection = true;
-    boolean showUserMode = true;
     int groupsAmount = 0;
     int groupIndex = 1;
-
-    FileOutputStream fos;
-    OutputStreamWriter osw;
-    BufferedWriter bw;
 
     SQLiteDatabase sqdb;
     DBHelper my_db;
@@ -143,8 +136,6 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         btRegisterAnotherUser.setOnClickListener(this);
         btLoginAnotherUser = (Button) findViewById(R.id.btLoginAnotherUser);
         btLoginAnotherUser.setOnClickListener(this);
-        btUseOrGenerateCode = (Button) findViewById(R.id.btUseOrGenerateCode);
-        btUseOrGenerateCode.setOnClickListener(this);
 
         tvLocalUserSelectionMainTextView = (TextView) findViewById(R.id.tvLocalUserSelectionMainTextView);
 
@@ -329,7 +320,7 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
                 sqdb.close();
 
                 if(User.obtainPrimaryUser().getUsername().equals(user.getUsername()))
-                    removePrimaryUser();
+                    fileAndDatabaseHelper.removePrimaryUser();
 
                 me.setClass(LocalUserSelection.this, LocalUserSelection.class);
                 startActivity(me);
@@ -340,25 +331,6 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
 
         ad = adb.create();
         ad.show();
-    }
-
-    public void removePrimaryUser(){
-        try {
-            fos = openFileOutput("primary_user", Context.MODE_PRIVATE);
-            osw = new OutputStreamWriter(fos);
-            bw = new BufferedWriter(osw);
-
-            bw.write("Username: " + " " + "\n");
-            bw.write("Password: " + " ");
-
-            bw.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void userChosen(User user){
@@ -398,56 +370,6 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
                 ibtPreviousGroup.setVisibility(View.VISIBLE);
             if(groupIndex == groupsAmount)
                 ibtNextGroup.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    public void useCodeMode(){
-        btGenerateCode.setVisibility(View.GONE);
-        btUseCode.setVisibility(View.GONE);
-
-        tvCodeState.setText("Enter your code in here: ");
-        etEnterCode.setVisibility(View.VISIBLE);
-        btCheckCode.setVisibility(View.VISIBLE);
-        btBack.setVisibility(View.VISIBLE);
-    }
-
-    public void backToChoosing(){
-        btGenerateCode.setVisibility(View.VISIBLE);
-        btUseCode.setVisibility(View.VISIBLE);
-
-        tvCodeState.setText("What are you intending to do?");
-
-        btCheckCode.setVisibility(View.GONE);
-
-        tvTimeBeforeExpiration.setVisibility(View.GONE);
-        etEnterCode.setVisibility(View.GONE);
-        btCheckCode.setVisibility(View.GONE);
-        tvShowGeneratedCode.setVisibility(View.GONE);
-        ibtShowCopyCodeOption.setVisibility(View.GONE);
-
-        btBack.setVisibility(View.GONE);
-    }
-
-    public void changeLocalUsersScreenMode(){
-        showUserMode = !showUserMode;
-
-        if(showUserMode) {
-            tvLocalUserSelectionMainTextView.setVisibility(View.VISIBLE);
-
-            if(groupsAmount > 1)
-                groupSelectorGridLayout.setVisibility(View.VISIBLE);
-
-            useOrGenerateCodesLinearLayout.setVisibility(View.GONE);
-            localUsersLinearLayout.setVisibility(View.VISIBLE);
-            btUseOrGenerateCode.setText("Use / Generate Code");
-        }
-        else{
-            tvLocalUserSelectionMainTextView.setVisibility(View.INVISIBLE);
-            groupSelectorGridLayout.setVisibility(View.INVISIBLE);
-
-            localUsersLinearLayout.setVisibility(View.GONE);
-            useOrGenerateCodesLinearLayout.setVisibility(View.VISIBLE);
-            btUseOrGenerateCode.setText("Show local users");
         }
     }
 
@@ -572,24 +494,6 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
 
         if(viewId == ibtPreviousGroup.getId())
             previousGroup();
-
-//        if(viewId == btUseOrGenerateCode.getId())
-//            changeLocalUsersScreenMode();
-//
-//        if(viewId == btGenerateCode.getId())
-//            generateCodeAndExpirationDate();
-//
-//        if(viewId == btUseCode.getId())
-//            useCodeMode();
-//
-//        if(viewId == btCheckCode.getId())
-//            useCode();
-//
-//        if(viewId == btBack.getId())
-//            backToChoosing();
-//
-//        if(viewId == ibtShowCopyCodeOption.getId())
-//            copyCodeOption();
     }
 
     @Override
