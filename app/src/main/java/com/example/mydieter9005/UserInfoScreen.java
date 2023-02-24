@@ -318,27 +318,27 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    public void showCodeGenerator(){
-        AlertDialog ad;
-        AlertDialog.Builder adb;
-        adb = new AlertDialog.Builder(this);
-        adb.setTitle("Your user code is: ");
-        adb.setIcon(R.drawable.ic_code_icon);
-
-        LinearLayout shareUserByCodeLinearLayout = (LinearLayout) findViewById(R.id.shareUserByCodeLinearLayout);
-        shareUserByCodeLinearLayout.setVisibility(View.VISIBLE);
-        adb.setView(shareUserByCodeLinearLayout);
-
-        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-
-        ad = adb.create();
-        ad.show();
-    }
+//    public void showCodeGenerator(){
+//        AlertDialog ad;
+//        AlertDialog.Builder adb;
+//        adb = new AlertDialog.Builder(this);
+//        adb.setTitle("Your user code is: ");
+//        adb.setIcon(R.drawable.ic_code_icon);
+//
+//        LinearLayout shareUserByCodeLinearLayout = (LinearLayout) findViewById(R.id.shareUserByCodeLinearLayout);
+//        shareUserByCodeLinearLayout.setVisibility(View.VISIBLE);
+//        adb.setView(shareUserByCodeLinearLayout);
+//
+//        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//
+//        ad = adb.create();
+//        ad.show();
+//    }
 
     public void deleteUserAlertDialog(){
         AlertDialog ad;
@@ -579,8 +579,8 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         if(viewId == btCancelProfilePictureSelection.getId())
             switchBetweenProfilePictureSelectionAndUserInfoScreen();
 
-        if(viewId == btShareUserByCode.getId())
-            showCodeGenerator();
+//        if(viewId == btShareUserByCode.getId())
+//            showCodeGenerator();
 
         if(viewId == btRemovePrimaryUser.getId())
             removePrimaryUser();

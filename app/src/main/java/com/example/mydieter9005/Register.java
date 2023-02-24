@@ -12,19 +12,30 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.inputmethodservice.ExtractEditText;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -51,11 +62,14 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     EditText etGetUsername, etGetPassword, etGetEmail, etGetStartingWeight;
     EditText etGetTargetCalories, etGetTargetProteins, etGetTargetFats;
     LinearLayout linearLayout, registerLoadingLinearLayout;
+    Button btRegister, btGoToLogin, btGetHelpCreatingAPlan;
     CheckBox cbRememberRegisteredUserInLocalDatabase;
-    Button btRegister, btGoToLogin;
 
     FileAndDatabaseHelper fileAndDatabaseHelper;
     Song activeSong = Song.getSongs().get(0);
+
+    Plan currentGeneratedPlan, maintainWeightPlan, loseWeightPlan, gainWeightPlan;
+    int currentPlanIndex = 1, maxPlansAmount = 3;
 
     ArrayList<String> usernamesList = new ArrayList<String>();
     int userPicturesAmount = 10;
@@ -87,6 +101,8 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         etGetTargetProteins = (EditText) findViewById(R.id.etGetTargetProteins);
         etGetTargetFats = (EditText) findViewById(R.id.etGetTargetFats);
 
+        btGetHelpCreatingAPlan = (Button) findViewById(R.id.btGetHelpCreatingAPlan);
+        btGetHelpCreatingAPlan.setOnClickListener(this);
         btGoToLogin = (Button) findViewById(R.id.btGoToLogin);
         btGoToLogin.setOnClickListener(this);
         btRegister = (Button) findViewById(R.id.btRegister);
@@ -261,6 +277,202 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         });
     }
 
+    public void generatePlanAlertDialog(){
+        AlertDialog ad;
+        AlertDialog.Builder adb;
+        adb = new AlertDialog.Builder(Register.this);
+
+        View customAlertDialog = LayoutInflater.from(Register.this).inflate(R.layout.generate_plan_alert_dialog, null);
+
+        LinearLayout generatePlansLinearLayout = (LinearLayout) customAlertDialog.findViewById(R.id.generatePlansLinearLayout);
+        EditText etGetAge = (EditText) customAlertDialog.findViewById(R.id.etGetAge);
+        EditText etGetHeight = (EditText) customAlertDialog.findViewById(R.id.etGetHeight);
+        EditText etGetWeight = (EditText) customAlertDialog.findViewById(R.id.etGetWeight);
+        Spinner sHowActiveAreYou = (Spinner) customAlertDialog.findViewById(R.id.sHowActiveAreYou);
+        RadioGroup rgChooseGender = (RadioGroup) customAlertDialog.findViewById(R.id.rgChooseGender);
+        Button btGeneratePlans = (Button) customAlertDialog.findViewById(R.id.btGeneratePlans);
+
+        ArrayAdapter<String> alertDialogAdapter = new ArrayAdapter<String>(Register.this, android.R.layout.simple_spinner_dropdown_item, Plan.getActiveLevelOptions());
+        sHowActiveAreYou.setAdapter(alertDialogAdapter);
+
+        LinearLayout showPlansLinearLayout = (LinearLayout) customAlertDialog.findViewById(R.id.showPlansLinearLayout);
+        TextView tvPlanName = (TextView) customAlertDialog.findViewById(R.id.tvPlanName);
+        TextView tvPlanCalories = (TextView) customAlertDialog.findViewById(R.id.tvPlanCalories);
+        TextView tvPlanProteins = (TextView) customAlertDialog.findViewById(R.id.tvPlanProteins);
+        TextView tvPlanFats = (TextView) customAlertDialog.findViewById(R.id.tvPlanFats);
+        ImageButton ibtPreviousPlan = (ImageButton) customAlertDialog.findViewById(R.id.ibtPreviousPlan);
+        TextView tvPlanNumberOutOf = (TextView) customAlertDialog.findViewById(R.id.tvPlanNumberOutOf);
+        ImageButton ibtNextPlan = (ImageButton) customAlertDialog.findViewById(R.id.ibtNextPlan);
+        Button btChoosePlan = (Button) customAlertDialog.findViewById(R.id.btChoosePlan);
+        Button btCancelPlan = (Button) customAlertDialog.findViewById(R.id.btCancelPlan);
+
+        adb.setView(customAlertDialog);
+        ad = adb.create();
+
+        btGeneratePlans.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String testWeight = etGetWeight.getText().toString();
+                String testHeight = etGetHeight.getText().toString();
+                String testAge = etGetAge.getText().toString();
+                String activeLevel = sHowActiveAreYou.getSelectedItem().toString();
+
+                if(passAlertDialogInfoTests(testWeight, testHeight, testAge, activeLevel)) {
+                    double weight = Double.parseDouble(testWeight);
+                    double height = Double.parseDouble(testHeight);
+                    int age = Integer.parseInt(testAge);
+
+                    String gender;
+                    if(rgChooseGender.getCheckedRadioButtonId() == R.id.rbChooseMale)
+                        gender = "Male";
+                    else
+                        gender = "Female";
+
+                    loseWeightPlan = new Plan("Lose weight", gender, weight, height, age, activeLevel);
+                    maintainWeightPlan = new Plan("Maintain weight", gender, weight, height, age, activeLevel);
+                    gainWeightPlan = new Plan("Gain weight", gender, weight, height, age, activeLevel);
+
+                    generatePlansLinearLayout.setVisibility(View.GONE);
+                    showPlansLinearLayout.setVisibility(View.VISIBLE);
+
+                    tvPlanName.setText("Name: Lose weight");
+                    tvPlanCalories.setText("Calories: " + loseWeightPlan.getTargetCalories());
+                    tvPlanProteins.setText("Proteins: " + loseWeightPlan.getTargetProteins());
+                    tvPlanFats.setText("Fats: " + loseWeightPlan.getTargetFats());
+
+                    tvPlanNumberOutOf.setText("Plan number 1 out of " + maxPlansAmount);
+                    ibtPreviousPlan.setVisibility(View.INVISIBLE);
+                    ibtNextPlan.setVisibility(View.VISIBLE);
+
+                    currentPlanIndex = 1;
+                }
+            }
+        });
+
+        ibtPreviousPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(0 < currentPlanIndex && currentPlanIndex <= maxPlansAmount){
+                    currentPlanIndex--;
+
+                    if(currentPlanIndex == 1)
+                        currentGeneratedPlan = loseWeightPlan;
+                    if(currentPlanIndex == 2)
+                        currentGeneratedPlan = maintainWeightPlan;
+                    if(currentPlanIndex == 3)
+                        currentGeneratedPlan = gainWeightPlan;
+
+                    tvPlanName.setText("Name: " + currentGeneratedPlan.getGoal());
+                    tvPlanCalories.setText("Calories: " + currentGeneratedPlan.getTargetCalories());
+                    tvPlanProteins.setText("Proteins: " + currentGeneratedPlan.getTargetProteins());
+                    tvPlanFats.setText("Fats: " + currentGeneratedPlan.getTargetFats());
+
+                    tvPlanNumberOutOf.setText("Plan number " + currentPlanIndex + " out of " + maxPlansAmount);
+
+                    ibtNextPlan.setVisibility(View.VISIBLE);
+                    if(currentPlanIndex == 1)
+                        ibtPreviousPlan.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        ibtNextPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(0 <= currentPlanIndex && currentPlanIndex < maxPlansAmount) {
+                    currentPlanIndex++;
+
+                    if(currentPlanIndex == 1)
+                        currentGeneratedPlan = loseWeightPlan;
+                    if(currentPlanIndex == 2)
+                        currentGeneratedPlan = maintainWeightPlan;
+                    if(currentPlanIndex == 3)
+                        currentGeneratedPlan = gainWeightPlan;
+
+                    tvPlanName.setText("Name: " + currentGeneratedPlan.getGoal());
+                    tvPlanCalories.setText("Calories: " + currentGeneratedPlan.getTargetCalories());
+                    tvPlanProteins.setText("Proteins: " + currentGeneratedPlan.getTargetProteins());
+                    tvPlanFats.setText("Fats: " + currentGeneratedPlan.getTargetFats());
+
+                    tvPlanNumberOutOf.setText("Plan number " + currentPlanIndex + " out of " + maxPlansAmount);
+
+                    if(1 < currentPlanIndex)
+                        ibtPreviousPlan.setVisibility(View.VISIBLE);
+                    if(currentPlanIndex == maxPlansAmount)
+                        ibtNextPlan.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        btChoosePlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(Register.this, "The plan to " + currentGeneratedPlan.getGoal() + " chosen successfully !", Toast.LENGTH_SHORT).show();
+                etGetTargetCalories.setText(currentGeneratedPlan.getTargetCalories() + "");
+                etGetTargetProteins.setText(currentGeneratedPlan.getTargetProteins() + "");
+                etGetTargetFats.setText(currentGeneratedPlan.getTargetFats() + "");
+                ad.cancel();
+            }
+        });
+
+        btCancelPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ad.cancel();
+            }
+        });
+
+        ad.show();
+    }
+
+    public boolean passAlertDialogInfoTests(String weight, String height, String age, String activeLevel) {
+        boolean passTests = true;
+
+        if(weight.replaceAll(" ", "").equals("")){
+            Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
+            passTests = false;
+        }
+        else{
+            if(!(0 < Double.parseDouble(weight) && Double.parseDouble(weight) < 500)){
+                Toast.makeText(this, "Starting weight should be between 0 to 500 kg.", Toast.LENGTH_SHORT).show();
+                passTests = false;
+            }
+        }
+
+        if(passTests){
+            if(height.replaceAll(" ", "").equals("")){
+                Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
+                passTests = false;
+            }
+            else{
+                if((!(50 < Double.parseDouble(height) && Double.parseDouble(height) < 250))){
+                    Toast.makeText(this, "Height should be between 50 to 250 cm.", Toast.LENGTH_SHORT).show();
+                    passTests = false;
+                }
+            }
+        }
+
+        if(passTests){
+            if(age.replaceAll(" ", "").equals("")){
+                Toast.makeText(this, "One or more of the fields is empty.", Toast.LENGTH_SHORT).show();
+                passTests = false;
+            }
+            else{
+                if((!(0 < Integer.parseInt(age) && Integer.parseInt(age) < 120))){
+                    Toast.makeText(this, "Age should be between 0 to 120 years.", Toast.LENGTH_SHORT).show();
+                    passTests = false;
+                }
+            }
+        }
+
+        if(activeLevel == null && passTests){
+            Toast.makeText(this, "Choose an active level first.", Toast.LENGTH_SHORT).show();
+            passTests = false;
+        }
+
+        return passTests;
+    }
+
     public void goToLogin(){
         me.setClass(this, Login.class);
         startActivity(me);
@@ -387,6 +599,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
+
+        if(viewId == btGetHelpCreatingAPlan.getId())
+            generatePlanAlertDialog();
 
         if(viewId == btRegister.getId())
             createUserAndUserPlan();

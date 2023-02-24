@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/generatePlansLinearLayout"
+        android:layout_width="160pt"
+        android:layout_height="300pt"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:textSize="8pt"
+            android:layout_marginTop="10pt"
+            android:layout_marginBottom="4pt"
+            android:text="In order to generate plans, enter the following info: " />
+
+        <EditText
+            android:id="@+id/etGetAge"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            android:hint="Enter your age: " />
+
+        <EditText
+            android:id="@+id/etGetHeight"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:hint="Enter your height (cm): " />
+
+        <EditText
+            android:id="@+id/etGetWeight"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:hint="Enter your weight (kg): " />
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:textSize="8pt"
+            android:layout_marginTop="8pt"
+            android:layout_marginBottom="3pt"
+            android:text="Select how active are you: " />
+
+        <Spinner
+            android:id="@+id/sHowActiveAreYou"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"/>
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:textSize="8pt"
+            android:layout_marginTop="8pt"
+            android:layout_marginBottom="3pt"
+            android:text="Select your gender: " />
+
+        <RadioGroup
+            android:id="@+id/rgChooseGender"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6pt">
+
+            <RadioButton
+                android:id="@+id/rbChooseMale"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Male" />
+
+            <RadioButton
+                android:id="@+id/rbChooseFemale"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Female" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:textSize="5pt"
+            android:layout_marginTop="2pt"
+            android:layout_marginBottom="2pt"
+            android:text="* This information will not be saved." />
+
+        <Button
+            android:id="@+id/btGeneratePlans"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10pt"
+            android:text="Generate plans" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/showPlansLinearLayout"
+        android:layout_width="160pt"
+        android:layout_height="260pt"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:textSize="8pt"
+            android:layout_marginTop="10pt"
+            android:layout_marginBottom="6pt"
+            android:text="Here are some plans just for you: " />
+
+        <ImageView
+            android:layout_width="125pt"
+            android:layout_height="75pt"
+            android:src="@drawable/diet_plan_background" />
+
+        <TextView
+            android:id="@+id/tvPlanName"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6pt"
+            android:textStyle="bold"
+            android:text="Name: " />
+
+        <TextView
+            android:id="@+id/tvPlanCalories"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Calories: " />
+
+        <TextView
+            android:id="@+id/tvPlanProteins"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Proteins: " />
+
+        <TextView
+            android:id="@+id/tvPlanFats"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6pt"
+            android:text="Fats: " />
+
+        <androidx.gridlayout.widget.GridLayout
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            app:orientation="horizontal"
+            android:layout_marginTop="6pt"
+            android:layout_marginBottom="6pt"
+            android:layoutDirection="ltr">
+
+            <ImageButton
+                android:id="@+id/ibtPreviousPlan"
+                android:layout_width="25pt"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_previous_arrow_icon"
+                android:visibility="invisible"
+                android:layoutDirection="ltr"/>
+
+            <TextView
+                android:id="@+id/tvPlanNumberOutOf"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|bottom" />
+
+            <ImageButton
+                android:id="@+id/ibtNextPlan"
+                android:layout_width="25pt"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_next_arrow_icon"
+                android:layoutDirection="ltr"/>
+        </androidx.gridlayout.widget.GridLayout>
+
+        <Button
+            android:id="@+id/btChoosePlan"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Choose this plan" />
+
+        <Button
+            android:id="@+id/btCancelPlan"
+            android:layout_width="125pt"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
+    </LinearLayout>
+</LinearLayout>

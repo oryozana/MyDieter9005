@@ -3,6 +3,7 @@ package com.example.mydieter9005;
 import java.io.Serializable;
 
 public class Plan implements Serializable {
+    private static String[] activeLevelOptions = new String[]{"Sedentary", "Lightly active", "Moderately active", "Very active", "Extra active"};
     private double targetCalories;
     private double targetProteins;
     private double targetFats;
@@ -22,17 +23,20 @@ public class Plan implements Serializable {
         this.goal = "Custom";
     }
 
-    public Plan(String goal, String sex, double weight, double height, int age){
+    public Plan(String goal, String sex, double weight, double height, int age, String activeLevel){
+        double[] activeLevelValues = new double[]{1.2, 1.375, 1.55, 1.725, 1.9};
         double calories, proteins, fats;
-        if(sex.equals("Man")) {
-            calories = 66.5 + (13.8 * weight) + (5 * height) - (6.8 * age);
-            fats = calories * 0.15;
+
+        if(sex.equals("Male")) {
+            calories = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            proteins = weight + (height * 0.4) - (age * 0.4) - 19;
+            fats = (weight * 0.5) + (height * 0.03) - (age * 0.02) - 5.4;
         }
         else {
-            calories = 655.1 + (9.6 * weight) + (1.9 * height) - (4.7 * age);
-            fats = calories * 0.2;
+            calories = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            proteins = (weight * 0.9) + (height * 0.3) - (age * 0.3) - 25;
+            fats = (weight * 0.4) + (height * 0.025) - (age * 0.015) - 4.3;
         }
-        proteins = calories * 0.2;
 
         if(goal.equals("Maintain weight")){
             this.targetCalories = calories;
@@ -51,7 +55,23 @@ public class Plan implements Serializable {
             this.targetProteins = proteins * 1.15;
             this.targetFats = fats * 1.15;
         }
+
+        for(int level = 0; level < activeLevelOptions.length; level++){
+            if(activeLevelOptions[level].equals(activeLevel)){
+                this.targetCalories *= activeLevelValues[level];
+                this.targetProteins *= activeLevelValues[level];
+                this.targetFats *= activeLevelValues[level];
+            }
+        }
+
         this.goal = goal;
+        roundValues();
+    }
+
+    public void roundValues(){
+        this.targetCalories = Math.round(this.targetCalories * 1000.0) / 1000.0;
+        this.targetProteins = Math.round(this.targetProteins * 1000.0) / 1000.0;
+        this.targetFats = Math.round(this.targetFats * 1000.0) / 1000.0;
     }
 
     public double getTargetCalories() {
@@ -80,6 +100,10 @@ public class Plan implements Serializable {
 
     public String getGoal() {
         return goal;
+    }
+
+    public static String[] getActiveLevelOptions() {
+        return activeLevelOptions;
     }
 
     @Override

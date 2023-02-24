@@ -10,7 +10,7 @@ public class User implements Serializable {
     private String username;
     private String password;
     private String Email;
-    private double startingWeight;
+    private final double startingWeight;
     private double weight;
     private Plan currentPlan;
     private int profilePictureId;

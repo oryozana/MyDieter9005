@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="numberDecimal"
-            android:hint="Enter your weight: " />
+            android:hint="Enter your weight (kg): " />
 
         <TextView
             android:layout_width="150pt"
@@ -69,30 +69,37 @@
             android:layout_marginTop="20pt"
             android:text="Enter your diet plan info: " />
 
-
         <EditText
             android:id="@+id/etGetTargetCalories"
             android:layout_width="150pt"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="numberDecimal"
-            android:hint="Enter your target calories: " />
+            android:hint="Enter your target calories: "
+            android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/etGetTargetProteins"
             android:layout_width="150pt"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="numberDecimal"
-            android:hint="Enter your target proteins: " />
+            android:hint="Enter your target proteins: "
+            android:inputType="numberDecimal" />
 
         <EditText
             android:id="@+id/etGetTargetFats"
             android:layout_width="150pt"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="numberDecimal"
-            android:hint="Enter your target fats: " />
+            android:hint="Enter your target fats: "
+            android:inputType="numberDecimal" />
+
+        <Button
+            android:id="@+id/btGetHelpCreatingAPlan"
+            android:layout_width="150pt"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6pt"
+            android:layout_marginTop="4pt"
+            android:text="Get help creating a plan" />
 
         <CheckBox
             android:id="@+id/cbRememberRegisteredUserInLocalDatabase"
