@@ -159,26 +159,6 @@
                 android:layout_marginBottom="8pt"
                 android:text="Total calories: "
                 android:textColor="@color/white" />
-
-            <Button
-                android:id="@+id/btMealsMenu"
-                android:layout_width="125pt"
-                android:layout_height="wrap_content"
-                android:text="Meals selector" />
-
-            <Button
-                android:id="@+id/btWriteMealsToExternalFile"
-                android:layout_width="125pt"
-                android:layout_height="wrap_content"
-                android:text="Save meals on external file"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/btReadMealsFromExternalFile"
-                android:layout_width="125pt"
-                android:layout_height="wrap_content"
-                android:text="Load saved meals"
-                android:visibility="gone" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

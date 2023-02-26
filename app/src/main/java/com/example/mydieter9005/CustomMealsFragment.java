@@ -130,14 +130,7 @@ public class CustomMealsFragment extends Fragment implements View.OnClickListene
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(DailyMenu.hasCustomMeal()){
-                    if(DailyMenu.getCustomMeal().getName().contains("Modifying: "))
-                        customMeal.setName("Modifying: " + s.toString());
-                    else
-                        customMeal.setName(s.toString());
-                }
-                else
-                    customMeal.setName(s.toString());
+                customMeal.setName(s.toString());
             }
 
             @Override
@@ -148,18 +141,8 @@ public class CustomMealsFragment extends Fragment implements View.OnClickListene
 
         setCustomNetworkConnectionReceiver();
 
-        if(!customMeal.getName().equals("")) {
-            if(DailyMenu.getCustomMeal().getName().contains("Modifying: ")) {
-                etCustomMeal.setText(customMeal.getName().split("Modifying: ")[1]);
-                etCustomMeal.setFocusable(false);
-            }
-            else {
-                etCustomMeal.setText(customMeal.getName());
-                etCustomMeal.setFocusableInTouchMode(true);
-            }
-        }
-        else
-            etCustomMeal.setFocusableInTouchMode(true);
+        if(!customMeal.getName().equals(""))
+            etCustomMeal.setText(customMeal.getName());
 
         if(isCustomSelection)
             switchBetweenCustomMealsAndCustomSelection();
@@ -210,18 +193,8 @@ public class CustomMealsFragment extends Fragment implements View.OnClickListene
             tvCustomSelection.setVisibility(View.GONE);
             btUseCodeAlertDialog.setVisibility(View.GONE);
 
-            if(!customMeal.getName().equals("")) {
-                if(DailyMenu.getCustomMeal().getName().contains("Modifying: ")) {
-                    etCustomMeal.setText(customMeal.getName().split("Modifying: ")[1]);
-                    etCustomMeal.setFocusable(false);
-                }
-                else {
-                    etCustomMeal.setText(customMeal.getName());
-                    etCustomMeal.setFocusableInTouchMode(true);
-                }
-            }
-            else
-                etCustomMeal.setFocusableInTouchMode(true);
+            if(!customMeal.getName().equals(""))
+                etCustomMeal.setText(customMeal.getName());
 
             setIngredientsAdapters();
         }
@@ -430,7 +403,7 @@ public class CustomMealsFragment extends Fragment implements View.OnClickListene
         LinearLayout customMealsOptionsLinearLayout = (LinearLayout) customAlertDialog.findViewById(R.id.customMealsOptionsLinearLayout);
         Button btPublishCustomMeal = (Button) customAlertDialog.findViewById(R.id.btPublishCustomMeal);
         Button btShareCustomMeal = (Button) customAlertDialog.findViewById(R.id.btShareCustomMeal);
-        Button btModifyCustomMeal = (Button) customAlertDialog.findViewById(R.id.btModifyCustomMeal);
+        Button btUseCustomMealAsBase = (Button) customAlertDialog.findViewById(R.id.btUseCustomMealAsBase);
         Button btRemoveCustomMeal = (Button) customAlertDialog.findViewById(R.id.btRemoveCustomMeal);
 
         LinearLayout chooseCodeDurationLinearLayout = (LinearLayout) customAlertDialog.findViewById(R.id.chooseCodeDurationLinearLayout);
@@ -495,14 +468,14 @@ public class CustomMealsFragment extends Fragment implements View.OnClickListene
             }
         });
 
-        btModifyCustomMeal.setOnClickListener(new View.OnClickListener() {
+        btUseCustomMealAsBase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 customMealsOptionsLinearLayout.setVisibility(View.GONE);
 
                 if(!DailyMenu.hasCustomMeal()) {
                     ad.cancel();
-                    meal.setName("Modifying: " + meal.getName());
+                    meal.setName(meal.getName() + " based");
                     DailyMenu.saveCustomMeal(meal);
                     switchBetweenCustomMealsAndCustomSelection();
                 }
@@ -1002,17 +975,10 @@ public class CustomMealsFragment extends Fragment implements View.OnClickListene
     }
 
     public void saveAndClearCustomMeal(){
-        if(DailyMenu.hasCustomMeal()){
-            if(DailyMenu.getCustomMeal().getName().contains("Modifying: "))
-                customMeal.setName(DailyMenu.getCustomMeal().getName().split("Modifying: ")[1]);
-        }
-
         if(checkIfCustomMealIsOk()) {
             saveCustomMealInAFile();
 
             DailyMenu.saveCustomMeal(null);
-            etCustomMeal.setFocusableInTouchMode(true);
-            etCustomMeal.setFocusable(true);
             etCustomMeal.setText("");
             customMeal = new Meal("");
             setIngredientsAdapters();

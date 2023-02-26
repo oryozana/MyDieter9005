@@ -6157,8 +6157,347 @@ public class removedFunctions {
 //        if(viewId == ibtShowCopyCodeOption.getId())
 //            copyCodeOption();
 
+            // From: IngredientsPickup:
+//    package com.example.mydieter9005;
+//
+//import androidx.annotation.NonNull;
+//import androidx.appcompat.app.AppCompatActivity;
+//
+//import android.content.Intent;
+//import android.media.MediaPlayer;
+//import android.os.Bundle;
+//import android.view.Menu;
+//import android.view.MenuInflater;
+//import android.view.MenuItem;
+//import android.view.View;
+//import android.widget.Button;
+//import android.widget.ImageButton;
+//import android.widget.ImageView;
+//import android.widget.TextView;
+//import android.widget.Toast;
+//
+//import java.io.BufferedReader;
+//import java.io.FileInputStream;
+//import java.io.FileNotFoundException;
+//import java.io.IOException;
+//import java.io.InputStreamReader;
+//import java.util.ArrayList;
+//
+//    public class ingredientsPickup extends AppCompatActivity implements View.OnClickListener {
+//
+//        private MediaPlayer mediaPlayer;
+//
+//        TextView tvFoodName, tvFoodGrams, tvCounterShow;
+//        ImageButton ibtNext, ibtPrevious;
+//        Button btFinishIngredientsPickup;
+//        ImageView ivFoodImg;
+//
+//        ArrayList<Ingredient> ingredients, finalIngredients;
+//        int ingredientsCounter = 0, ingredientsAmount = 0;
+//        ArrayList<Ingredient> ingredientsToShow;
+//        String lastClicked = "next";
+//
+//        DailyMenu todayMenu = DailyMenu.getTodayMenu();
+//        FileAndDatabaseHelper fileAndDatabaseHelper;
+//        Song activeSong = Song.getSongs().get(0);
+//
+//        Intent me;
+//
+//        @Override
+//        protected void onCreate(Bundle savedInstanceState) {
+//            super.onCreate(savedInstanceState);
+//            setContentView(R.layout.activity_ingredients_pickup);
+//
+//            me = getIntent();
+//            if(me.hasExtra("activeSong"))
+//                activeSong = (Song) me.getSerializableExtra("activeSong");
+//
+//            ingredients = Ingredient.getIngredientsList();  // All the ingredients that inside the app.
+//            finalIngredients = new ArrayList<Ingredient>();  // The needed ingredients to make the meals.
+//
+//            tvCounterShow = (TextView) findViewById(R.id.tvCounterShow);
+//            tvFoodName = (TextView) findViewById(R.id.tvFoodName);
+//            tvFoodGrams = (TextView) findViewById(R.id.tvFoodGrams);
+//
+//            ivFoodImg = (ImageView) findViewById(R.id.ivFoodImg);
+//
+//            btFinishIngredientsPickup = (Button) findViewById(R.id.btFinishIngredientsPickup);
+//            btFinishIngredientsPickup.setOnClickListener(this);
+//            ibtPrevious = (ImageButton) findViewById(R.id.ibtPrevious);
+//            ibtPrevious.setOnClickListener(this);
+//            ibtNext = (ImageButton) findViewById(R.id.ibtNext);
+//            ibtNext.setOnClickListener(this);
+//
+//            fileAndDatabaseHelper = new FileAndDatabaseHelper(this, me);
+//            activeSong = fileAndDatabaseHelper.implementSettingsData();
+//
+//            initiateIngredientsToShow();
+//            initiateMediaPlayer();
+//        }
+//
+//        public int getIngredientIndexInArrayList(Ingredient ingredient, ArrayList<Ingredient> ingredientsArrayList){
+//            for(int i = 0; i < ingredientsArrayList.size(); i++){
+//                if(ingredientsArrayList.get(i).getName().equals(ingredient.getName()))
+//                    return i;
+//            }
+//            return -1;
+//        }
+//
+//        public void initiateIngredientsToShow(){
+//            ingredientsToShow = todayMenu.generateAllIngredientsNeededArrayList();
+//            ingredientsAmount = ingredientsToShow.size();
+//
+//            tvCounterShow.setText("Item: " + ingredientsCounter + " out of " + ingredientsAmount);
+//            if(ingredientsAmount == 0)
+//                ibtNext.setVisibility(View.INVISIBLE);
+//        }
+//
+//        public void nextItem(){
+//            if(ingredientsCounter + 1 == ingredientsAmount)
+//                ibtNext.setVisibility(View.INVISIBLE);
+//            if(ibtPrevious.getVisibility() == View.INVISIBLE && ingredientsCounter != 0)
+//                ibtPrevious.setVisibility(View.VISIBLE);
+//
+//            ingredientsCounter++;
+//            setIngredientInfo();
+//
+//            lastClicked = "next";
+//            tvCounterShow.setText("Item: " + ingredientsCounter + " out of " + ingredientsAmount);
+//        }
+//
+//        public void previousItem(){
+//            if(ingredientsCounter == 2)
+//                ibtPrevious.setVisibility(View.INVISIBLE);
+//            if(ibtNext.getVisibility() == View.INVISIBLE)
+//                ibtNext.setVisibility(View.VISIBLE);
+//
+//            ingredientsCounter--;
+//            setIngredientInfo();
+//
+//            lastClicked = "previous";
+//            tvCounterShow.setText("Item: " + ingredientsCounter + " out of " + ingredientsAmount);
+//        }
+//
+//        public void setIngredientInfo(){
+//            Ingredient ingredient = ingredientsToShow.get(ingredientsCounter - 1);
+//            tvFoodName.setText("Name: " + ingredient.getName());
+//            tvFoodGrams.setText("Grams: " + ingredient.getGrams());
+//
+//            if(getIngredientIndexInArrayList(ingredient, ingredients) != -1)
+//                ivFoodImg.setImageResource(ingredient.getImgId());
+//            else
+//                ivFoodImg.setImageResource(R.drawable.image_not_available);
+//        }
+//
+//        public void finishIngredientsPickup(){
+//            me.setClass(this, MainActivity.class);
+//            startActivity(me);
+//        }
+//
+//        public void initiateMediaPlayer(){
+//            mediaPlayer = MediaPlayer.create(ingredientsPickup.this, activeSong.getId());
+//            mediaPlayer.setLooping(true);
+//            if(me.getBooleanExtra("playMusic", true)){
+//                mediaPlayer.start();
+//            }
+//        }
+//
+//        @Override
+//        public boolean onCreateOptionsMenu(@NonNull Menu menu) {
+//            MenuInflater inflater = getMenuInflater();
+//            inflater.inflate(R.menu.main_menu, menu);
+//            return true;
+//        }
+//
+//        @Override
+//        public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//            int itemID = item.getItemId();
+//            if(itemID == R.id.sendToMusicMaster){
+//                me.setClass(ingredientsPickup.this, musicMaster.class);
+//                me.putExtra("cameToMusicMasterFrom", getLocalClassName());
+//                startActivity(me);
+//            }
+//
+//            if(itemID == R.id.sendToSettings){
+//                me.setClass(ingredientsPickup.this, settingsSetter.class);
+//                me.putExtra("cameToSettingsFrom", getLocalClassName());
+//                startActivity(me);
+//            }
+//
+//            if(itemID == R.id.sendToUserScreen){
+//                me.setClass(ingredientsPickup.this, UserInfoScreen.class);
+//                me.putExtra("cameToUserScreenFrom", getLocalClassName());
+//                startActivity(me);
+//            }
+//            return super.onOptionsItemSelected(item);
+//        }
+//
+//        @Override
+//        protected void onResume() {
+//            super.onResume();
+//            mediaPlayer.start();
+//            if(!me.getBooleanExtra("playMusic", true)){
+//                mediaPlayer.stop();
+//            }
+//        }
+//
+//        @Override
+//        protected void onPause() {
+//            super.onPause();
+//            mediaPlayer.pause();
+//        }
+//
+//        @Override
+//        protected void onDestroy() {
+//            super.onDestroy();
+//            mediaPlayer.stop();
+//            mediaPlayer.release();
+//        }
+//
+//        @Override
+//        public void onClick(View v) {
+//            int viewId = v.getId();
+//
+//            if(viewId == ibtNext.getId())
+//                nextItem();
+//
+//            if(viewId == ibtPrevious.getId())
+//                previousItem();
+//
+//            if(viewId == btFinishIngredientsPickup.getId())
+//                finishIngredientsPickup();
+//        }
+//    }
 
+//    <?xml version="1.0" encoding="utf-8"?>
+//<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+//    xmlns:app="http://schemas.android.com/apk/res-auto"
+//    xmlns:tools="http://schemas.android.com/tools"
+//    android:layout_width="match_parent"
+//    android:layout_height="match_parent"
+//    android:orientation="vertical"
+//    android:gravity="center"
+//    android:background="@drawable/ingredients_pickup_background"
+//    tools:context=".ingredientsPickup">
+//
+//    <TextView
+//    android:id="@+id/tvFoodName"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:text="Name: "
+//    android:textColor="@color/black"
+//    android:textSize="10pt"/>
+//
+//    <TextView
+//    android:id="@+id/tvFoodGrams"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:text="Grams: "
+//    android:textColor="@color/black"
+//    android:textSize="10pt"/>
+//
+//    <ImageView
+//    android:id="@+id/ivFoodImg"
+//    android:layout_width="100pt"
+//    android:layout_height="80pt"
+//    android:layout_margin="6pt"
+//    app:srcCompat="@drawable/food_time" />
+//
+//    <TextView
+//    android:id="@+id/tvCounterShow"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:textColor="@color/black"
+//    android:gravity="center" />
+//
+//    <androidx.gridlayout.widget.GridLayout
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginTop="4pt"
+//    app:orientation="horizontal"
+//    android:layoutDirection="ltr">
+//
+//        <ImageButton
+//    android:id="@+id/ibtPrevious"
+//    android:layout_width="48pt"
+//    android:layout_height="wrap_content"
+//    android:layout_margin="1pt"
+//    android:visibility="invisible"
+//    app:srcCompat="@drawable/ic_previous_arrow_icon"
+//    android:layoutDirection="ltr"/>
+//
+//        <ImageButton
+//    android:id="@+id/ibtNext"
+//    android:layout_width="48pt"
+//    android:layout_height="wrap_content"
+//    android:layout_margin="1pt"
+//    app:srcCompat="@drawable/ic_next_arrow_icon"
+//    android:layoutDirection="ltr"/>
+//    </androidx.gridlayout.widget.GridLayout>
+//
+//    <Button
+//    android:id="@+id/btFinishIngredientsPickup"
+//    android:layout_width="100pt"
+//    android:layout_height="wrap_content"
+//    android:text="Finish" />
+//
+//</LinearLayout>
 
+            // From: HomeFragment:
+//            Button btMealsMenu, btWriteMealsToExternalFile, btReadMealsFromExternalFile;
+//    LinearLayout breakfastLinearLayout, lunchLinearLayout, dinnerLinearLayout;
 
+//    btReadMealsFromExternalFile = (Button) view.findViewById(R.id.btReadMealsFromExternalFile);
+//        btReadMealsFromExternalFile.setOnClickListener(this);
+//    btWriteMealsToExternalFile = (Button) view.findViewById(R.id.btWriteMealsToExternalFile);
+//        btWriteMealsToExternalFile.setOnClickListener(this);
+//    btMealsMenu = (Button) view.findViewById(R.id.btMealsMenu);
+//        btMealsMenu.setOnClickListener(this)
 
+    //        tvBreakfastMain = (TextView) view.findViewById(R.id.tvBreakfastMain);
+//        tvBreakfastMain.setMovementMethod(new ScrollingMovementMethod());
+//        tvLunchMain = (TextView) view.findViewById(R.id.tvLunchMain);
+//        tvLunchMain.setMovementMethod(new ScrollingMovementMethod());
+//        tvDinnerMain = (TextView) view.findViewById(R.id.tvDinnerMain);
+//        tvDinnerMain.setMovementMethod(new ScrollingMovementMethod());
+
+    //    public void saveDailyMenuIntoFile(DailyMenu dailyMenu){
+//        try {
+//            fos = openFileOutput("dailyMenusFile", Context.MODE_PRIVATE);
+//            osw = new OutputStreamWriter(fos);
+//            bw = new BufferedWriter(osw);
+//
+//            bw.write("Daily menus: " + "\n");
+//
+//            DailyMenu.removeDailyMenuDuplicationsAndAddAnotherOne(dailyMenu);
+//            for(int i = 0; i < DailyMenu.getDailyMenus().size(); i++)
+//                bw.write(DailyMenu.getDailyMenus().get(i).generateDailyMenuDescriptionForFiles() + "\n");
+//
+//            bw.close();
+//        }
+//        catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+//    @Override
+//    public void onClick(View v) {
+//        int viewId = v.getId();
+//    }
+
+            // From: CustomMealsFragment:
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if(DailyMenu.hasCustomMeal()){
+//                    if(DailyMenu.getCustomMeal().getName().contains("Modifying: "))
+//                        customMeal.setName("Modifying: " + s.toString());
+//                    else
+//                        customMeal.setName(s.toString());
+//                }
+//                else
+//                    customMeal.setName(s.toString());
+//            }
 }

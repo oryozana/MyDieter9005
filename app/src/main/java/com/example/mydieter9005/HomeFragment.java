@@ -39,11 +39,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class HomeFragment extends Fragment implements View.OnClickListener {
+public class HomeFragment extends Fragment {
 
     TextView tvTotalProteinsMain, tvTotalFatsMain, tvTotalCaloriesMain;
-    Button btMealsMenu, btWriteMealsToExternalFile, btReadMealsFromExternalFile;
-    LinearLayout breakfastLinearLayout, lunchLinearLayout, dinnerLinearLayout;
     LinearLayout mainActivityLinearLayout;
 
     MealOverviewFragment mealOverviewFragment;
@@ -68,23 +66,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        tvBreakfastMain = (TextView) view.findViewById(R.id.tvBreakfastMain);
-//        tvBreakfastMain.setMovementMethod(new ScrollingMovementMethod());
-//        tvLunchMain = (TextView) view.findViewById(R.id.tvLunchMain);
-//        tvLunchMain.setMovementMethod(new ScrollingMovementMethod());
-//        tvDinnerMain = (TextView) view.findViewById(R.id.tvDinnerMain);
-//        tvDinnerMain.setMovementMethod(new ScrollingMovementMethod());
-
         tvTotalCaloriesMain = (TextView) view.findViewById(R.id.tvTotalCaloriesMain);
         tvTotalProteinsMain = (TextView) view.findViewById(R.id.tvTotalProteinsMain);
         tvTotalFatsMain = (TextView) view.findViewById(R.id.tvTotalFatsMain);
-
-        btReadMealsFromExternalFile = (Button) view.findViewById(R.id.btReadMealsFromExternalFile);
-        btReadMealsFromExternalFile.setOnClickListener(this);
-        btWriteMealsToExternalFile = (Button) view.findViewById(R.id.btWriteMealsToExternalFile);
-        btWriteMealsToExternalFile.setOnClickListener(this);
-        btMealsMenu = (Button) view.findViewById(R.id.btMealsMenu);
-        btMealsMenu.setOnClickListener(this);
 
         mainActivityLinearLayout = (LinearLayout) view.findViewById(R.id.mainActivityLinearLayout);
 
@@ -232,32 +216,5 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         tvTotalProteinsMain.setText("Total Proteins: " + todayMenu.getTotalProteins() + " .");
         tvTotalFatsMain.setText("Total Fats: " + todayMenu.getTotalFats() + " .");
         tvTotalCaloriesMain.setText("Total calories: " + todayMenu.getTotalCalories() + " .");
-    }
-
-//    public void saveDailyMenuIntoFile(DailyMenu dailyMenu){
-//        try {
-//            fos = openFileOutput("dailyMenusFile", Context.MODE_PRIVATE);
-//            osw = new OutputStreamWriter(fos);
-//            bw = new BufferedWriter(osw);
-//
-//            bw.write("Daily menus: " + "\n");
-//
-//            DailyMenu.removeDailyMenuDuplicationsAndAddAnotherOne(dailyMenu);
-//            for(int i = 0; i < DailyMenu.getDailyMenus().size(); i++)
-//                bw.write(DailyMenu.getDailyMenus().get(i).generateDailyMenuDescriptionForFiles() + "\n");
-//
-//            bw.close();
-//        }
-//        catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    @Override
-    public void onClick(View v) {
-        int viewId = v.getId();
     }
 }

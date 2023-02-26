@@ -34,10 +34,10 @@
             android:text="Share custom meal" />
 
         <Button
-            android:id="@+id/btModifyCustomMeal"
+            android:id="@+id/btUseCustomMealAsBase"
             android:layout_width="125pt"
             android:layout_height="wrap_content"
-            android:text="Modify custom meal" />
+            android:text="Use custom meal as base" />
 
         <Button
             android:id="@+id/btRemoveCustomMeal"
