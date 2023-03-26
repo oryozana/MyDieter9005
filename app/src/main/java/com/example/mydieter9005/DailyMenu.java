@@ -11,6 +11,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class DailyMenu {
@@ -107,6 +110,10 @@ public class DailyMenu {
         message += "date: " + this.date + " }";
 
         return message;
+    }
+
+    public String generateEmptyDailyMenuDescriptionForFiles(){
+        return "DailyMenu { breakfast ( null ) lunch ( null ) dinner ( null ) date: " + this.date + " }";
     }
 
     public static DailyMenu generateDailyMenuObjectFromFile(String data){
@@ -430,6 +437,24 @@ public class DailyMenu {
             tmpIngredientList.clear();
         }
         return dinnerMeals;
+    }
+
+    public void fillMissingDailyMenusDates(Context context){
+        LocalDateTime oldestDailyMenu = LocalDateTime.now(), today = LocalDateTime.now();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd_MM_yyyy");
+
+        for(int i = 0; i < dailyMenus.size(); i++){
+            if(oldestDailyMenu.isAfter(LocalDateTime.parse(dailyMenus.get(i).getDate())))
+                oldestDailyMenu = LocalDateTime.parse(dailyMenus.get(i).getDate());
+        }
+
+        int daysUntilToday = (int) oldestDailyMenu.until(today, ChronoUnit.DAYS);
+        for(int i = 0; i < daysUntilToday; i++){
+            if(!hasTodayMenuInsideAllDailyMenus(dtf.format(oldestDailyMenu.plusDays(i)))) {
+                DailyMenu tmpDailyMenu = new DailyMenu(dtf.format(oldestDailyMenu.plusDays(i)));
+                saveDailyMenuIntoFile(tmpDailyMenu, context);
+            }
+        }
     }
 
     public void clearAllFood(Context context){

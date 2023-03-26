@@ -6500,4 +6500,158 @@ public class removedFunctions {
 //                else
 //                    customMeal.setName(s.toString());
 //            }
+
+            // From: FoodSelectionFragment:
+    //    ArrayList<Meal> mealsList;
+//    boolean isOnMealsMode = false;
+
+    //        mealsList = new ArrayList<Meal>();
+//        ArrayList<Ingredient> ingredientsNeeded = new ArrayList<Ingredient>();  // For multi-ingredients meals.
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("nestle cereals"), 30));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("milk"), 200));
+//        mealsList.add(new Meal("Nestle cereals with milk", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("Chocolate flavored nestle cereals"), 30));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("milk"), 200));
+//        mealsList.add(new Meal("Chocolate flavored nestle cereals", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        mealsList.add(new Meal("Yogurt", 100));
+//        mealsList.add(new Meal("Chocolate flavored yogurt", 100));
+//        mealsList.add(new Meal("Chocolate flavored ice cream", 250));
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        mealsList.add(new Meal("Toast", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("tomato"), 100));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("cucumber"), 100));
+//        mealsList.add(new Meal("Toast with tomato and cucumber", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("tomato"), 100));
+//        mealsList.add(new Meal("Toast with tomato", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("cucumber"), 100));
+//        mealsList.add(new Meal("Toast with cucumber", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("olive"), 100));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("corn"), 100));
+//        mealsList.add(new Meal("Toast with olive and corn", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("olive"), 100));
+//        mealsList.add(new Meal("Toast with olive", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+//
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
+//        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("corn"), 100));
+//        mealsList.add(new Meal("Toast with corn", ingredientsNeeded));
+//        ingredientsNeeded.clear();
+
+    //        etFilterFood.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if(isOnLocalMode){
+//                    if(isOnMealsMode)
+//                        mealsAdapter.getFilter().filter(s);
+//                    else
+//                        ingredientsAdapter.getFilter().filter(s);
+//                }
+//                else
+//                    mealsAdapter.getFilter().filter(s);
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {}
+//        });
+
+    //        isOnMealsMode = false;
+
+    //    public void setMealListViewAdapter(){
+//        mealsAdapter = new MealListAdapter(getActivity(), mealsList);
+//        listView.setAdapter(mealsAdapter);
+//
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
+//
+//                mealOverviewFragment = new MealOverviewFragment("FoodSelectionFragment", selectedItem);
+//                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, mealOverviewFragment).commit();
+//            }
+//        });
+//    }
+
+    //    public void switchBetweenMealAndIngredients(){
+//        isOnMealsMode = !isOnMealsMode;
+//
+//        if(!etFilterFood.getText().toString().equals(""))
+//            etFilterFood.setText("");
+//
+//        if(isOnMealsMode) {
+//            btSwitchBetweenMealAndIngredients.setText("Choose from Ingredients");
+//            setMealListViewAdapter();
+//        }
+//        else {
+//            btSwitchBetweenMealAndIngredients.setText("Choose from Meals");
+//            setIngredientListViewAdapters();
+//        }
+//    }
+
+//    btSwitchBetweenMealAndIngredients = (Button) view.findViewById(R.id.btSwitchBetweenMealAndIngredients);
+//        btSwitchBetweenMealAndIngredients.setOnClickListener(this);
+
+    //        if(viewId == btSwitchBetweenMealAndIngredients.getId())
+//            switchBetweenMealAndIngredients();
+    //Button btSwitchBetweenMealAndIngredients, btSwitchBetweenLocalAndGlobalFood;
+                //btSwitchBetweenMealAndIngredients.setVisibility(View.INVISIBLE);
+                //btSwitchBetweenMealAndIngredients.setVisibility(View.VISIBLE);
+                //btSwitchBetweenMealAndIngredients.setVisibility(View.GONE);
+
+
+
+
+//            <Button
+//    android:id="@+id/btSwitchBetweenMealAndIngredients"
+//    android:layout_width="125pt"
+//    android:layout_height="wrap_content"
+//    android:layout_marginLeft="15pt"
+//    android:layout_marginTop="10pt"
+//    android:layout_marginRight="15pt"
+//    android:text="Choose from meals" />
+
 }

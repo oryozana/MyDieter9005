@@ -1,6 +1,5 @@
 package com.example.mydieter9005;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,12 +22,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,9 +35,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class FoodSelectionFragment extends Fragment implements View.OnClickListener {
@@ -53,22 +45,19 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
     MealOverviewFragment mealOverviewFragment;
 
     LinearLayout linearLayout, loadingWorldSavedCustomMealsLinearLayout;
-    Button btSwitchBetweenMealAndIngredients, btSwitchBetweenLocalAndGlobalFood;
+    Button btSwitchBetweenLocalAndGlobalFood;
     EditText etFilterFood;
     ListView listView;
 
     DailyMenu todayMenu = DailyMenu.getTodayMenu();
-    ArrayList<Meal> mealsList;
     ArrayList<Meal> internetMealsList = new ArrayList<Meal>();
     MealListAdapter mealsAdapter;
 
     ArrayList<Ingredient> ingredients;
     IngredientListAdapter ingredientsAdapter;
 
-    boolean isOnMealsMode = false;
     boolean isOnLocalMode = true;
 
-    FirebaseDatabase codesDb;
     DatabaseReference databaseReference;
 
     String cameFrom;
@@ -95,80 +84,6 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mealsList = new ArrayList<Meal>();
-        ArrayList<Ingredient> ingredientsNeeded = new ArrayList<Ingredient>();  // For multi-ingredients meals.
-
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("nestle cereals"), 30));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("milk"), 200));
-        mealsList.add(new Meal("Nestle cereals with milk", ingredientsNeeded));
-        ingredientsNeeded.clear();
-
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("Chocolate flavored nestle cereals"), 30));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("milk"), 200));
-        mealsList.add(new Meal("Chocolate flavored nestle cereals", ingredientsNeeded));
-        ingredientsNeeded.clear();
-
-        mealsList.add(new Meal("Yogurt", 100));
-        mealsList.add(new Meal("Chocolate flavored yogurt", 100));
-        mealsList.add(new Meal("Chocolate flavored ice cream", 250));
-
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
-        mealsList.add(new Meal("Toast", ingredientsNeeded));
-        ingredientsNeeded.clear();
-
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("tomato"), 100));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("cucumber"), 100));
-        mealsList.add(new Meal("Toast with tomato and cucumber", ingredientsNeeded));
-        ingredientsNeeded.clear();
-
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("tomato"), 100));
-        mealsList.add(new Meal("Toast with tomato", ingredientsNeeded));
-        ingredientsNeeded.clear();
-
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("cucumber"), 100));
-        mealsList.add(new Meal("Toast with cucumber", ingredientsNeeded));
-        ingredientsNeeded.clear();
-
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("olive"), 100));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("corn"), 100));
-        mealsList.add(new Meal("Toast with olive and corn", ingredientsNeeded));
-        ingredientsNeeded.clear();
-
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("olive"), 100));
-        mealsList.add(new Meal("Toast with olive", ingredientsNeeded));
-        ingredientsNeeded.clear();
-
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("bread"), 150));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("yellow cheese"), 75));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("thousand island dressing"), 25));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("ketchup"), 25));
-        ingredientsNeeded.add(new Ingredient(Ingredient.getIngredientByName("corn"), 100));
-        mealsList.add(new Meal("Toast with corn", ingredientsNeeded));
-        ingredientsNeeded.clear();
-
         listView = (ListView) view.findViewById(R.id.listViewFood);
 
         loadingWorldSavedCustomMealsLinearLayout = (LinearLayout) view.findViewById(R.id.loadingWorldSavedCustomMealsLinearLayout);
@@ -178,8 +93,6 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
 
         btSwitchBetweenLocalAndGlobalFood = (Button) view.findViewById(R.id.btSwitchBetweenLocalAndGlobalFood);
         btSwitchBetweenLocalAndGlobalFood.setOnClickListener(this);
-        btSwitchBetweenMealAndIngredients = (Button) view.findViewById(R.id.btSwitchBetweenMealAndIngredients);
-        btSwitchBetweenMealAndIngredients.setOnClickListener(this);
 
         etFilterFood = (EditText) view.findViewById(R.id.etFilterFood);
         etFilterFood.addTextChangedListener(new TextWatcher() {
@@ -188,12 +101,8 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(isOnLocalMode){
-                    if(isOnMealsMode)
-                        mealsAdapter.getFilter().filter(s);
-                    else
-                        ingredientsAdapter.getFilter().filter(s);
-                }
+                if(isOnLocalMode)
+                    ingredientsAdapter.getFilter().filter(s);
                 else
                     mealsAdapter.getFilter().filter(s);
             }
@@ -202,12 +111,9 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
             public void afterTextChanged(Editable s) {}
         });
 
-        if(cameFrom.equals("CustomMealsFragment")){
+        if(cameFrom.equals("CustomMealsFragment"))
             btSwitchBetweenLocalAndGlobalFood.setVisibility(View.INVISIBLE);
-            btSwitchBetweenMealAndIngredients.setVisibility(View.INVISIBLE);
-        }
 
-        isOnMealsMode = false;
         isOnLocalMode = true;
 
         setIngredientListViewAdapters();
@@ -224,21 +130,6 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
                 Ingredient selectedItem = (Ingredient) parent.getItemAtPosition(position);
 
                 ingredientOverviewAlertDialog(selectedItem);
-            }
-        });
-    }
-
-    public void setMealListViewAdapter(){
-        mealsAdapter = new MealListAdapter(getActivity(), mealsList);
-        listView.setAdapter(mealsAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Meal selectedItem = (Meal) adapterView.getItemAtPosition(i);
-
-                mealOverviewFragment = new MealOverviewFragment("FoodSelectionFragment", selectedItem);
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainActivityFrameLayout, mealOverviewFragment).commit();
             }
         });
     }
@@ -475,22 +366,6 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
         ad.show();
     }
 
-    public void switchBetweenMealAndIngredients(){
-        isOnMealsMode = !isOnMealsMode;
-
-        if(!etFilterFood.getText().toString().equals(""))
-            etFilterFood.setText("");
-
-        if(isOnMealsMode) {
-            btSwitchBetweenMealAndIngredients.setText("Choose from Ingredients");
-            setMealListViewAdapter();
-        }
-        else {
-            btSwitchBetweenMealAndIngredients.setText("Choose from Meals");
-            setIngredientListViewAdapters();
-        }
-    }
-
     public void switchBetweenLocalAndGlobalFood(){
         isOnLocalMode = !isOnLocalMode;
 
@@ -499,12 +374,8 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
 
         if(isOnLocalMode){
             btSwitchBetweenLocalAndGlobalFood.setText("Choose from internet");
-            btSwitchBetweenMealAndIngredients.setVisibility(View.VISIBLE);
 
-            if(isOnMealsMode)
-                setMealListViewAdapter();
-            else
-                setIngredientListViewAdapters();
+            setIngredientListViewAdapters();
 
             try{
                 getActivity().unregisterReceiver(networkConnectionReceiver);
@@ -515,7 +386,6 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
         }
         else{
             btSwitchBetweenLocalAndGlobalFood.setText("Choose from local");
-            btSwitchBetweenMealAndIngredients.setVisibility(View.GONE);
             setCustomNetworkConnectionReceiver();
             setInternetListViewAdapter();
         }
@@ -571,9 +441,6 @@ public class FoodSelectionFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
-
-        if(viewId == btSwitchBetweenMealAndIngredients.getId())
-            switchBetweenMealAndIngredients();
 
         if(viewId == btSwitchBetweenLocalAndGlobalFood.getId())
             switchBetweenLocalAndGlobalFood();
