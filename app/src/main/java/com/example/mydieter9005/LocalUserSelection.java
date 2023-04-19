@@ -56,6 +56,7 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
     SQLiteDatabase sqdb;
     DBHelper my_db;
 
+    Intent exitAppService;
     Intent me;
 
     @Override
@@ -188,7 +189,7 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
             int col7 = c.getColumnIndex(DBHelper.TARGET_PROTEIN);
             int col8 = c.getColumnIndex(DBHelper.TARGET_FATS);
             int col9 = c.getColumnIndex(DBHelper.PROFILE_PICTURE_ID);
-     //       int col10 = c.getColumnIndex(DBHelper.DAILY_MENUS);
+            int col10 = c.getColumnIndex(DBHelper.DAILY_MENUS);
 
             c.moveToFirst();
 
@@ -202,9 +203,9 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
                 String t7 = c.getString(col7);
                 String t8 = c.getString(col8);
                 String t9 = c.getString(col9);
-        //        String t10 = c.getString(col10);
+                String t10 = c.getString(col10);
 
-                localUsers.add(new User(t1, t2, t3, t4, t6, t7, t8, t9));
+                localUsers.add(new User(t1, t2, t3, t4, t6, t7, t8, t9, t10));
                 c.moveToNext();
             }
 
@@ -295,6 +296,8 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
     }
 
     public void userChosen(User user){
+        user.uploadUserDailyMenusIntoTemporaryFile(LocalUserSelection.this);
+
         User.setCurrentUser(user);
         me.setClass(LocalUserSelection.this, MainActivity.class);
         me.putExtra("cameFromLogin", true);
@@ -437,6 +440,7 @@ public class LocalUserSelection extends AppCompatActivity implements View.OnClic
         videoView.stopPlayback();
         mediaPlayer.stop();
         mediaPlayer.release();
+        startService(exitAppService);
         super.onDestroy();
     }
 

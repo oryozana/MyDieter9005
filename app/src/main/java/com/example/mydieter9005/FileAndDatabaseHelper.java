@@ -132,6 +132,17 @@ public class FileAndDatabaseHelper {
         Toast.makeText(context, "Password successfully changed.", Toast.LENGTH_SHORT).show();
     }
 
+    public void updateUserDailyMenusInLocalDatabase(String username, String dailyMenus){
+        sqdb=my_db.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(DBHelper.DAILY_MENUS, dailyMenus);
+
+        sqdb.update(DBHelper.TABLE_NAME, cv,DBHelper.USERNAME+"=?", new String[]{username});
+        sqdb.close();
+
+        Toast.makeText(context, "Daily menus successfully updated.", Toast.LENGTH_SHORT).show();
+    }
+
     public void setPrimaryUser(User user){
         User.setPrimaryUser(user);
 
@@ -145,15 +156,12 @@ public class FileAndDatabaseHelper {
 
             bw.close();
         }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
         catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void removePrimaryUser(){
+    public void removePrimaryUser() {
         User.setPrimaryUser(null);
 
         try {
@@ -165,9 +173,6 @@ public class FileAndDatabaseHelper {
             bw.write("Password: " + " ");
 
             bw.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
         catch (IOException e) {
             e.printStackTrace();

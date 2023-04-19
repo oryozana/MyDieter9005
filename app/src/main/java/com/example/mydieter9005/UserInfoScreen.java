@@ -80,6 +80,7 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
     SQLiteDatabase sqdb;
     DBHelper my_db;
 
+    Intent exitAppService;
     Intent me;
 
     @Override
@@ -300,15 +301,7 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
                         String password = String.valueOf(dataSnapshot.child("password").getValue());
 
                         if(entered_password.equals(password)){
-                            double targetCalories = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetCalories").getValue()));
-                            double targetProteins = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetProteins").getValue()));
-                            double targetFats = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetFats").getValue()));
-                            Plan plan = new Plan(targetCalories, targetProteins, targetFats);
-
-                            String email = String.valueOf(dataSnapshot.child("email").getValue());
-                            double startingWeight = Double.parseDouble(String.valueOf(dataSnapshot.child("startingWeight").getValue()));
-                            int profilePictureId = Integer.parseInt(String.valueOf(dataSnapshot.child("profilePictureId").getValue()));
-                            User.setCurrentUser(new User(username, password, email, startingWeight, plan, profilePictureId));
+                            User.setCurrentUser(new User(dataSnapshot));
                         }
                     }
                     else
@@ -548,6 +541,7 @@ public class UserInfoScreen extends AppCompatActivity implements View.OnClickLis
         videoView.stopPlayback();
         mediaPlayer.stop();
         mediaPlayer.release();
+        startService(exitAppService);
         super.onDestroy();
     }
 

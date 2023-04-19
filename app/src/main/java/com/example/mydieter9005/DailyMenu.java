@@ -53,6 +53,11 @@ public class DailyMenu {
     }
 
     public static DailyMenu getTodayMenu() {
+        if(todayMenu == null) {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd_MM_yyyy");
+            LocalDateTime today = LocalDateTime.now();
+            return new DailyMenu(dtf.format(today));
+        }
         return todayMenu;
     }
 
@@ -61,7 +66,7 @@ public class DailyMenu {
     }
 
     public String generateDailyMenuDescriptionForFiles(){
-        String message = "DailyMenu { ";
+        String message = "       DailyMenu { ";
 
         message += "breakfast ( ";
         for(int i = 0; i < this.breakfast.size(); i++){
@@ -113,7 +118,7 @@ public class DailyMenu {
     }
 
     public String generateEmptyDailyMenuDescriptionForFiles(){
-        return "DailyMenu { breakfast ( null ) lunch ( null ) dinner ( null ) date: " + this.date + " }";
+        return "       DailyMenu { breakfast ( null ) lunch ( null ) dinner ( null ) date: " + this.date + " }";
     }
 
     public static DailyMenu generateDailyMenuObjectFromFile(String data){
@@ -144,31 +149,31 @@ public class DailyMenu {
 
         if(!breakfastData.equals("null")){
             breakfastDataParts = breakfastData.split("     ");
-            for(int i = 0; i < breakfastDataParts.length; i++){
-                if(breakfastDataParts[i].split(" \\[ ")[0].equals("Meal"))
-                    breakfastFood.add(Meal.generateMealObjectFromFileDescription(breakfastDataParts[i] + " ]"));
-                if(breakfastDataParts[i].split(" \\[ ")[0].equals("Ingredient"))
-                    breakfastFood.add(Ingredient.generateIngredientObjectFromFileDescription(breakfastDataParts[i] + " ]"));
+            for (String breakfastDataPart : breakfastDataParts) {
+                if (breakfastDataPart.split(" \\[ ")[0].equals("Meal"))
+                    breakfastFood.add(Meal.generateMealObjectFromFileDescription(breakfastDataPart + " ]"));
+                if (breakfastDataPart.split(" \\[ ")[0].equals("Ingredient"))
+                    breakfastFood.add(Ingredient.generateIngredientObjectFromFileDescription(breakfastDataPart + " ]"));
             }
         }
 
         if(!lunchData.equals("null")){
             lunchDataParts = lunchData.split("     ");
-            for(int i = 0; i < lunchDataParts.length; i++){
-                if(lunchDataParts[i].split(" \\[ ")[0].equals("Meal"))
-                    lunchFood.add(Meal.generateMealObjectFromFileDescription(lunchDataParts[i]));
-                if(lunchDataParts[i].split(" \\[ ")[0].equals("Ingredient"))
-                    lunchFood.add(Ingredient.generateIngredientObjectFromFileDescription(lunchDataParts[i]));
+            for (String lunchDataPart : lunchDataParts) {
+                if (lunchDataPart.split(" \\[ ")[0].equals("Meal"))
+                    lunchFood.add(Meal.generateMealObjectFromFileDescription(lunchDataPart));
+                if (lunchDataPart.split(" \\[ ")[0].equals("Ingredient"))
+                    lunchFood.add(Ingredient.generateIngredientObjectFromFileDescription(lunchDataPart));
             }
         }
 
         if(!dinnerData.equals("null")){
             dinnerDataParts = dinnerData.split("     ");
-            for(int i = 0; i < dinnerDataParts.length; i++){
-                if(dinnerDataParts[i].split(" \\[ ")[0].equals("Meal"))
-                    dinnerFood.add(Meal.generateMealObjectFromFileDescription(dinnerDataParts[i]));
-                if(dinnerDataParts[i].split(" \\[ ")[0].equals("Ingredient"))
-                    dinnerFood.add(Ingredient.generateIngredientObjectFromFileDescription(dinnerDataParts[i]));
+            for (String dinnerDataPart : dinnerDataParts) {
+                if (dinnerDataPart.split(" \\[ ")[0].equals("Meal"))
+                    dinnerFood.add(Meal.generateMealObjectFromFileDescription(dinnerDataPart));
+                if (dinnerDataPart.split(" \\[ ")[0].equals("Ingredient"))
+                    dinnerFood.add(Ingredient.generateIngredientObjectFromFileDescription(dinnerDataPart));
             }
         }
 
@@ -183,6 +188,25 @@ public class DailyMenu {
             dailyMenu.addDinner(dinnerFood.get(i));
 
         return dailyMenu;
+    }
+
+    public static void restartDailyMenusFile(Context context){
+        FileOutputStream fos;
+        OutputStreamWriter osw;
+        BufferedWriter bw;
+
+        try {
+            fos = context.openFileOutput("dailyMenusFile", Context.MODE_PRIVATE);
+            osw = new OutputStreamWriter(fos);
+            bw = new BufferedWriter(osw);
+
+            bw.write("Daily menus: " + "\n");
+
+            bw.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isThereAtLeastOneThing(){
@@ -439,7 +463,7 @@ public class DailyMenu {
         return dinnerMeals;
     }
 
-    public void fillMissingDailyMenusDates(Context context){
+    public static void fillMissingDailyMenusDates(Context context){
         LocalDateTime oldestDailyMenu = LocalDateTime.now(), today = LocalDateTime.now();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd_MM_yyyy");
 
@@ -588,7 +612,7 @@ public class DailyMenu {
         ArrayList<DailyMenu> tmpDailyMenus = new ArrayList<DailyMenu>();
         boolean found;
 
-        for(int i = 0; i < dailyMenus.size(); i++){
+        for(int i = 0; i < dailyMenus.size(); i++) {
             found = false;
             for(int j = i + 1; j < dailyMenus.size(); j++){
                 if(dailyMenus.get(i).date.equals(dailyMenus.get(j).date) || dailyMenus.get(i).date.equals(dailyMenu.date))
@@ -605,12 +629,8 @@ public class DailyMenu {
 
     public static boolean hasCustomMeal(){
         if(newCustomMeal != null){
-            if(newCustomMeal.getName().replaceAll(" ", "").equals("")){
-                if(newCustomMeal.getNeededIngredientsForMeal().size() == 0)
-                    return false;
-                else
-                    return true;
-            }
+            if(newCustomMeal.getName().replaceAll(" ", "").equals(""))
+                return newCustomMeal.getNeededIngredientsForMeal().size() != 0;
             else
                 return true;
         }
@@ -643,9 +663,6 @@ public class DailyMenu {
 
             bw.close();
         }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
         catch (IOException e) {
             e.printStackTrace();
         }
@@ -677,9 +694,6 @@ public class DailyMenu {
                 currentLine = br.readLine();
             }
             br.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
         catch (IOException e) {
             e.printStackTrace();

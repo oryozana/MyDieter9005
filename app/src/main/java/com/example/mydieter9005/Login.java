@@ -108,7 +108,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         initiateMediaPlayer();
     }
 
-    public void getUserFromFirebaseDatabase(String username, String entered_password){
+    public void getUserFromFirebaseDatabase(String username, String enteredPassword){
         linearLayout.setVisibility(View.GONE);
         loginLoadingLinearLayout.setVisibility(View.VISIBLE);
 
@@ -119,19 +119,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 if(task.isSuccessful()){
                     if(task.getResult().exists()){
                         DataSnapshot dataSnapshot = task.getResult();
-                        String username = dataSnapshot.getKey();
                         String password = String.valueOf(dataSnapshot.child("password").getValue());
 
-                        if(entered_password.equals(password)){
-                            double targetCalories = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetCalories").getValue()));
-                            double targetProteins = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetProteins").getValue()));
-                            double targetFats = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetFats").getValue()));
-                            Plan plan = new Plan(targetCalories, targetProteins, targetFats);
-
-                            String email = String.valueOf(dataSnapshot.child("email").getValue());
-                            double startingWeight = Double.parseDouble(String.valueOf(dataSnapshot.child("startingWeight").getValue()));
-                            int profilePictureId = Integer.parseInt(String.valueOf(dataSnapshot.child("profilePictureId").getValue()));
-                            User.setCurrentUser(new User(username, password, email, startingWeight, plan, profilePictureId));
+                        if(enteredPassword.equals(password)){
+                            User.setCurrentUser(new User(dataSnapshot));
+                            User.getCurrentUser().uploadUserDailyMenusIntoTemporaryFile(Login.this);
 
 //                            DataSnapshot dailyMenus = dataSnapshot.child("dailyMenus");
 //                            for(DataSnapshot dailyMenu : dailyMenus.getChildren()){
@@ -218,15 +210,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                     String enteredEmail = etGetEmailForgot.getText().toString();
 
                                     if(email.equals(enteredEmail)){
-                                        double targetCalories = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetCalories").getValue()));
-                                        double targetProteins = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetProteins").getValue()));
-                                        double targetFats = Double.parseDouble(String.valueOf(dataSnapshot.child("currentPlan").child("targetFats").getValue()));
-                                        Plan plan = new Plan(targetCalories, targetProteins, targetFats);
-
-                                        String password = String.valueOf(dataSnapshot.child("password").getValue());
-                                        double startingWeight = Double.parseDouble(String.valueOf(dataSnapshot.child("startingWeight").getValue()));
-                                        int profilePictureId = Integer.parseInt(String.valueOf(dataSnapshot.child("profilePictureId").getValue()));
-                                        forgotUser = new User(username, password, email, startingWeight, plan, profilePictureId);
+                                        forgotUser = new User(dataSnapshot);
+                                        forgotUser.uploadUserDailyMenusIntoTemporaryFile(Login.this);
 
                                         loadingLinearLayout.setVisibility(View.GONE);
                                         newPasswordLinearLayout.setVisibility(View.VISIBLE);

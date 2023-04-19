@@ -77,6 +77,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     FirebaseDatabase usersDb;
     DatabaseReference databaseReference;
 
+    Intent exitAppService;
     Intent me;
 
     @Override
@@ -120,7 +121,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     }
 
     public void createUserAndUserPlan(){
-        if(passUserInfoTests()){
+        if(passUserInfoTests()){  // Not to be included in the User(dataSnapshot) builder.
             double targetCalories = Double.parseDouble(etGetTargetCalories.getText().toString());
             double targetProteins = Double.parseDouble(etGetTargetProteins.getText().toString());
             double targetFats = Double.parseDouble(etGetTargetFats.getText().toString());
@@ -132,7 +133,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             double startingWeight = Double.parseDouble(etGetStartingWeight.getText().toString());
 
             int profilePictureId = getResources().getIdentifier("user_picture_" + (((int)(Math.random() * userPicturesAmount)) + 1), "drawable", getPackageName());
-            User user = new User(username, password, email, startingWeight, userPlan, profilePictureId);
+            User user = new User(username, password, email, startingWeight, userPlan, profilePictureId, DailyMenu.getTodayMenu().generateEmptyDailyMenuDescriptionForFiles());
+
+            user.uploadUserDailyMenusIntoTemporaryFile(Register.this);
 
             linearLayout.setVisibility(View.GONE);
             registerLoadingLinearLayout.setVisibility(View.VISIBLE);
@@ -593,6 +596,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         videoView.stopPlayback();
         mediaPlayer.stop();
         mediaPlayer.release();
+        startService(exitAppService);
         super.onDestroy();
     }
 

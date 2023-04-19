@@ -52,6 +52,8 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
+
+    Intent exitAppService;
     Intent me;
 
     @Override
@@ -337,6 +339,7 @@ public class settingsSetter extends AppCompatActivity implements View.OnClickLis
         videoView.stopPlayback();
         mediaPlayer.stop();
         mediaPlayer.release();
+        startService(exitAppService);
         super.onDestroy();
     }
 

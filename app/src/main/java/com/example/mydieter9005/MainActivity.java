@@ -33,7 +33,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
     private AnalogClock analogClock;
     private TextClock textClock;
@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FoodSelectionFragment foodSelectionFragment = new FoodSelectionFragment();
     CustomMealsFragment customMealsFragment = new CustomMealsFragment();
 
-    private VideoView videoView;
     private MediaPlayer mediaPlayer;
+    private VideoView videoView;
 
     DailyMenu todayMenu;
     Song activeSong;  // In this activity he get a initial value at "createTheFirstIntent".
@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FileInputStream is;
     InputStreamReader isr;
     BufferedReader br;
+
     Intent me;
 
     @Override
@@ -351,9 +352,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             bw.close();
         }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
         catch (IOException e) {
             e.printStackTrace();
         }
@@ -369,9 +367,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             bw.close();
         }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
         catch (IOException e) {
             e.printStackTrace();
         }
@@ -386,9 +381,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bw.write("Daily menus: " + "\n");
 
             bw.close();
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -406,9 +398,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             bw.close();
         }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
         catch (IOException e) {
             e.printStackTrace();
         }
@@ -421,21 +410,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View v) {
-        int viewId = v.getId();
-
-//        if(viewId == btMealsMenu.getId())
-//            sendToSelected(v);
-
-//        if(viewId == btWriteMealsToExternalFile.getId())
-//            write();
-//
-//        if(viewId == btReadMealsFromExternalFile.getId())
-//            showFileData();
-    }
-
-    @Override
     public void onBackPressed() {
 
     }
 }
+
+

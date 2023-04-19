@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.mydieter9005">
+    package="com.example.mydieter9005" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -15,10 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyDieter9005"
-        tools:targetApi="31">
+        tools:targetApi="31" >
+
         <activity
             android:name=".LocalUserSelection"
-            android:exported="false">
+            android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -32,42 +33,28 @@
         <activity
             android:name=".UserInfoScreen"
             android:exported="false"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".Login"
-            android:exported="false">
+            android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".Register"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".WorldSavedCustomMeals"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ingredientsSelection"
-            android:exported="false">
+            android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".musicMaster"
-            android:exported="false">
+            android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -76,39 +63,15 @@
             android:name=".settingsSetter"
             android:exported="false" />
         <activity
-            android:name=".customSelection"
-            android:exported="false" />
-        <activity
-            android:name=".customMeals"
-            android:exported="false" />
-        <activity
-            android:name=".finishMeals"
-            android:exported="false" />
-        <activity
-            android:name=".ingredientsPickup"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".dinnerSelection"
-            android:exported="false" />
-        <activity
-            android:name=".lunchSelection"
-            android:exported="false" />
-        <activity
-            android:name=".breakfastSelection"
-            android:exported="false" />
-        <activity
-            android:name=".mealsMenu"
-            android:exported="false" />
     </application>
 
 </manifest>
